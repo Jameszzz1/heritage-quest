@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center"><img src="addons/supabase/icon.svg" width="80px"/></p>
 
 👉 [3.x](https://github.com/supabase-community/godot-engine.supabase/tree/main)
@@ -57,3 +58,7 @@ func _ready():
 	).completed
 	print(auth_task.user)
 ```
+=======
+# heritage-quest
+For capstone project
+>>>>>>> ef84e9d5f1acbc0089b6dde70fe4c349898437d1

@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bqscxnh0cdu5k"]
+
+[ext_resource type="Texture2D" uid="uid://cswjxvpta1e3a" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentbackground.png" id="1_7vj1j"]
+[ext_resource type="PackedScene" uid="uid://bgdpdtfj1fx41" path="res://scenes/characters/ascent_james.tscn" id="1_rfeuv"]
+[ext_resource type="Script" uid="uid://dmnwn1yqp4keh" path="res://scripts/ascent_game.gd" id="1_wghk5"]
+
+[node name="AscentGame" type="Node2D" unique_id=1517604280]
+script = ExtResource("1_wghk5")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=816237673]
+position = Vector2(14.999977, -1724.3207)
+scale = Vector2(1.3706896, 1.7373455)
+texture = ExtResource("1_7vj1j")
+
+[node name="AscentPlayer" parent="." unique_id=2091553734 instance=ExtResource("1_rfeuv")]
+position = Vector2(14, 220)

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://dv6pm8p1uq0cg"]
+
+[ext_resource type="Texture2D" uid="uid://lrly14r5ejrc" path="res://assets/sprites/things/1_SCTnalak.png" id="1_ukmbv"]
+[ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="2_he08e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5jkby"]
+size = Vector2(56.666664, 6.666666)
+
+[node name="SouthCotabatoHouse1" type="StaticBody2D" unique_id=1623192595]
+scale = Vector2(0.3, 0.3)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2109295320]
+texture = ExtResource("1_ukmbv")
+region_enabled = true
+region_rect = Rect2(88.48534, 37.62359, 232.90758, 187.07736)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=541465640]
+position = Vector2(0, -9.536743e-07)
+polygon = PackedVector2Array(-96.666664, 6.6666675, -96.666664, 43.333332, -86.666664, 50, -70, 56.666664, -50, 60, -30, 63.333332, -26.666666, 23.333332, 30, 23.333332, 30, 66.666664, 60, 63.333332, 80, 56.666664, 100, 46.666664, 100, 6.6666675)
+
+[node name="Entrance" type="Area2D" parent="." unique_id=563520920]
+script = ExtResource("2_he08e")
+target_scene = "res://scenes/provinces/south_cotabato/south_cotabato_inside_house.tscn"
+spawn_pos = Vector2(-520, 140)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entrance" unique_id=1359393955]
+position = Vector2(1.6666675, 26.666666)
+shape = SubResource("RectangleShape2D_5jkby")
+
+[connection signal="body_entered" from="Entrance" to="Entrance" method="_on_body_entered"]

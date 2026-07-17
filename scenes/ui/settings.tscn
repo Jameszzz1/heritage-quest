@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://dgrayasbr1xws"]
+
+[ext_resource type="Script" uid="uid://c6ahr67to4n77" path="res://scripts/ingame_settings.gd" id="1_7pacj"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_h175o"]
+
+[node name="Settings" type="Control" unique_id=2094690682]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7pacj")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1010565431]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -101.0
+offset_right = 102.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Panel" type="PanelContainer" parent="Background" unique_id=585171921]
+custom_minimum_size = Vector2(200, 150)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/Panel" unique_id=197039451]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Title" type="Label" parent="Background/Panel/VBoxContainer" unique_id=2098582563]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+theme_override_font_sizes/font_size = 20
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="FullscreenButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=262344501]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+text = "Switch to fullscreen"
+
+[node name="SaveButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=2037519183]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+text = "Save Game"
+
+[node name="MainMenuButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=1191590502]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+text = "MainMenu"
+
+[node name="VolumeLevel" type="Label" parent="Background/Panel/VBoxContainer" unique_id=973908130]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+text = "Volume "
+
+[node name="VolumeSlider" type="HSlider" parent="Background/Panel/VBoxContainer" unique_id=535437985]
+layout_mode = 2
+min_value = 1.0
+step = 0.01
+value = 1.0
+
+[connection signal="pressed" from="Background/Panel/VBoxContainer/FullscreenButton" to="." method="_on_fullscreen_button_pressed"]
+[connection signal="pressed" from="Background/Panel/VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="Background/Panel/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="value_changed" from="Background/Panel/VBoxContainer/VolumeSlider" to="." method="_on_volume_slider_value_changed"]

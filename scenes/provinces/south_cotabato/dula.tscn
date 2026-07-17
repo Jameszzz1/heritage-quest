@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://cxxgpoyg25kf4"]
+
+[ext_resource type="Script" uid="uid://ci7y3wbwiugvc" path="res://scenes/provinces/south_cotabato/dula.gd" id="1_avsrw"]
+[ext_resource type="Texture2D" uid="uid://h7d5ev3jwr38" path="res://assets/sprites/characters/2_TboliNPC.png" id="1_uika4"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_avsrw"]
+height = 20.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4uj8w"]
+radius = 79.99999
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w6rpf"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_74g26"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[node name="Dula" type="CharacterBody2D" unique_id=859027162]
+scale = Vector2(0.2, 0.2)
+script = ExtResource("1_avsrw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=420036070]
+texture = ExtResource("1_uika4")
+region_enabled = true
+region_rect = Rect2(207.34097, 269.18173, 34.385406, 79.21698)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=535058028]
+shape = SubResource("CapsuleShape2D_avsrw")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1677268344]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=145599210]
+position = Vector2(0, -4.9999995)
+shape = SubResource("CircleShape2D_4uj8w")
+
+[node name="NameLabel" type="Label" parent="." unique_id=292645568]
+offset_left = -10.0
+offset_top = -60.0
+offset_right = 15.0
+offset_bottom = -44.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_w6rpf")
+text = "Dula"
+
+[node name="InteractLabel" type="Label" parent="." unique_id=1501925773]
+offset_left = -50.000015
+offset_top = -80.0
+offset_right = 49.99997
+offset_bottom = -64.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_74g26")
+text = "Press \"E\" to Interact"

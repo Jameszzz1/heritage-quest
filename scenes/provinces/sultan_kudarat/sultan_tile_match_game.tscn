@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://br4dntjk1o7yj"]
+
+[ext_resource type="Script" uid="uid://dxp6b0p1otsbi" path="res://scripts/tile_match_game.gd" id="1_pd7og"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_3nh2d"]
+[ext_resource type="AudioStream" uid="uid://cnu2jv3kq8uwo" path="res://assets/audio/sfx/sultantilesoundeffect.mp3" id="3_3nh2d"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_pd7og"]
+load_path = "res://.godot/imported/bgtilesmatch.png-4c2cf5c63d0aaed95a179da083729414.ctex"
+
+[node name="TileMatchGame" type="Control" unique_id=1890055166]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pd7og")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1775023114]
+modulate = Color(0.66245234, 0.66245234, 0.6624523, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("CompressedTexture2D_pd7og")
+expand_mode = 1
+
+[node name="Grid" type="GridContainer" parent="." unique_id=788993085]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.54700005
+anchor_top = 0.5
+anchor_right = 0.54700005
+anchor_bottom = 0.5
+offset_left = -85.04001
+offset_top = -64.0
+offset_right = 85.33499
+offset_bottom = 72.375
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=424266944]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.067
+anchor_right = 0.025
+anchor_bottom = 0.067
+offset_top = -4.0600004
+offset_right = 21.0
+offset_bottom = 3.9399996
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_3nh2d")
+theme_override_font_sizes/font_size = 8
+text = "SCORE:"
+
+[node name="TimerLabel" type="Label" parent="." unique_id=1590765463]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.14400001
+anchor_right = 0.025
+anchor_bottom = 0.14400001
+offset_top = -3.920002
+offset_right = 59.0
+offset_bottom = 4.079998
+theme_override_fonts/font = ExtResource("2_3nh2d")
+theme_override_font_sizes/font_size = 8
+text = "TIME :"
+
+[node name="GameTimer" type="Timer" parent="." unique_id=588907263]
+
+[node name="MatchSound" type="AudioStreamPlayer" parent="." unique_id=129547975]
+stream = ExtResource("3_3nh2d")

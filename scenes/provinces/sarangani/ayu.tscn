@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://bi3kll5wochib"]
+
+[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/ui/npc_dialogue.gd" id="1_bvu7j"]
+[ext_resource type="Texture2D" uid="uid://bk2x4h7qk5w5x" path="res://assets/images/provinces/sarangani/1_ayu.png" id="2_bvu7j"]
+[ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="3_ucy3d"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hv80j"]
+radius = 9.999998
+height = 19.999996
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fivpj"]
+radius = 68.00735
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fivpj"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hv80j"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[node name="Ayu" type="CharacterBody2D" unique_id=2100318797]
+scale = Vector2(0.2, 0.2)
+script = ExtResource("1_bvu7j")
+npc_name = "Ayu"
+dialogue_file = "res://dialogues/ayu.json"
+minigame_scene = "res://scenes/provinces/sarangani/saragani_slide_puzzle_medium.tscn"
+has_minigame = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=239521770]
+texture = ExtResource("2_bvu7j")
+region_enabled = true
+region_rect = Rect2(341.05466, 188.3, 39.510223, 75.39143)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2070637459]
+position = Vector2(0, 5)
+shape = SubResource("CapsuleShape2D_hv80j")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1911519244]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=225181254]
+shape = SubResource("CircleShape2D_fivpj")
+
+[node name="NameLabel" type="Label" parent="." unique_id=667001934]
+offset_left = -10.000001
+offset_top = -55.0
+offset_right = 10.999999
+offset_bottom = -39.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_fivpj")
+text = "Ayu"
+metadata/_edit_use_anchors_ = true
+
+[node name="InteractLabel" type="Label" parent="." unique_id=1141032926]
+offset_left = -50.000008
+offset_top = -75.0
+offset_right = 49.999977
+offset_bottom = -59.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_hv80j")
+text = "Press \"E\" to Interact"
+metadata/_edit_use_anchors_ = true
+
+[node name="DialoguePlayer" parent="." unique_id=1264107373 instance=ExtResource("3_ucy3d")]

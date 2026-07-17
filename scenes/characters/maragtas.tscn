@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://2eqteecvlxxn"]
+
+[ext_resource type="Script" uid="uid://od2ygc3u2xkw" path="res://scripts/maragtas.gd" id="1_yecsw"]
+[ext_resource type="Texture2D" uid="uid://k3w2fxpw2rpk" path="res://assets/sprites/characters/snake.png" id="2_6qm58"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yecsw"]
+radius = 11.0
+height = 22.0
+
+[sub_resource type="Animation" id="Animation_kn508"]
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+
+[sub_resource type="Animation" id="Animation_jgvdo"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+
+[sub_resource type="Animation" id="Animation_hqx8h"]
+resource_name = "run"
+length = 0.08065242
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.08065242),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 4]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6qm58"]
+_data = {
+&"RESET": SubResource("Animation_kn508"),
+&"idle": SubResource("Animation_jgvdo"),
+&"run": SubResource("Animation_hqx8h")
+}
+
+[node name="Maragtas" type="CharacterBody2D" unique_id=1119949917]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_yecsw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=984996761]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_6qm58")
+hframes = 3
+vframes = 2
+frame = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1671651145]
+shape = SubResource("CapsuleShape2D_yecsw")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=934873989]
+libraries/ = SubResource("AnimationLibrary_6qm58")
+autoplay = &"run"
+speed_scale = 0.2

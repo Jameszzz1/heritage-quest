@@ -1,0 +1,71 @@
+[gd_scene format=4 uid="uid://cma8rqpkyi3ei"]
+
+[ext_resource type="Texture2D" uid="uid://dfebcqsa3r7ug" path="res://assets/sprites/tiles/wood_floor.png" id="1_pav15"]
+[ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="2_hncgv"]
+[ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="3_ejiep"]
+[ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="4_ejiep"]
+[ext_resource type="PackedScene" uid="uid://d4kfx2bx3gbba" path="res://scenes/provinces/south_cotabato/bai_linay.tscn" id="5_7ltd8"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hncgv"]
+texture = ExtResource("1_pav15")
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_pxroh"]
+tile_shape = 1
+tile_size = Vector2i(16, 8)
+sources/0 = SubResource("TileSetAtlasSource_hncgv")
+
+[node name="SouthCotabatoInsideHouse" type="Node2D" unique_id=993474668]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1126311043]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=290516836]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -246.0
+offset_top = -150.0
+offset_right = 330.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1689433657]
+y_sort_enabled = true
+texture_filter = 1
+tile_map_data = PackedByteArray("AAD9//f/AAAAAAAAAAD9//n/AAAAAAAAAAD9//v/AAAAAAAAAAD9//3/AAAAAAAAAAD9////AAAAAAAAAAD9/wEAAAAAAAAAAAD9/wMAAAAAAAAAAAD+//f/AAAAAAAAAAD+//j/AAAAAAAAAAD+//n/AAAAAAAAAAD+//r/AAAAAAAAAAD+//v/AAAAAAAAAAD+//z/AAAAAAAAAAD+//3/AAAAAAAAAAD+//7/AAAAAAAAAAD+////AAAAAAAAAAD+/wAAAAAAAAAAAAD+/wEAAAAAAAAAAAD+/wIAAAAAAAAAAAD+/wMAAAAAAAAAAAD+/wQAAAAAAAAAAAD+/wUAAAAAAAAAAAD///f/AAAAAAAAAAD///j/AAAAAAAAAAD///n/AAAAAAAAAAD///r/AAAAAAAAAAD///v/AAAAAAAAAAD///z/AAAAAAAAAAD///3/AAAAAAAAAAD///7/AAAAAAAAAAD/////AAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAAAAAD//wIAAAAAAAAAAAD//wMAAAAAAAAAAAD//wQAAAAAAAAAAAD//wUAAAAAAAAAAAAAAPf/AAAAAAAAAAAAAPj/AAAAAAAAAAAAAPn/AAAAAAAAAAAAAPr/AAAAAAAAAAAAAPv/AAAAAAAAAAAAAPz/AAAAAAAAAAAAAP3/AAAAAAAAAAAAAP7/AAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAABAPf/AAAAAAAAAAABAPj/AAAAAAAAAAABAPn/AAAAAAAAAAABAPr/AAAAAAAAAAABAPv/AAAAAAAAAAABAPz/AAAAAAAAAAABAP3/AAAAAAAAAAABAP7/AAAAAAAAAAABAP//AAAAAAAAAAABAAAAAAAAAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAABAAUAAAAAAAAAAAACAPf/AAAAAAAAAAACAPj/AAAAAAAAAAACAPn/AAAAAAAAAAACAPr/AAAAAAAAAAACAPv/AAAAAAAAAAACAPz/AAAAAAAAAAACAP3/AAAAAAAAAAACAP7/AAAAAAAAAAACAP//AAAAAAAAAAACAAAAAAAAAAAAAAACAAEAAAAAAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAAAAAACAAQAAAAAAAAAAAACAAUAAAAAAAAAAAADAPj/AAAAAAAAAAADAPn/AAAAAAAAAAADAPr/AAAAAAAAAAADAPv/AAAAAAAAAAADAPz/AAAAAAAAAAADAP3/AAAAAAAAAAADAP7/AAAAAAAAAAADAP//AAAAAAAAAAADAAAAAAAAAAAAAAADAAEAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAD7//n/AAAAAAAAAAD7//v/AAAAAAAAAAD7//3/AAAAAAAAAAD7////AAAAAAAAAAD7/wEAAAAAAAAAAAD7/wMAAAAAAAAAAAD7/wUAAAAAAAAAAAD8//f/AAAAAAAAAAD8//j/AAAAAAAAAAD8//n/AAAAAAAAAAD8//r/AAAAAAAAAAD8//v/AAAAAAAAAAD8//z/AAAAAAAAAAD8//3/AAAAAAAAAAD8//7/AAAAAAAAAAD8////AAAAAAAAAAD8/wAAAAAAAAAAAAD8/wEAAAAAAAAAAAD8/wIAAAAAAAAAAAD8/wMAAAAAAAAAAAD8/wQAAAAAAAAAAAD8/wUAAAAAAAAAAAD8/wYAAAAAAAAAAAD8/wcAAAAAAAAAAAD9//j/AAAAAAAAAAD9//r/AAAAAAAAAAD9//z/AAAAAAAAAAD9//7/AAAAAAAAAAD9/wAAAAAAAAAAAAD9/wIAAAAAAAAAAAD9/wQAAAAAAAAAAAD9/wUAAAAAAAAAAAD9/wYAAAAAAAAAAAD9/wcAAAAAAAAAAAD+/wYAAAAAAAAAAAD+/wcAAAAAAAAAAAD//wYAAAAAAAAAAAD//wcAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAYAAAAAAAAAAAABAAcAAAAAAAAAAAACAAYAAAAAAAAAAAACAAcAAAAAAAAAAAADAAYAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_pxroh")
+
+[node name="DialoguePlayer" parent="." unique_id=1264107373 instance=ExtResource("3_ejiep")]
+
+[node name="Exit" type="Area2D" parent="." unique_id=1386192197]
+script = ExtResource("4_ejiep")
+target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
+spawn_pos = Vector2(211, -37)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Exit" unique_id=920664689]
+position = Vector2(0, 4)
+polygon = PackedVector2Array(-70, 23, -48, 35, -46, 32, -66, 21)
+
+[node name="Barrier" type="StaticBody2D" parent="." unique_id=1380903340]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Barrier" unique_id=1072839714]
+polygon = PackedVector2Array(-74, 26, -75, -26, -66, -41, -48, -46, 47, -46, 66, -41, 73, -26, 74, 23, 48, 37, -45, 37, -45, 35, 48, 35, 72, 22, 71, -25, 65, -39, 47, -44, -48, -44, -64, -39, -72, -26, -72, 26)
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1269042307]
+y_sort_enabled = true
+position = Vector2(52, -8)
+scale = Vector2(0.2, 0.2)
+
+[node name="BaiLinay" parent="Node2D" unique_id=2100318797 instance=ExtResource("5_7ltd8")]
+position = Vector2(-90, 30)
+scale = Vector2(0.99999994, 0.99999994)
+
+[node name="James" parent="Node2D" unique_id=636874803 instance=ExtResource("2_hncgv")]
+position = Vector2(-520, 140)
+scale = Vector2(4.9999995, 4.9999995)
+
+[connection signal="body_entered" from="Exit" to="Exit" method="_on_body_entered"]

@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://doiri4m8ky6e2"]
+
+[ext_resource type="Script" uid="uid://c6mic13yl7utk" path="res://scripts/ui/health_bar.gd" id="1_4rf34"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_4rf34"]
+[ext_resource type="Texture2D" uid="uid://cqo6384x3e3xn" path="res://assets/sprites/things/heart.png" id="2_qi2ti"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4t3n2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sbqyx"]
+bg_color = Color(0, 1, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_683hc"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+shadow_color = Color(0, 0, 0, 0.27450982)
+shadow_offset = Vector2(0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bekpy"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="FontVariation" id="FontVariation_vvvjn"]
+base_font = ExtResource("2_4rf34")
+
+[node name="HealthBar" type="ProgressBar" unique_id=460268891 groups=["health_bar"]]
+z_index = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 11.0
+offset_top = 16.0
+offset_right = -259.0
+offset_bottom = -162.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_4t3n2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_sbqyx")
+value = 70.0
+show_percentage = false
+script = ExtResource("1_4rf34")
+
+[node name="DamageBar" type="ProgressBar" parent="." unique_id=674436574 groups=["damage_bar"]]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_683hc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bekpy")
+value = 80.0
+show_percentage = false
+
+[node name="Timer" type="Timer" parent="." unique_id=167509601]
+wait_time = 0.4
+one_shot = true
+
+[node name="Label" type="Label" parent="." unique_id=1840547679]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 360.50003
+anchor_top = 153.0
+anchor_right = 360.50003
+anchor_bottom = 153.0
+offset_left = -18010.002
+offset_top = -313.0
+offset_right = -17997.002
+offset_bottom = -307.0
+theme_override_fonts/font = SubResource("FontVariation_vvvjn")
+theme_override_font_sizes/font_size = 5
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=431577043]
+texture_filter = 1
+position = Vector2(-5, 2)
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("2_qi2ti")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://dmdhxi5g77jsp"]
+
+[ext_resource type="Texture2D" uid="uid://fd0tf04nhgpo" path="res://assets/sprites/things/james_house.png" id="1_s02ut"]
+[ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="2_qf5a5"]
+
+[node name="JamesHouse" type="StaticBody2D" unique_id=2138113803]
+scale = Vector2(0.11, 0.1)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1502340087]
+texture = ExtResource("1_s02ut")
+offset = Vector2(0, -88)
+region_enabled = true
+region_rect = Rect2(492.0885, 66.78126, 961.5006, 718.9856)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=129184692]
+position = Vector2(9.090909, 10)
+polygon = PackedVector2Array(-436.36365, 10, -172.72728, 130, -72.72727, 170, 100, 80, 200, 30, 409.0909, -70, 100, -230)
+
+[node name="LeftEntrance" type="Area2D" parent="." unique_id=967175434]
+position = Vector2(9.090909, 10)
+script = ExtResource("2_qf5a5")
+target_scene = "res://scenes/provinces/south_cotabato/james_inside_house.tscn"
+spawn_pos = Vector2(42, 18)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LeftEntrance" unique_id=1628653089]
+position = Vector2(-72.72727, 120)
+polygon = PackedVector2Array(-90.90901, 30, -18.181816, 60, -9.090904, 50, -81.8181, 20)
+
+[node name="RightEntrance" type="Area2D" parent="." unique_id=1686730559]
+position = Vector2(0, 160)
+script = ExtResource("2_qf5a5")
+target_scene = "res://scenes/provinces/south_cotabato/james_inside_house.tscn"
+spawn_pos = Vector2(42, 18)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RightEntrance" unique_id=382549850]
+position = Vector2(181.81818, -70)
+polygon = PackedVector2Array(-63.63636, 10, 18.181824, -30, 9.090912, -40, -72.72728, 0)
+
+[connection signal="body_entered" from="LeftEntrance" to="LeftEntrance" method="_on_body_entered"]
+[connection signal="body_entered" from="RightEntrance" to="RightEntrance" method="_on_body_entered"]

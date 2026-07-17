@@ -1,0 +1,350 @@
+[gd_scene format=3 uid="uid://klyn4xlonjaf"]
+
+[ext_resource type="Texture2D" uid="uid://ccleha8mxd420" path="res://assets/images/menu/AchievementBG.png" id="1_3n56f"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="1_cau7c"]
+[ext_resource type="Script" uid="uid://h4fvencirwr" path="res://scripts/login.gd" id="1_xlo4h"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bvvwm"]
+texture = ExtResource("1_3n56f")
+modulate_color = Color(0.25565878, 0.25565878, 0.25565878, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xlo4h"]
+modulate_color = Color(0.32941177, 0.32941177, 0.32941177, 0)
+
+[sub_resource type="FontFile" id="FontFile_xlo4h"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/12/0/ascent = 0.0
+cache/0/12/0/descent = 0.0
+cache/0/12/0/underline_position = 0.0
+cache/0/12/0/underline_thickness = 0.0
+cache/0/12/0/scale = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3n56f"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xlo4h"]
+bg_color = Color(0.59607846, 0.59607846, 0.59607846, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bvvwm"]
+bg_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0emk2"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 10
+
+[node name="Login" type="Control" unique_id=925303134]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xlo4h")
+
+[node name="Background" type="Panel" parent="." unique_id=1304626751]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_bvvwm")
+
+[node name="LoginUI" type="Panel" parent="." unique_id=1800049734]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_xlo4h")
+
+[node name="Username" type="LineEdit" parent="LoginUI" unique_id=1095301663]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 40.0
+offset_right = 224.0
+offset_bottom = 60.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+
+[node name="Password" type="LineEdit" parent="LoginUI" unique_id=1409567919]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 70.0
+offset_right = 224.0
+offset_bottom = 90.0
+theme_override_fonts/font = SubResource("FontFile_xlo4h")
+theme_override_font_sizes/font_size = 12
+secret = true
+
+[node name="Emailtag" type="Label" parent="LoginUI" unique_id=1000667679]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 42.0
+offset_right = 100.0
+offset_bottom = 54.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+text = "Email"
+
+[node name="Passwordtag" type="Label" parent="LoginUI" unique_id=209089276]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 73.0
+offset_right = 97.0
+offset_bottom = 85.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+text = "Password"
+
+[node name="Loginn" type="Button" parent="LoginUI" unique_id=1556666124]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.52000004
+anchor_top = 0.63900006
+anchor_right = 0.52000004
+anchor_bottom = 0.63900006
+offset_left = -27.40001
+offset_top = -6.020012
+offset_right = 27.59999
+offset_bottom = 5.979988
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_3n56f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_xlo4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bvvwm")
+text = "Login"
+
+[node name="CreateAcc" type="Button" parent="LoginUI" unique_id=184158823]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.51900005
+anchor_top = 0.744
+anchor_right = 0.51900005
+anchor_bottom = 0.744
+offset_left = -37.080017
+offset_top = -9.919998
+offset_right = 36.919983
+offset_bottom = 10.080002
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_3n56f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_xlo4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bvvwm")
+text = "Create Account
+"
+
+[node name="CreateAccountUI" type="Panel" parent="." unique_id=860104780]
+visible = false
+layout_mode = 0
+offset_left = 40.0
+offset_top = 2.0
+offset_right = 281.0
+offset_bottom = 178.0
+
+[node name="Createlabel" type="Label" parent="CreateAccountUI" unique_id=941627796]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 4.0
+offset_right = 193.0
+offset_bottom = 25.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 10
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 20
+text = "CREATE ACCOUNT"
+
+[node name="NameLE" type="LineEdit" parent="CreateAccountUI" unique_id=1871830257]
+layout_mode = 0
+offset_left = 69.0
+offset_top = 36.0
+offset_right = 205.0
+offset_bottom = 60.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+
+[node name="EmailLE" type="LineEdit" parent="CreateAccountUI" unique_id=515285931]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 67.0
+offset_right = 204.0
+offset_bottom = 91.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+
+[node name="PassLE" type="LineEdit" parent="CreateAccountUI" unique_id=1205186898]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 97.0
+offset_right = 204.0
+offset_bottom = 122.0
+theme_override_font_sizes/font_size = 12
+secret = true
+
+[node name="EmailLabel" type="Label" parent="CreateAccountUI" unique_id=1388836763]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 72.0
+offset_right = 63.0
+offset_bottom = 84.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+text = "Email :"
+
+[node name="PassLabel" type="Label" parent="CreateAccountUI" unique_id=2073711794]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 101.0
+offset_right = 64.0
+offset_bottom = 113.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+text = "Password :"
+
+[node name="NameLabel" type="Label" parent="CreateAccountUI" unique_id=1233821170]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 40.0
+offset_right = 74.0
+offset_bottom = 56.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+text = "Name :"
+
+[node name="Register" type="Button" parent="CreateAccountUI" unique_id=1267688293]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 137.0
+offset_right = 174.0
+offset_bottom = 157.0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_3n56f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_xlo4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bvvwm")
+text = "Register"
+
+[node name="Button" type="Button" parent="CreateAccountUI" unique_id=1856258704]
+layout_mode = 0
+offset_left = 195.0
+offset_top = 155.0
+offset_right = 236.0
+offset_bottom = 169.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_0emk2")
+text = "Back"
+
+[node name="otpUI" type="Panel" parent="." unique_id=884231229]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="otpUI" unique_id=1583032549]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 8.0
+offset_right = 293.0
+offset_bottom = 31.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+text = "Check your email for the OTP code"
+
+[node name="OTPInput" type="LineEdit" parent="otpUI" unique_id=498365529]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 80.0
+offset_right = 192.0
+offset_bottom = 111.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+placeholder_text = "Enter OTP here"
+
+[node name="VerifyBtn" type="Button" parent="otpUI" unique_id=1351160417]
+layout_mode = 0
+offset_left = 261.0
+offset_top = 157.0
+offset_right = 302.0
+offset_bottom = 171.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_0emk2")
+text = "Verify"
+
+[node name="OTPStatus" type="Label" parent="otpUI" unique_id=719467183]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 42.0
+offset_right = 295.0
+offset_bottom = 65.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+text = "Check your email for the OTP code"
+
+[connection signal="pressed" from="LoginUI/Loginn" to="." method="_on_loginn_pressed"]
+[connection signal="pressed" from="LoginUI/CreateAcc" to="." method="_on_create_acc_pressed"]
+[connection signal="pressed" from="CreateAccountUI/Register" to="." method="_on_register_pressed"]
+[connection signal="pressed" from="CreateAccountUI/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="otpUI/VerifyBtn" to="." method="_on_verify_pressed"]

@@ -1,0 +1,79 @@
+[gd_scene format=4 uid="uid://bs535asobvvqk"]
+
+[ext_resource type="Texture2D" uid="uid://bb418vkxsgmkg" path="res://assets/sprites/tiles/wood_floor_outlined.png" id="1_7hqe8"]
+[ext_resource type="Texture2D" uid="uid://dfebcqsa3r7ug" path="res://assets/sprites/tiles/wood_floor.png" id="2_cfgkd"]
+[ext_resource type="Texture2D" uid="uid://bjuw8de8h70kf" path="res://assets/sprites/things/bed.png" id="2_kuo5g"]
+[ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="4_cfgkd"]
+[ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="5_iallg"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cfgkd"]
+texture = ExtResource("1_7hqe8")
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iallg"]
+texture = ExtResource("2_cfgkd")
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_iallg"]
+tile_shape = 1
+tile_size = Vector2i(16, 8)
+sources/0 = SubResource("TileSetAtlasSource_cfgkd")
+sources/1 = SubResource("TileSetAtlasSource_iallg")
+
+[node name="JamesInsideHouse" type="Node2D" unique_id=1039113294]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1360692008]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -246.0
+offset_top = -150.0
+offset_right = 330.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1922422030]
+y_sort_enabled = true
+texture_filter = 1
+tile_map_data = PackedByteArray("AAD9//3/AAAAAAAAAAD9//7/AAAAAAAAAAD9////AAAAAAAAAAD+//v/AAAAAAAAAAD+//z/AAAAAAAAAAD+//3/AAAAAAAAAAD+//7/AAAAAAAAAAD+////AAAAAAAAAAD+/wAAAAAAAAAAAAD+/wEAAAAAAAAAAAD///n/AAAAAAAAAAD///r/AAAAAAAAAAD///v/AAAAAAAAAAD///z/AAAAAAAAAAD///3/AAAAAAAAAAD///7/AAAAAAAAAAD/////AAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAAAAAD//wIAAAAAAAAAAAD//wMAAAAAAAAAAAAAAPr/AAAAAAAAAAAAAPv/AAAAAAAAAAAAAPz/AAAAAAAAAAAAAP3/AAAAAAAAAAAAAP7/AAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAABAPz/AAAAAAAAAAABAP3/AAAAAAAAAAABAP7/AAAAAAAAAAABAP//AAAAAAAAAAABAAAAAAAAAAAAAAACAP7/AAAAAAAAAAD8////AAAAAAAAAAD9/wAAAAAAAAAAAAD9/wEAAAAAAAAAAAD+/wIAAAAAAAAAAAD+/wMAAAAAAAAAAAD//wQAAAAAAAAAAAD//wUAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAACAP//AAAAAAAAAAACAAAAAAAAAAAAAAADAP//AAAAAAAAAAD8/wAAAAAAAAAAAAD8/wEAAAAAAAAAAAD9/wIAAAAAAAAAAAD9/wMAAAAAAAAAAAD+/wQAAAAAAAAAAAD+/wUAAAAAAAAAAAD//wYAAAAAAAAAAAD//wcAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAkAAAAAAAAAAAABAAgAAAAAAAAAAAABAAcAAAAAAAAAAAACAAYAAAAAAAAAAAACAAUAAAAAAAAAAAADAAQAAAAAAAAAAAADAAMAAAAAAAAAAAAEAAIAAAAAAAAAAAAEAAEAAAAAAAAAAAAEAAAAAAAAAAAAAAADAAAAAAAAAAAAAAACAAEAAAAAAAAAAAACAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAYAAAAAAAAAAAABAAUAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAADAAIAAAAAAAAAAAADAAEAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAPj/AAAAAAAAAAACAPz/AAAAAAAAAAACAP3/AAAAAAAAAAADAP7/AAAAAAAAAAABAPv/AAAAAAAAAAABAPr/AAAAAAAAAAAAAPn/AAAAAAAAAAAAAAoAAAAAAAAAAAD//wkAAAAAAAAAAAD//wgAAAAAAAAAAAD+/wcAAAAAAAAAAAD+/wYAAAAAAAAAAAD9/wUAAAAAAAAAAAD9/wQAAAAAAAAAAAD8/wMAAAAAAAAAAAD8/wIAAAAAAAAAAAD7/wEAAAAAAAAAAAD7/wIAAAAAAAAAAAD7/wMAAAAAAAAAAAD8/wQAAAAAAAAAAAD8/wUAAAAAAAAAAAD9/wYAAAAAAAAAAAD9/wcAAAAAAAAAAAD+/wgAAAAAAAAAAAD+/wkAAAAAAAAAAAD//woAAAAAAAAAAAD//wsAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_iallg")
+
+[node name="Node2D" type="Node2D" parent="." unique_id=692572259]
+y_sort_enabled = true
+
+[node name="James" parent="Node2D" unique_id=636874803 instance=ExtResource("4_cfgkd")]
+position = Vector2(42, 18)
+
+[node name="Bed" type="Sprite2D" parent="Node2D" unique_id=1200669540]
+position = Vector2(8, -11.000001)
+scale = Vector2(0.06, 0.052)
+texture = ExtResource("2_kuo5g")
+region_enabled = true
+region_rect = Rect2(657.5693, 55.01567, 741.8106, 750.0954)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Node2D/Bed" unique_id=854768116]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Node2D/Bed/StaticBody2D" unique_id=2111113389]
+polygon = PackedVector2Array(-300, 115.38463, 16.666672, 250, 249.99998, 115.38463, -16.666664, -38.461517)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=976569891]
+
+[node name="Barrier" type="StaticBody2D" parent="." unique_id=1109665497]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Barrier" unique_id=533973576]
+polygon = PackedVector2Array(-89, 8, 6, -44, 101, 3, 62, 24, 60, 22, 96, 3, 6, -42, -85, 8, -1, 51, 41, 32, 44, 35, 0, 57, -80, 16)
+
+[node name="Exit" type="Area2D" parent="." unique_id=1482441546]
+position = Vector2(9.090909, 10)
+script = ExtResource("5_iallg")
+target_scene = "res://scenes/provinces/south_cotabato/homebase.tscn"
+spawn_pos = Vector2(59, -49)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Exit" unique_id=828227565]
+polygon = PackedVector2Array(31.909092, 22, 34.909092, 25, 52.909092, 15, 50.909092, 12)
+
+[connection signal="body_entered" from="Exit" to="Exit" method="_on_body_entered"]

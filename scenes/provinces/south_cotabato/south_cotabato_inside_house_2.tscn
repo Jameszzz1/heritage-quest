@@ -1,0 +1,82 @@
+[gd_scene format=4 uid="uid://dopa5kc5nbdq2"]
+
+[ext_resource type="Texture2D" uid="uid://bb418vkxsgmkg" path="res://assets/sprites/tiles/wood_floor_outlined.png" id="1_vk20a"]
+[ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="3_0e5wb"]
+[ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="3_0mi8e"]
+[ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="3_p0jbp"]
+[ext_resource type="PackedScene" uid="uid://cxxgpoyg25kf4" path="res://scenes/provinces/south_cotabato/dula.tscn" id="4_0mi8e"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3d30f"]
+texture = ExtResource("1_vk20a")
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_0e5wb"]
+tile_shape = 1
+tile_size = Vector2i(16, 8)
+sources/0 = SubResource("TileSetAtlasSource_3d30f")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0e5wb"]
+size = Vector2(16.064947, 2.3500729)
+
+[node name="SouthCotabatoInsideHouse2" type="Node2D" unique_id=1179299597]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1417650594]
+zoom = Vector2(2, 2)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=105696388]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -288.0
+offset_top = -161.0
+offset_right = 288.0
+offset_bottom = 161.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=404651924]
+y_sort_enabled = true
+texture_filter = 1
+tile_map_data = PackedByteArray("AAD9//3/AAAAAAAAAAD9//7/AAAAAAAAAAD9////AAAAAAAAAAD+//v/AAAAAAAAAAD+//z/AAAAAAAAAAD+//3/AAAAAAAAAAD+//7/AAAAAAAAAAD+////AAAAAAAAAAD+/wAAAAAAAAAAAAD+/wEAAAAAAAAAAAD///n/AAAAAAAAAAD///r/AAAAAAAAAAD///v/AAAAAAAAAAD///z/AAAAAAAAAAD///3/AAAAAAAAAAD///7/AAAAAAAAAAD/////AAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAAAAAD//wIAAAAAAAAAAAD//wMAAAAAAAAAAAAAAPr/AAAAAAAAAAAAAPv/AAAAAAAAAAAAAPz/AAAAAAAAAAAAAP3/AAAAAAAAAAAAAP7/AAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAABAPz/AAAAAAAAAAABAP3/AAAAAAAAAAABAP7/AAAAAAAAAAABAP//AAAAAAAAAAABAAAAAAAAAAAAAAACAP7/AAAAAAAAAAD8////AAAAAAAAAAD9/wAAAAAAAAAAAAD9/wEAAAAAAAAAAAD+/wIAAAAAAAAAAAD+/wMAAAAAAAAAAAD//wQAAAAAAAAAAAD//wUAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAACAP//AAAAAAAAAAACAAAAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_0e5wb")
+
+[node name="DialoguePlayer" parent="." unique_id=1264107373 instance=ExtResource("3_p0jbp")]
+
+[node name="RightExit" type="Area2D" parent="." unique_id=132110949]
+script = ExtResource("3_0mi8e")
+target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
+spawn_pos = Vector2(145, -82)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit" unique_id=1487517302]
+position = Vector2(25.999998, 13)
+rotation = -0.5340707
+scale = Vector2(0.9999999, 0.99999994)
+skew = -0.23561978
+shape = SubResource("RectangleShape2D_0e5wb")
+
+[node name="LeftExit" type="Area2D" parent="." unique_id=725556584]
+script = ExtResource("3_0mi8e")
+target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
+spawn_pos = Vector2(115, -82)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit" unique_id=1077387887]
+position = Vector2(-31, 13)
+rotation = 0.48520154
+scale = Vector2(0.9999999, 0.9999999)
+skew = 0.21642077
+shape = SubResource("RectangleShape2D_0e5wb")
+
+[node name="Node2D" type="Node2D" parent="." unique_id=103893261]
+y_sort_enabled = true
+
+[node name="James" parent="Node2D" unique_id=636874803 instance=ExtResource("3_0e5wb")]
+position = Vector2(18, 2)
+
+[node name="Dula" parent="Node2D" unique_id=859027162 instance=ExtResource("4_0mi8e")]
+position = Vector2(-9, -18)
+
+[connection signal="body_entered" from="RightExit" to="RightExit" method="_on_body_entered"]
+[connection signal="body_entered" from="LeftExit" to="LeftExit" method="_on_body_entered"]

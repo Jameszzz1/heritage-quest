@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://4vtt5j2okwer"]
+
+[ext_resource type="Texture2D" uid="uid://lrly14r5ejrc" path="res://assets/sprites/things/1_SCTnalak.png" id="1_ygmno"]
+
+[node name="SoutCotabatoHouse3" type="StaticBody2D" unique_id=926720113]
+scale = Vector2(0.3, 0.3)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=545788790]
+texture = ExtResource("1_ygmno")
+offset = Vector2(0, -15)
+region_enabled = true
+region_rect = Rect2(499.61652, 23.47022, 164.20966, 176.52971)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=293038599]
+position = Vector2(0, -13)
+polygon = PackedVector2Array(-61, 36, -32, 47, 0, 57, 38, 45, 65, 34, 34, 25, 0, 19, -30, 26)

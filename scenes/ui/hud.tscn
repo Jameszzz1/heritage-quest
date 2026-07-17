@@ -1,0 +1,147 @@
+[gd_scene format=3 uid="uid://npo3s3xsf6u"]
+
+[ext_resource type="Script" uid="uid://crh1spc1dwe8k" path="res://scripts/ui/hud.gd" id="1_6fi6k"]
+[ext_resource type="PackedScene" uid="uid://cevx861x0sjkw" path="res://scenes/ui/stamina_bar.tscn" id="1_ahhtf"]
+[ext_resource type="PackedScene" uid="uid://dgrayasbr1xws" path="res://scenes/ui/settings.tscn" id="2_h022r"]
+[ext_resource type="PackedScene" uid="uid://doiri4m8ky6e2" path="res://scenes/ui/health_bar.tscn" id="2_oj5la"]
+[ext_resource type="Texture2D" uid="uid://1rj5c3xxe04s" path="res://assets/sprites/things/backpack.png" id="2_oo0fn"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="5_uo2fv"]
+[ext_resource type="PackedScene" uid="uid://cov0jyhb0rx5i" path="res://scenes/ui/mini_map.tscn" id="6_047uy"]
+[ext_resource type="PackedScene" uid="uid://pqvdhde0ypbb" path="res://scenes/ui/energy_bar.tscn" id="7_gss2c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fi6k"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h022r"]
+
+[node name="HUD" type="CanvasLayer" unique_id=562083514]
+process_mode = 3
+script = ExtResource("1_6fi6k")
+
+[node name="Settings" parent="." unique_id=2094690682 instance=ExtResource("2_h022r")]
+visible = false
+
+[node name="HealthBar" parent="." unique_id=460268891 instance=ExtResource("2_oj5la")]
+offset_top = 12.0
+offset_bottom = -166.0
+
+[node name="EnergyBar" parent="." unique_id=238467111 instance=ExtResource("7_gss2c")]
+offset_left = 74.0
+offset_top = 12.0
+offset_right = -196.0
+offset_bottom = -166.0
+
+[node name="StaminaBar" parent="." unique_id=627258738 instance=ExtResource("1_ahhtf")]
+offset_left = 11.0
+offset_top = 25.0
+offset_right = -259.0
+offset_bottom = -153.0
+
+[node name="Backpack" type="TextureButton" parent="." unique_id=541575279]
+offset_top = 153.0
+offset_right = 39.0
+offset_bottom = 195.0
+texture_normal = ExtResource("2_oo0fn")
+ignore_texture_size = true
+stretch_mode = 6
+
+[node name="BackpackLabel" type="Label" parent="Backpack" unique_id=1435230468]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 5.0
+offset_right = 35.0
+offset_bottom = 13.0
+theme_override_fonts/font = ExtResource("5_uo2fv")
+theme_override_font_sizes/font_size = 8
+text = "Backpack"
+
+[node name="BackpackPopup" type="Panel" parent="." unique_id=1738123070]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -115.0
+offset_top = -82.0
+offset_right = 141.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6fi6k")
+
+[node name="TabContainer" type="TabContainer" parent="BackpackPopup" unique_id=1637497862]
+layout_mode = 0
+offset_top = 23.0
+offset_right = 225.0
+offset_bottom = 126.0
+theme_override_fonts/font = ExtResource("5_uo2fv")
+theme_override_font_sizes/font_size = 8
+current_tab = 0
+
+[node name="Inventory" type="Control" parent="BackpackPopup/TabContainer" unique_id=583032312]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="GridContainer" type="GridContainer" parent="BackpackPopup/TabContainer/Inventory" unique_id=3363484]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 4.0
+offset_right = 224.0
+offset_bottom = 81.0
+columns = 5
+
+[node name="Journal" type="Control" parent="BackpackPopup/TabContainer" unique_id=1542711737]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Button" type="Button" parent="BackpackPopup" unique_id=620090882]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.795
+anchor_top = 0.268
+anchor_right = 0.795
+anchor_bottom = 0.268
+offset_left = -8.520004
+offset_top = -11.016001
+offset_right = 20.479996
+offset_bottom = 8.983999
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("5_uo2fv")
+theme_override_font_sizes/font_size = 8
+text = "Close"
+
+[node name="MiniMap" parent="." unique_id=492215546 instance=ExtResource("6_047uy")]
+offset_top = 48.0
+offset_bottom = -97.0
+
+[node name="SettingsButton" type="Button" parent="." unique_id=1121677931]
+process_mode = 3
+custom_minimum_size = Vector2(0.5, 0.5)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -14.0
+offset_bottom = 14.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxEmpty_h022r")
+text = "⚙"
+
+[node name="PauseLabel" type="Label" parent="." unique_id=1053751796]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.0
+offset_top = -11.5
+offset_right = 31.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_uo2fv")
+theme_override_font_sizes/font_size = 30
+text = "PAUSED"
+
+[connection signal="pressed" from="SettingsButton" to="." method="_on_settings_pressed"]

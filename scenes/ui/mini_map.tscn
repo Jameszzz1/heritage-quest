@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://cov0jyhb0rx5i"]
+
+[ext_resource type="Script" uid="uid://df0pt04c10hdf" path="res://scripts/ui/mini_map.gd" id="1_1wrf6"]
+[ext_resource type="Texture2D" uid="uid://dif17anni6log" path="res://assets/images/mini_map/minimap_frame.png" id="2_ytmag"]
+[ext_resource type="Texture2D" uid="uid://d3kmk5xc7hwve" path="res://assets/images/mini_map/marker_james.png" id="3_wxlrw"]
+
+[node name="MiniMap" type="Control" unique_id=492215546]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 133.0
+offset_top = 47.0
+offset_right = -151.0
+offset_bottom = -98.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1wrf6")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=13220680]
+clip_contents = true
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 80.0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=2123336182]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(80, 80)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport" unique_id=180949880]
+
+[node name="Frame" type="TextureRect" parent="." unique_id=862303427]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 64.0
+offset_right = 185.0
+offset_bottom = 129.0
+mouse_filter = 2
+texture = ExtResource("2_ytmag")
+expand_mode = 1
+
+[node name="PlayerMarker" type="TextureRect" parent="." unique_id=960430476]
+layout_mode = 0
+offset_left = 142.0
+offset_top = 91.0
+offset_right = 157.0
+offset_bottom = 106.0
+mouse_filter = 2
+texture = ExtResource("3_wxlrw")
+expand_mode = 1

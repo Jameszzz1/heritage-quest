@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://b28itkt7gvj13"]
+
+[ext_resource type="Script" uid="uid://cyaw8rwqxnya3" path="res://scripts/gahum.gd" id="1_blspe"]
+[ext_resource type="Texture2D" uid="uid://nwk8icuu2yw2" path="res://assets/sprites/characters/dog.png" id="2_0r5ok"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s42ax"]
+radius = 46.0
+height = 92.0
+
+[sub_resource type="Animation" id="Animation_kn508"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_jgvdo"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_hqx8h"]
+resource_name = "run"
+length = 0.08065242
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0020500505, 0.033333335, 0.06666667, 0.08065242),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rwhet"]
+_data = {
+&"RESET": SubResource("Animation_kn508"),
+&"idle": SubResource("Animation_jgvdo"),
+&"run": SubResource("Animation_hqx8h")
+}
+
+[node name="Gahum" type="CharacterBody2D" unique_id=32252268]
+scale = Vector2(0.2, 0.2)
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_blspe")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=790372547]
+texture = ExtResource("2_0r5ok")
+hframes = 3
+vframes = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1475877363]
+shape = SubResource("CapsuleShape2D_s42ax")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1111618345]
+libraries/ = SubResource("AnimationLibrary_rwhet")
+autoplay = &"run"
+speed_scale = 0.2

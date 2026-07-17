@@ -1,0 +1,788 @@
+[gd_scene format=3 uid="uid://evf7oc8gy8rm"]
+
+[ext_resource type="Script" uid="uid://c26e25310crnr" path="res://scripts/main_menu.gd" id="1_qch7b"]
+[ext_resource type="Texture2D" uid="uid://cbtrtp3tpvlp4" path="res://assets/images/menu/background.png" id="2_4ovp2"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_1mexh"]
+[ext_resource type="AudioStream" uid="uid://yo0ct2n0eu0j" path="res://assets/audio/music/MainmenuBG.mp3" id="4_6ud2m"]
+[ext_resource type="Script" uid="uid://cr44v6d33lxk" path="res://scripts/audio_control.gd" id="5_qqxfm"]
+[ext_resource type="Script" uid="uid://djdlkyki5s0gm" path="res://scripts/fullscreen_control.gd" id="6_ktljq"]
+[ext_resource type="Texture2D" uid="uid://dy5l2u8h3lhul" path="res://assets/images/menu/AchivementBackground.png" id="7_rbask"]
+[ext_resource type="Script" uid="uid://b1lqa3w8fei5x" path="res://scripts/achievements_container.gd" id="8_e6a60"]
+[ext_resource type="Texture2D" uid="uid://cqhcq7qpp4053" path="res://assets/images/badges/01_FirstDiscovery.png" id="9_5et21"]
+[ext_resource type="Texture2D" uid="uid://cosrkpj1vitkt" path="res://assets/images/badges/02_DreamweaverScholar.png" id="10_ei00g"]
+[ext_resource type="Texture2D" uid="uid://f00n27xpxs2" path="res://assets/images/badges/03_FloodSurvivor.png" id="11_75tx2"]
+[ext_resource type="Texture2D" uid="uid://bifebhhubk14e" path="res://assets/images/badges/04_LakeSebuExplorer.png" id="12_j4d8q"]
+[ext_resource type="Texture2D" uid="uid://b3thqbdhkot4" path="res://assets/images/badges/13_CaveExplorer.png" id="13_qpknu"]
+[ext_resource type="Texture2D" uid="uid://cxjgcnbcsk01x" path="res://assets/images/badges/14_MaitumScholar.png" id="14_wabu5"]
+[ext_resource type="Texture2D" uid="uid://dl68pacqe0kev" path="res://assets/images/badges/15_TsunamiSurvivor.png" id="15_3e805"]
+[ext_resource type="Texture2D" uid="uid://mtc58no28fwk" path="res://assets/images/badges/05_MosqueVisitor.png" id="16_dwgav"]
+[ext_resource type="Texture2D" uid="uid://beuibwo0w2pqy" path="res://assets/images/badges/06_SultanScholar.png" id="17_bvtfn"]
+[ext_resource type="Texture2D" uid="uid://bm5gplxnkrcei" path="res://assets/images/badges/07_LandslideSurvivor.png" id="18_r6ok0"]
+[ext_resource type="Texture2D" uid="uid://rd1dqaj4eal5" path="res://assets/images/badges/08_IsulanPioneer.png" id="19_oq1mw"]
+[ext_resource type="Texture2D" uid="uid://4go4d0g13cfe" path="res://assets/images/badges/09_MountainTrekker.png" id="20_cc4y2"]
+[ext_resource type="Texture2D" uid="uid://bs7sgnefraj40" path="res://assets/images/badges/10_HighlandScholar.png" id="21_iglv2"]
+[ext_resource type="Texture2D" uid="uid://4c0fuvyu5hxi" path="res://assets/images/badges/11_QuakeSurvivor.png" id="22_c68a3"]
+[ext_resource type="Texture2D" uid="uid://biytudfw8dfb4" path="res://assets/images/badges/12_LegendFinder.png" id="23_01voq"]
+[ext_resource type="Texture2D" uid="uid://cxo5fhncg31eh" path="res://assets/images/badges/16_HeritageMaster.png" id="24_hr2v7"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w44g7"]
+texture = ExtResource("2_4ovp2")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glbon"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vrkn"]
+bg_color = Color(0.59607846, 0.59607846, 0.59607846, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fu7sn"]
+bg_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_jix8l"]
+color = Color(1, 1, 1, 1)
+thickness = 6
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_glbon"]
+color = Color(0, 1, 0, 1)
+thickness = 6
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j5v2v"]
+texture = ExtResource("7_rbask")
+modulate_color = Color(0.1584723, 0.15847233, 0.1584723, 1)
+
+[node name="MainMenu" type="Control" unique_id=899148716]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qch7b")
+
+[node name="Background" type="Panel" parent="." unique_id=503178664]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_w44g7")
+
+[node name="Label" type="Label" parent="Background" unique_id=1514164771]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 7.0
+offset_right = 277.0
+offset_bottom = 42.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 10
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 34
+text = "HERITAGE QUEST"
+
+[node name="StartGame" type="Button" parent="." unique_id=709635106]
+layout_mode = 0
+offset_left = 118.0
+offset_top = 63.0
+offset_right = 191.0
+offset_bottom = 74.0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
+text = "START JOURNEY"
+
+[node name="Achievements2" type="Button" parent="." unique_id=2082298048]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 80.0
+offset_right = 190.0
+offset_bottom = 91.0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
+text = "DISCOVERYJOURNAL"
+
+[node name="Options2" type="Button" parent="." unique_id=91885977]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 96.0
+offset_right = 190.0
+offset_bottom = 107.0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
+text = "OPTIONS"
+
+[node name="Exit" type="Button" parent="." unique_id=334917098]
+layout_mode = 0
+offset_left = 123.0
+offset_top = 113.0
+offset_right = 183.0
+offset_bottom = 124.0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
+text = "EXIT"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=508031387]
+stream = ExtResource("4_6ud2m")
+autoplay = true
+
+[node name="Logout" type="Button" parent="." unique_id=635887972]
+layout_mode = 0
+offset_left = 283.0
+offset_top = 162.0
+offset_right = 314.0
+offset_bottom = 173.0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
+text = "LOGOUT
+"
+
+[node name="Options" type="Panel" parent="." unique_id=1693388400]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Settings" type="Label" parent="Options" unique_id=590272039]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -66.0
+offset_right = 66.0
+offset_bottom = 35.0
+grow_horizontal = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 10
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 34
+text = "SETTINGS"
+
+[node name="AudioControl" type="HSlider" parent="Options" unique_id=965750336]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 59.0
+offset_right = 245.0
+offset_bottom = 75.0
+theme_override_styles/slider = SubResource("StyleBoxLine_jix8l")
+theme_override_styles/grabber_area = SubResource("StyleBoxLine_glbon")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_glbon")
+max_value = 1.0
+step = 0.05
+value = 1.0
+script = ExtResource("5_qqxfm")
+audio_bus_name = "Music"
+
+[node name="FullscreenControl" type="CheckButton" parent="Options" unique_id=1476773957]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.15900001
+anchor_top = 0.5
+anchor_right = 0.15900001
+anchor_bottom = 0.5
+offset_left = 0.11999512
+offset_top = -11.0
+offset_right = 127.119995
+offset_bottom = 13.0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 12
+text = "Fullscreen"
+script = ExtResource("6_ktljq")
+
+[node name="Music Volume" type="Label" parent="Options" unique_id=2105482927]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.178
+anchor_top = 0.372
+anchor_right = 0.178
+anchor_bottom = 0.372
+offset_left = 0.040000916
+offset_top = -5.959999
+offset_right = 64.04
+offset_bottom = 6.040001
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 12
+text = "Music Volume"
+
+[node name="Back" type="Button" parent="Options" unique_id=1076464629]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.99100006
+anchor_top = 0.94400007
+anchor_right = 0.99100006
+anchor_bottom = 0.94400007
+offset_left = -33.120026
+offset_top = -4.9200134
+offset_right = -0.120025635
+offset_bottom = 5.0799866
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
+text = "Back"
+
+[node name="Achievements" type="Panel" parent="." unique_id=599565214]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_j5v2v")
+
+[node name="ACHIEVEMENTS" type="Label" parent="Achievements" unique_id=899726953]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 4.0
+offset_right = 217.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/paragraph_spacing = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 10
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 20
+text = "ACHIEVEMENTS"
+
+[node name="Back" type="Button" parent="Achievements" unique_id=217725135]
+layout_mode = 0
+offset_left = 1032.0
+offset_top = 594.0
+offset_right = 1140.0
+offset_bottom = 634.0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
+text = "Back"
+
+[node name="AchievementsScrollContainer" type="ScrollContainer" parent="Achievements" unique_id=1279038764]
+custom_minimum_size = Vector2(600, 400)
+layout_direction = 4
+layout_mode = 1
+offset_left = 49.0
+offset_top = 73.0
+offset_right = 649.0
+offset_bottom = 473.0
+
+[node name="AchievementsContainer" type="VBoxContainer" parent="Achievements/AchievementsScrollContainer" unique_id=1906347471]
+layout_mode = 2
+script = ExtResource("8_e6a60")
+
+[node name="SouthCotabatoLabel" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=877079595]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "South Cotabato"
+
+[node name="SouthCotabatoGrid" type="GridContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=1549809140]
+layout_mode = 2
+columns = 2
+
+[node name="SCHBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid" unique_id=1946062126]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="01_FirstDiscovery" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer" unique_id=1625324757]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("9_5et21")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="01Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer" unique_id=1462922324]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Interact with the first NPC          
+in South Cotabato"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SC2HBoxContainer2" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer" unique_id=431780093]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="02_Dreamweaver" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer/SC2HBoxContainer2" unique_id=1853403959]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("10_ei00g")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="02Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer/SC2HBoxContainer2" unique_id=2144213868]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Pass the South Cotabato        
+Knowledge Quiz"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SC3HBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer" unique_id=1812988528]
+layout_mode = 2
+
+[node name="03_FloodSurvivor" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer/SC3HBoxContainer" unique_id=1759616226]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("11_75tx2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="03Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer/SC3HBoxContainer" unique_id=17452263]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Survive the South Cotabato      
+flood event      
+"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SC4HBoxContainer3" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer" unique_id=1637674598]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="04_LakeSebuExplorer" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer/SC4HBoxContainer3" unique_id=2058249905]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("12_j4d8q")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="04Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SouthCotabatoGrid/SCHBoxContainer/SC4HBoxContainer3" unique_id=707950886]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Visit the Lake Sebu landmark"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SaranganiLabel" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=1295105700]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Sarangani"
+
+[node name="SaraganiGrid" type="GridContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=809047227]
+layout_mode = 2
+columns = 2
+
+[node name="SHBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid" unique_id=161427180]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="13_CaveExplorer" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid/SHBoxContainer" unique_id=2016588749]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("13_qpknu")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="13Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid/SHBoxContainer" unique_id=1281317258]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Locate the Ayub Cave                 
+in Sarangani"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="S2HBoxContainer2" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid/SHBoxContainer" unique_id=386803988]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="14_MaiturmScholar" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid/SHBoxContainer/S2HBoxContainer2" unique_id=935995166]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("14_wabu5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="14Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid/SHBoxContainer/S2HBoxContainer2" unique_id=1933068976]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Pass the Sarangani              
+Knowledge Quiz "
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="S2HBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid/SHBoxContainer" unique_id=1026278497]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="15_TsunamiSurvivor" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid/SHBoxContainer/S2HBoxContainer" unique_id=951125165]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("15_3e805")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="15Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SaraganiGrid/SHBoxContainer/S2HBoxContainer" unique_id=628307320]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Survive the Sarangani coastal     
+disaster event"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SultanKudaratLabel" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=2059889611]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Sultan Kudarat"
+
+[node name="SultanKudaratGrid" type="GridContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=1813047877]
+layout_mode = 2
+columns = 2
+
+[node name="SKBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid" unique_id=1664535026]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="05_MosqueVisitor" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SKBoxContainer" unique_id=217097184]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("16_dwgav")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="05Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SKBoxContainer" unique_id=513655738]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Reach the Golden Mosque landmark
+ in Sultan Kudarat"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SK2HBoxContainer2" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SKBoxContainer" unique_id=1142364279]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="06_SultanScholar" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SKBoxContainer/SK2HBoxContainer2" unique_id=1145461523]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("17_bvtfn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="06Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SKBoxContainer/SK2HBoxContainer2" unique_id=1836750082]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Pass the Sultan Kudarat       
+Knowledge Quiz"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SK3HBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SKBoxContainer" unique_id=445032534]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="07_LandSlideSurvivor" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SKBoxContainer/SK3HBoxContainer" unique_id=986388867]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("18_r6ok0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="07Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SKBoxContainer/SK3HBoxContainer" unique_id=191954531]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Survive the Sultan Kudarat     
+landslide event"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SK4HBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid" unique_id=630148025]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="08_IsulanPioneer" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SK4HBoxContainer" unique_id=378702420]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("19_oq1mw")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="08Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/SultanKudaratGrid/SK4HBoxContainer" unique_id=897911915]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Activate the main checkpoint in 
+Sultan Kudarat"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CotabatProvinceLabel" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=2025690493]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Cotabato Province"
+
+[node name="CotabatoProviceGrid" type="GridContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=1444181288]
+layout_mode = 2
+columns = 2
+
+[node name="SouthCotabatoGrid" type="GridContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid" unique_id=907294927]
+layout_mode = 2
+
+[node name="CP1HBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid" unique_id=92251668]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="09_MountainTrekker" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer" unique_id=2081304017]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("20_cc4y2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="09Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer" unique_id=1944625786]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Reach the Mt. Apo base camp       
+in Cotabato  Province        "
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CP2HBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer" unique_id=1453443274]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="10_HighlandScholar" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer/CP2HBoxContainer" unique_id=1992696932]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("21_iglv2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="10Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer/CP2HBoxContainer" unique_id=1558372684]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Pass the Cotabato Province   
+Knowledge Quiz"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CP3HBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer" unique_id=1483422679]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="11_QuakeSurvivor" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer/CP3HBoxContainer" unique_id=2071081740]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("22_c68a3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="11Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer/CP3HBoxContainer" unique_id=448920758]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Survive the Cotabato 
+earthquake event                   "
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CP4HBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer" unique_id=2034354070]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="12_LegendFinder" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer/CP4HBoxContainer" unique_id=1464036481]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("23_01voq")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="12Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/CotabatoProviceGrid/SouthCotabatoGrid/CP1HBoxContainer/CP4HBoxContainer" unique_id=838996484]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Interact with the Manobo Tribal 
+Elder NPC"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="FinalMilestonLabel" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=238900097]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Final Milestone "
+
+[node name="FinalMilestoneGrid" type="GridContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer" unique_id=540952761]
+layout_mode = 2
+
+[node name="FMHBoxContainer" type="HBoxContainer" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/FinalMilestoneGrid" unique_id=1779547234]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="16_HeritageMaster" type="TextureRect" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/FinalMilestoneGrid/FMHBoxContainer" unique_id=972368285]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("24_hr2v7")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="16Label" type="Label" parent="Achievements/AchievementsScrollContainer/AchievementsContainer/FinalMilestoneGrid/FMHBoxContainer" unique_id=69053489]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+text = "Complete all four provinces and collect
+ all Provincial Tokens"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[connection signal="pressed" from="StartGame" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Achievements2" to="." method="_on_achievements_pressed"]
+[connection signal="pressed" from="Options2" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="Logout" to="." method="_on_logout_pressed"]
+[connection signal="value_changed" from="Options/AudioControl" to="Options/AudioControl" method="_on_value_changed"]
+[connection signal="toggled" from="Options/FullscreenControl" to="Options/FullscreenControl" method="_on_toggled"]
+[connection signal="pressed" from="Options/Back" to="." method="_on_back_options_pressed"]
+[connection signal="pressed" from="Achievements/Back" to="." method="_on_back_achie_pressed"]

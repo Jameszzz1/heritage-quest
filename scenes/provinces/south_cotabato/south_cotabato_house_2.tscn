@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://dplyu3h281s5t"]
+
+[ext_resource type="Texture2D" uid="uid://lrly14r5ejrc" path="res://assets/sprites/things/1_SCTnalak.png" id="1_d73lm"]
+[ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="2_qkrtu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oaoce"]
+size = Vector2(21.717749, 3.9671655)
+
+[node name="SouthCotabatoHouse2" type="StaticBody2D" unique_id=1450364758]
+scale = Vector2(0.3, 0.3)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=896765149]
+texture = ExtResource("1_d73lm")
+offset = Vector2(0, -15)
+region_enabled = true
+region_rect = Rect2(362.63635, 182.72272, 163.63635, 169.38733)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=50815047]
+polygon = PackedVector2Array(-3.3333333, 40, 20, 16.666666, 43.333332, 6.6666665, 66.666664, 10, 36.666664, 3.3333333, 0, 0, -30, 3.3333333, -60, 13.333333, -46.666664, 10, -26.666666, 16.666666)
+
+[node name="RightEntrance" type="Area2D" parent="." unique_id=49569428]
+script = ExtResource("2_qkrtu")
+target_scene = "res://scenes/provinces/south_cotabato/south_cotabato_inside_house_2.tscn"
+spawn_pos = Vector2(18, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightEntrance" unique_id=709291592]
+position = Vector2(33.151985, 13.401859)
+rotation = -0.36128315
+scale = Vector2(0.99999994, 1)
+skew = 0.3490659
+shape = SubResource("RectangleShape2D_oaoce")
+
+[node name="LeftEntrance" type="Area2D" parent="." unique_id=786138401]
+script = ExtResource("2_qkrtu")
+target_scene = "res://scenes/provinces/south_cotabato/south_cotabato_inside_house_2.tscn"
+spawn_pos = Vector2(-23, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftEntrance" unique_id=1948197083]
+position = Vector2(-36.31456, 15.672737)
+rotation = 0.3019419
+scale = Vector2(0.99999994, 0.99999994)
+skew = -0.3193953
+shape = SubResource("RectangleShape2D_oaoce")
+
+[connection signal="body_entered" from="RightEntrance" to="RightEntrance" method="_on_body_entered"]
+[connection signal="body_entered" from="LeftEntrance" to="LeftEntrance" method="_on_body_entered"]

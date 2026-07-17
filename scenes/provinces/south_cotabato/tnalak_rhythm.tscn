@@ -1,0 +1,151 @@
+[gd_scene format=3 uid="uid://d3rsgxndq2dp6"]
+
+[ext_resource type="Script" uid="uid://cfbhboirj3ie5" path="res://scripts/tnalak_rhythm.gd" id="1_uk1p8"]
+[ext_resource type="Texture2D" uid="uid://c0gd1aylp3cij" path="res://assets/images/mini_games/bg_with_frame.png" id="2_uqh0l"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_agens"]
+[ext_resource type="Texture2D" uid="uid://b3qwfgxj868wu" path="res://assets/images/mini_games/btn_d_idle.png" id="4_0hv81"]
+[ext_resource type="Texture2D" uid="uid://bb22ocdbcgyte" path="res://assets/images/mini_games/btn_d_pressed.png" id="5_54vu3"]
+[ext_resource type="Texture2D" uid="uid://drwt7gtjc75a3" path="res://assets/images/mini_games/btn_f_idle.png" id="6_h731l"]
+[ext_resource type="Texture2D" uid="uid://b1a6u6cj78gqa" path="res://assets/images/mini_games/btn_f_pressed.png" id="7_bgydf"]
+[ext_resource type="Texture2D" uid="uid://dg3v4tsqdsgoy" path="res://assets/images/mini_games/btn_j_idle.png" id="8_xjwen"]
+[ext_resource type="Texture2D" uid="uid://dlg255itcgpvr" path="res://assets/images/mini_games/btn_j_pressed.png" id="9_pwds7"]
+[ext_resource type="Texture2D" uid="uid://pu43al4o2kxb" path="res://assets/images/mini_games/btn_k_idle.png" id="10_ljl7m"]
+[ext_resource type="Texture2D" uid="uid://onvprf835f81" path="res://assets/images/mini_games/btn_k_pressed.png" id="11_fmvba"]
+[ext_resource type="AudioStream" uid="uid://bkpdq185ewa13" path="res://assets/audio/music/tnalak_track.mp3" id="12_amo6l"]
+
+[node name="TnalakRhythm" type="Control" unique_id=161912630]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uk1p8")
+
+[node name="UI" type="Control" parent="." unique_id=1103868542]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="UI" unique_id=1309324668]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_uqh0l")
+expand_mode = 1
+
+[node name="LabelTitle" type="Label" parent="UI" unique_id=1945051295]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 14.0
+offset_right = 211.0
+offset_bottom = 26.0
+theme_override_fonts/font = ExtResource("3_agens")
+theme_override_font_sizes/font_size = 12
+text = "THE SACRED THREAD"
+
+[node name="LabelScore" type="Label" parent="UI" unique_id=220200697]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 24.0
+offset_right = 51.0
+offset_bottom = 35.0
+theme_override_fonts/font = ExtResource("3_agens")
+theme_override_font_sizes/font_size = 10
+text = "COMBO: 0"
+
+[node name="LabelCombo" type="Label" parent="UI" unique_id=628353035]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 7.0
+offset_right = 47.0
+offset_bottom = 18.0
+theme_override_fonts/font = ExtResource("3_agens")
+theme_override_font_sizes/font_size = 10
+text = "SCORE: 0"
+
+[node name="LabelTimer" type="Label" parent="UI" unique_id=1386971371]
+layout_mode = 0
+offset_left = 282.0
+offset_top = 11.0
+offset_right = 305.0
+offset_bottom = 31.0
+theme_override_colors/font_color = Color(0.19215687, 0.6156863, 0.8117647, 1)
+theme_override_fonts/font = ExtResource("3_agens")
+theme_override_font_sizes/font_size = 12
+
+[node name="LabelCountdown" type="Label" parent="UI" unique_id=1956749522]
+layout_mode = 0
+offset_left = 78.0
+offset_top = 81.0
+offset_right = 251.0
+offset_bottom = 101.0
+theme_override_colors/font_color = Color(0.30588236, 0.6666667, 0.92941177, 1)
+theme_override_fonts/font = ExtResource("3_agens")
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Notes" type="Node2D" parent="." unique_id=1445124023]
+
+[node name="HitZone" type="Control" parent="." unique_id=1284810329]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BtnD" type="TextureButton" parent="HitZone" unique_id=759134107]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 0
+offset_left = 105.0
+offset_top = 147.0
+offset_right = 134.0
+offset_bottom = 174.0
+texture_normal = ExtResource("4_0hv81")
+texture_pressed = ExtResource("5_54vu3")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="BtnF" type="TextureButton" parent="HitZone" unique_id=1347752652]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 0
+offset_left = 132.0
+offset_top = 148.0
+offset_right = 160.0
+offset_bottom = 173.0
+texture_normal = ExtResource("6_h731l")
+texture_pressed = ExtResource("7_bgydf")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="BtnJ" type="TextureButton" parent="HitZone" unique_id=2059197055]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 0
+offset_left = 161.0
+offset_top = 149.0
+offset_right = 187.0
+offset_bottom = 172.0
+texture_normal = ExtResource("8_xjwen")
+texture_pressed = ExtResource("9_pwds7")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="BtnK" type="TextureButton" parent="HitZone" unique_id=1256051471]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 0
+offset_left = 187.0
+offset_top = 148.0
+offset_right = 214.0
+offset_bottom = 173.0
+texture_normal = ExtResource("10_ljl7m")
+texture_pressed = ExtResource("11_fmvba")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1277493206]
+stream = ExtResource("12_amo6l")

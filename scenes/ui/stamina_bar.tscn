@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://cevx861x0sjkw"]
+
+[ext_resource type="Script" uid="uid://caqdperxb328k" path="res://scripts/ui/stamina_bar.gd" id="1_urdcj"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_sam5s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4t3n2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sbqyx"]
+bg_color = Color(1, 1, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_683hc"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+shadow_color = Color(0, 0, 0, 0.27450982)
+shadow_offset = Vector2(0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bekpy"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="FontVariation" id="FontVariation_vvvjn"]
+base_font = ExtResource("2_sam5s")
+
+[node name="StaminaBar" type="ProgressBar" unique_id=460268891 groups=["stamina_bar"]]
+z_index = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 27.0
+offset_right = -252.0
+offset_bottom = -151.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_4t3n2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_sbqyx")
+value = 60.0
+show_percentage = false
+script = ExtResource("1_urdcj")
+
+[node name="DamageBar" type="ProgressBar" parent="." unique_id=674436574]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_683hc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bekpy")
+value = 80.0
+show_percentage = false
+
+[node name="Timer" type="Timer" parent="." unique_id=167509601]
+wait_time = 0.4
+one_shot = true
+
+[node name="Label" type="Label" parent="." unique_id=1840547679]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 360.50003
+anchor_top = 153.0
+anchor_right = 360.50003
+anchor_bottom = 153.0
+offset_left = -18008.002
+offset_top = -313.0
+offset_right = -17992.002
+offset_bottom = -307.0
+theme_override_fonts/font = SubResource("FontVariation_vvvjn")
+theme_override_font_sizes/font_size = 5
+text = "Stamina"
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

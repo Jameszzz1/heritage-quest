@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://b4kimagwm34tg"]
+
+[ext_resource type="Script" uid="uid://bjwuqf6dyw1l2" path="res://scripts/saragani_slide_puzzle_medium.gd" id="1_p77qb"]
+[ext_resource type="Texture2D" uid="uid://cs432qch01gol" path="res://assets/images/provinces/sarangani/SlidePuzzle.png" id="2_sg58u"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_t5ev3"]
+[ext_resource type="AudioStream" uid="uid://dj4uvtluu7tm" path="res://assets/audio/sfx/SaraganiSoundEffect.mp3" id="4_1eqx4"]
+
+[node name="SlidePuzzleMedium" type="Control" unique_id=950891294]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_p77qb")
+
+[node name="Panel" type="Panel" parent="." unique_id=1490982188]
+modulate = Color(0.9074065, 0.6013398, 0.12606925, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1893383165]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 258.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = -122.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_sg58u")
+expand_mode = 1
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1614659311]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -73.5
+offset_top = -64.5
+offset_right = 73.5
+offset_bottom = 64.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 6
+
+[node name="TimerLabel" type="Label" parent="." unique_id=1926018334]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 7.0
+offset_right = 74.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_t5ev3")
+theme_override_font_sizes/font_size = 16
+text = "Time:"
+
+[node name="GameOverLabel" type="Label" parent="." unique_id=1577871619]
+visible = false
+layout_mode = 0
+offset_left = 81.0
+offset_top = 52.0
+offset_right = 256.0
+offset_bottom = 75.0
+theme_override_fonts/font = ExtResource("3_t5ev3")
+text = "Game Over! Try Again?"
+
+[node name="TryAgainButton" type="Button" parent="." unique_id=679881134]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -36.0
+offset_top = -12.0
+offset_right = 34.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_t5ev3")
+theme_override_font_sizes/font_size = 8
+text = "Try Again"
+
+[node name="TileSound" type="AudioStreamPlayer" parent="." unique_id=1317523720]
+stream = ExtResource("4_1eqx4")

@@ -1,0 +1,72 @@
+[
+	{
+		"type": "dialogue",
+		"name": "Dula",
+		"text": "Mabuhay, James! I am Dula, a young T'boli weaver from Lake Sebu."
+	},
+	{
+		"type": "dialogue",
+		"name": "Dula",
+		"text": "I heard you spoke with Bai Linay. She is wise and her words carry the weight of our ancestors."
+	},
+	{
+		"type": "dialogue",
+		"name": "Dula",
+		"text": "But words are only useful if they are remembered. Let me see if you were truly listening!"
+	},
+	{
+		"type": "question",
+		"name": "Dula",
+		"question": "I want to see if you were listening. What sacred plant provides the fibers we use to weave our T'nalak?",
+		"choices": [
+			"Raw silk from forest worms",
+			"Fibers from the Abaca plant",
+            "Hand-spun cotton"
+		],
+		"correct": 1
+	},
+	{
+		"type": "question",
+		"name": "Dula",
+		"question": "Who is the spirit that guides our hands and grants us visions in our sleep?",
+		"choices": [
+			"Fu Dalu, the Spirit of the Abaca",
+			"The Council of Elders",
+            "The Lake Sebu Deity"
+		],
+		"correct": 0
+	},
+	{
+		"type": "question",
+		"name": "Dula",
+		"question": "There is a reason the world calls us Dreamweavers. Do you know why that is?",
+		"choices": [
+			"Weaving is done during sleep.",
+			"Patterns come from spiritual dreams.",
+            "We recite dreams before weaving."
+		],
+		"correct": 1
+	},
+	{
+		"type": "question",
+		"name": "Dula",
+		"question": "Of all the waters in this province, which one is known as the heart of our culture?",
+		"choices": [
+			"Lake Lanao",
+			"Lake Sebu",
+            "Lake Holon"
+		],
+		"correct": 1
+	},
+	{
+		"type": "question",
+		"name": "Dula",
+		"question": "If the sky darkens and a Flash Flood rushes through the valley, where should you go to stay safe?",
+		"choices": [
+			"Deep inside a cave.",
+			"Immediately to higher ground.",
+            "Under the tallest tree you can find."
+		],
+		"correct": 1
+	}
+]

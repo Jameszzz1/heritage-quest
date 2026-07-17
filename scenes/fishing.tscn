@@ -1,0 +1,178 @@
+[gd_scene format=3 uid="uid://cmtyq20xauwlf"]
+
+[ext_resource type="Script" uid="uid://dle4t6hmk22eh" path="res://scripts/fishing.gd" id="1_xb554"]
+[ext_resource type="Texture2D" uid="uid://b2pigrs7rxs0u" path="res://assets/images/mini_games/fish.png" id="2_qliby"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_lsi5g"]
+[ext_resource type="AudioStream" uid="uid://de7u4u0b0xs7w" path="res://assets/audio/sfx/fishing_water-splash-3.wav" id="4_qliby"]
+[ext_resource type="AudioStream" uid="uid://bvvpo22s1jeod" path="res://assets/audio/sfx/fishing_reel-.wav" id="5_gb8to"]
+[ext_resource type="AudioStream" uid="uid://c8ng6k0l2xj20" path="res://assets/audio/sfx/fishing_success.mp3" id="6_0xc70"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vc7xe"]
+bg_color = Color(0.05000019, 0, 1, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vc7xe"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+spread = 55.0
+initial_velocity_min = 37.71
+initial_velocity_max = 80.35
+gravity = Vector3(0, 98, 0)
+hue_variation_min = 0.28999996
+hue_variation_max = 0.28999996
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lsi5g"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 10
+
+[node name="Control" type="Control" unique_id=1217742815]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xb554")
+
+[node name="Background" type="Panel" parent="." unique_id=1762316935]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vc7xe")
+
+[node name="Tube" type="ColorRect" parent="." unique_id=991814010]
+custom_minimum_size = Vector2(40, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -67.0
+offset_right = 21.0
+offset_bottom = 83.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.39297795, 1, 1)
+
+[node name="Greenbar" type="ColorRect" parent="Tube" unique_id=221165890]
+custom_minimum_size = Vector2(40, 20)
+layout_mode = 0
+offset_top = 102.0
+offset_right = 40.0
+offset_bottom = 132.0
+color = Color(1.504086e-07, 0.36472902, 3.85046e-07, 1)
+
+[node name="ProgressBar" type="ProgressBar" parent="Tube" unique_id=163941904]
+modulate = Color(0, 0.3647059, 0, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.4690001
+anchor_top = 0.5
+anchor_right = 1.4690001
+anchor_bottom = 0.5
+offset_left = -12.760002
+offset_top = 75.98103
+offset_right = 138.38284
+offset_bottom = 101.49098
+rotation = -1.5707964
+show_percentage = false
+
+[node name="OrangeFish" type="Sprite2D" parent="Tube" unique_id=1049308839]
+position = Vector2(14.000008, 117.00001)
+rotation = -1.5707964
+scale = Vector2(0.0761632, 0.12702274)
+texture = ExtResource("2_qliby")
+region_enabled = true
+region_rect = Rect2(0, 177.81155, 350.9126, 87.5018)
+
+[node name="Caught!" type="Label" parent="." unique_id=323632119]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.522
+anchor_top = 0.10300001
+anchor_right = 0.522
+anchor_bottom = 0.10300001
+offset_left = -36.04001
+offset_top = -7.540001
+offset_right = 35.95999
+offset_bottom = 7.459999
+grow_horizontal = 2
+pivot_offset = Vector2(148.5, 25.5)
+theme_override_fonts/font = ExtResource("3_lsi5g")
+theme_override_font_sizes/font_size = 12
+text = "You got a fish!"
+
+[node name="WaterSplash" type="AudioStreamPlayer" parent="." unique_id=82968863]
+stream = ExtResource("4_qliby")
+
+[node name="FishingReel" type="AudioStreamPlayer" parent="." unique_id=987087150]
+stream = ExtResource("5_gb8to")
+
+[node name="Success" type="AudioStreamPlayer" parent="." unique_id=1504158724]
+stream = ExtResource("6_0xc70")
+
+[node name="ParticleBurst" type="GPUParticles2D" parent="." unique_id=263558491]
+position = Vector2(169, 27)
+emitting = false
+amount = 100
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_vc7xe")
+
+[node name="FishCounter" type="Label" parent="." unique_id=1674514452]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.037
+anchor_top = 0.072000004
+anchor_right = 0.037
+anchor_bottom = 0.072000004
+offset_left = 0.15999985
+offset_top = -3.960001
+offset_right = 52.16
+offset_bottom = 4.039999
+theme_override_fonts/font = ExtResource("3_lsi5g")
+theme_override_font_sizes/font_size = 8
+text = "Fishes Caught: 0"
+
+[node name="TimerLabel" type="Label" parent="." unique_id=393947560]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.037
+anchor_top = 0.13900001
+anchor_right = 0.037
+anchor_bottom = 0.13900001
+offset_left = 0.15999985
+offset_top = -4.0200024
+offset_right = 31.16
+offset_bottom = 3.9799976
+theme_override_fonts/font = ExtResource("3_lsi5g")
+theme_override_font_sizes/font_size = 8
+text = "Time:     "
+
+[node name="Button" type="Button" parent="." unique_id=1729494638]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -35.0
+offset_top = -12.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_lsi5g")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_lsi5g")
+text = "Back"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

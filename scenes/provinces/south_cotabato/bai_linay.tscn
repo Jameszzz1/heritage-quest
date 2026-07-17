@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://d4kfx2bx3gbba"]
+
+[ext_resource type="Texture2D" uid="uid://ddxkj6yfk3pg1" path="res://assets/sprites/characters/1_TboliLola.png" id="1_fivpj"]
+[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/ui/npc_dialogue.gd" id="1_hv80j"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hv80j"]
+radius = 9.999998
+height = 19.999996
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fivpj"]
+radius = 68.00735
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fivpj"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hv80j"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[node name="BaiLinay" type="CharacterBody2D" unique_id=2100318797]
+scale = Vector2(0.2, 0.2)
+script = ExtResource("1_hv80j")
+npc_name = "Bai Linay"
+dialogue_file = "res://dialogues/bai_linay.json"
+minigame_scene = "res://scenes/provinces/south_cotabato/tnalak_rhythm.tscn"
+has_minigame = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=239521770]
+texture = ExtResource("1_fivpj")
+region_enabled = true
+region_rect = Rect2(539.3541, 269.61893, 37.47461, 80.328)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2070637459]
+position = Vector2(0, 5)
+shape = SubResource("CapsuleShape2D_hv80j")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1911519244]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=225181254]
+shape = SubResource("CircleShape2D_fivpj")
+
+[node name="NameLabel" type="Label" parent="." unique_id=667001934]
+offset_left = -20.0
+offset_top = -55.0
+offset_right = 26.0
+offset_bottom = -39.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_fivpj")
+text = "Bai Linay"
+
+[node name="InteractLabel" type="Label" parent="." unique_id=1141032926]
+offset_left = -50.000008
+offset_top = -75.0
+offset_right = 49.999977
+offset_bottom = -59.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_hv80j")
+text = "Press \"E\" to Interact"

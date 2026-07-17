@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://dlh6lk7gas66c"]
+
+[ext_resource type="Script" uid="uid://cj77vmv6o6p66" path="res://scripts/dialogue_box.gd" id="1_fu8b5"]
+[ext_resource type="Texture2D" uid="uid://dnfxvk4784mug" path="res://assets/images/pngfind.com-black-text-box-png-3624311.png" id="1_rc1id"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_tm68y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fu8b5"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="DialoguePlayer" type="CanvasLayer" unique_id=1264107373 groups=["dialogue_box"]]
+script = ExtResource("1_fu8b5")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=87699737]
+offset_left = 15.0
+offset_top = 82.0
+offset_right = 285.0
+offset_bottom = 154.0
+texture = ExtResource("1_rc1id")
+region_rect = Rect2(7.929962, 0, 526.35, 481)
+
+[node name="Name" type="RichTextLabel" parent="NinePatchRect" unique_id=1363281627]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 2.0
+offset_right = 80.0
+offset_bottom = 25.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("3_tm68y")
+theme_override_fonts/bold_font = ExtResource("3_tm68y")
+theme_override_fonts/bold_italics_font = ExtResource("3_tm68y")
+theme_override_fonts/italics_font = ExtResource("3_tm68y")
+theme_override_fonts/mono_font = ExtResource("3_tm68y")
+text = "Name"
+
+[node name="TextBody" type="RichTextLabel" parent="NinePatchRect" unique_id=534379639]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 23.0
+offset_right = 261.0
+offset_bottom = 45.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("3_tm68y")
+theme_override_fonts/bold_font = ExtResource("3_tm68y")
+theme_override_fonts/bold_italics_font = ExtResource("3_tm68y")
+theme_override_fonts/italics_font = ExtResource("3_tm68y")
+theme_override_fonts/mono_font = ExtResource("3_tm68y")
+theme_override_font_sizes/normal_font_size = 10
+text = "Body"
+
+[node name="ChoicesContainer" type="HBoxContainer" parent="." unique_id=728243462]
+offset_left = 15.0
+offset_top = 133.0
+offset_right = 278.0
+offset_bottom = 152.0
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="Choice1" type="Button" parent="ChoicesContainer" unique_id=1118740634]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_tm68y")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_fu8b5")
+
+[node name="Choice2" type="Button" parent="ChoicesContainer" unique_id=349166508]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_tm68y")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_fu8b5")
+
+[node name="Choice3" type="Button" parent="ChoicesContainer" unique_id=1749606796]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_tm68y")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_fu8b5")

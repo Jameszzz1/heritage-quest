@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cmtyq20xauwlf"]
 
-[ext_resource type="Script" uid="uid://dle4t6hmk22eh" path="res://scripts/fishing.gd" id="1_xb554"]
+[ext_resource type="Script" uid="uid://dle4t6hmk22eh" path="res://scripts/resourcesgamescript/fishing.gd" id="1_xb554"]
 [ext_resource type="Texture2D" uid="uid://b2pigrs7rxs0u" path="res://assets/images/mini_games/fish.png" id="2_qliby"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_lsi5g"]
 [ext_resource type="AudioStream" uid="uid://de7u4u0b0xs7w" path="res://assets/audio/sfx/fishing_water-splash-3.wav" id="4_qliby"]

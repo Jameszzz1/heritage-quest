@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://h2l7roknl3p8"]
 
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="1_pd4ea"]
+[ext_resource type="Script" uid="uid://c3n5mm3uewcs8" path="res://scripts/longwayscript/cotabato.gd" id="1_peene"]
 [ext_resource type="Texture2D" uid="uid://7g3vnvxhcbyh" path="res://assets/sprites/tiles/dark_water.png" id="2_c344i"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="3_0t51a"]
 [ext_resource type="Texture2D" uid="uid://c4jwruwaeko0h" path="res://assets/sprites/tiles/grass.png" id="4_8uoxm"]
@@ -141,6 +142,7 @@ pattern_1 = SubResource("TileMapPattern_yka0h")
 size = Vector2(73.43172, 17.005806)
 
 [node name="cotabato" type="Node2D" unique_id=1066175384]
+script = ExtResource("1_peene")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1345688183]
 anchors_preset = 8

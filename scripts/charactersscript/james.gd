@@ -52,6 +52,10 @@ func _ready():
 		position = Global.spawn_position
 		Global.spawn_position = Vector2.ZERO
 
+func is_night_scene() -> bool:
+	var scene_path = get_tree().current_scene.scene_file_path
+	return scene_path.find("shortway") != -1
+
 func setup_torch_light():
 	var gradient = Gradient.new()
 	gradient.set_color(0, Color(1, 1, 1, 1))
@@ -90,7 +94,7 @@ func setup_ambient_sight():
 	ambient_sight.texture = gradient_texture
 	ambient_sight.texture_scale = 0.15
 	ambient_sight.energy = 0.7
-	ambient_sight.enabled = true
+	ambient_sight.enabled = is_night_scene()
 
 func _physics_process(delta):
 	reconnect_ui()
@@ -172,6 +176,11 @@ func handle_energy(delta):
 	energy = clamp(energy, 0, max_energy)
 
 func handle_torch(delta):
+	if not is_night_scene():
+		has_torch = false
+		torch_light.enabled = false
+		return
+
 	if Input.is_action_just_pressed("toggle_torch") and energy > 2:
 		has_torch = !has_torch
 		torch_light.enabled = has_torch

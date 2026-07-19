@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://pqvdhde0ypbb"]
 
-[ext_resource type="Script" uid="uid://b2andte4xyih" path="res://scripts/ui/energy_bar.gd" id="1_pb3hv"]
+[ext_resource type="Script" uid="uid://b2andte4xyih" path="res://scripts/uiscript/energy_bar.gd" id="1_pb3hv"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_l6ukm"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4t3n2"]

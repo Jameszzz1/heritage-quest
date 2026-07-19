@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d4kfx2bx3gbba"]
 
 [ext_resource type="Texture2D" uid="uid://ddxkj6yfk3pg1" path="res://assets/sprites/characters/1_TboliLola.png" id="1_fivpj"]
-[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/ui/npc_dialogue.gd" id="1_hv80j"]
+[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/uiscript/npc_dialogue.gd" id="1_hv80j"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hv80j"]
 radius = 9.999998

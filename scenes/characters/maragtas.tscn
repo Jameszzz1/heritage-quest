@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://2eqteecvlxxn"]
 
-[ext_resource type="Script" uid="uid://od2ygc3u2xkw" path="res://scripts/maragtas.gd" id="1_yecsw"]
+[ext_resource type="Script" uid="uid://od2ygc3u2xkw" path="res://scripts/enemiesscript/maragtas.gd" id="1_yecsw"]
 [ext_resource type="Texture2D" uid="uid://k3w2fxpw2rpk" path="res://assets/sprites/characters/snake.png" id="2_6qm58"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yecsw"]

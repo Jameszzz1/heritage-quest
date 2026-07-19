@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cevx861x0sjkw"]
 
-[ext_resource type="Script" uid="uid://caqdperxb328k" path="res://scripts/ui/stamina_bar.gd" id="1_urdcj"]
+[ext_resource type="Script" uid="uid://caqdperxb328k" path="res://scripts/uiscript/stamina_bar.gd" id="1_urdcj"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_sam5s"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4t3n2"]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b28itkt7gvj13"]
 
-[ext_resource type="Script" uid="uid://cyaw8rwqxnya3" path="res://scripts/gahum.gd" id="1_blspe"]
+[ext_resource type="Script" uid="uid://cyaw8rwqxnya3" path="res://scripts/enemiesscript/gahum.gd" id="1_blspe"]
 [ext_resource type="Texture2D" uid="uid://nwk8icuu2yw2" path="res://assets/sprites/characters/dog.png" id="2_0r5ok"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s42ax"]

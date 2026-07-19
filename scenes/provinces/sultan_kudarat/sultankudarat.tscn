@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://dvox2r5c6cvcx"]
 
-[ext_resource type="Script" uid="uid://bk33m0iom5kvi" path="res://scripts/sultankudarat.gd" id="1_lfqmq"]
+[ext_resource type="Script" uid="uid://bk33m0iom5kvi" path="res://scripts/longwayscript/sultankudarat.gd" id="1_lfqmq"]
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="1_ulpi2"]
 [ext_resource type="Texture2D" uid="uid://7g3vnvxhcbyh" path="res://assets/sprites/tiles/dark_water.png" id="2_3xaqs"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="3_dn60e"]

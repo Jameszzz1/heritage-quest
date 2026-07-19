@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dxucm7epm143n"]
 
-[ext_resource type="Script" uid="uid://cals2yat1m8iv" path="res://scripts/ui/tutorial.gd" id="1_c13y7"]
+[ext_resource type="Script" uid="uid://cals2yat1m8iv" path="res://scripts/uiscript/tutorial.gd" id="1_c13y7"]
 [ext_resource type="Texture2D" uid="uid://dnfxvk4784mug" path="res://assets/images/pngfind.com-black-text-box-png-3624311.png" id="2_8ho6b"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_ph3nu"]
 

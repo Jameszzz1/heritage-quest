@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://doiri4m8ky6e2"]
 
-[ext_resource type="Script" uid="uid://c6mic13yl7utk" path="res://scripts/ui/health_bar.gd" id="1_4rf34"]
+[ext_resource type="Script" uid="uid://c6mic13yl7utk" path="res://scripts/uiscript/health_bar.gd" id="1_4rf34"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_4rf34"]
 [ext_resource type="Texture2D" uid="uid://cqo6384x3e3xn" path="res://assets/sprites/things/heart.png" id="2_qi2ti"]
 

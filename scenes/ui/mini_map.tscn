@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cov0jyhb0rx5i"]
 
-[ext_resource type="Script" uid="uid://df0pt04c10hdf" path="res://scripts/ui/mini_map.gd" id="1_1wrf6"]
+[ext_resource type="Script" uid="uid://df0pt04c10hdf" path="res://scripts/uiscript/mini_map.gd" id="1_1wrf6"]
 [ext_resource type="Texture2D" uid="uid://dif17anni6log" path="res://assets/images/mini_map/minimap_frame.png" id="2_ytmag"]
 [ext_resource type="Texture2D" uid="uid://d3kmk5xc7hwve" path="res://assets/images/mini_map/marker_james.png" id="3_wxlrw"]
 

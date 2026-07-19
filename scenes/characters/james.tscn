@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d4hfn5wfmdob0"]
 
-[ext_resource type="Script" uid="uid://bc6f21tb6x0il" path="res://scripts/characters/james.gd" id="1_8i33a"]
+[ext_resource type="Script" uid="uid://bc6f21tb6x0il" path="res://scripts/charactersscript/james.gd" id="1_8i33a"]
 [ext_resource type="Texture2D" uid="uid://bjppr32kgp2ls" path="res://assets/sprites/characters/MainCharacter_James.png" id="1_agfs1"]
 [ext_resource type="Texture2D" uid="uid://o5n8wocjbedr" path="res://assets/sprites/things/torch.png" id="3_1ioj8"]
 [ext_resource type="PackedScene" uid="uid://npo3s3xsf6u" path="res://scenes/ui/hud.tscn" id="4_2tmx1"]

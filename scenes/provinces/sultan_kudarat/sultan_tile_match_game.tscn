@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://br4dntjk1o7yj"]
 
-[ext_resource type="Script" uid="uid://dxp6b0p1otsbi" path="res://scripts/tile_match_game.gd" id="1_pd7og"]
+[ext_resource type="Script" uid="uid://dxp6b0p1otsbi" path="res://scripts/minigamescript/tile_match_game.gd" id="1_pd7og"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_3nh2d"]
 [ext_resource type="AudioStream" uid="uid://cnu2jv3kq8uwo" path="res://assets/audio/sfx/sultantilesoundeffect.mp3" id="3_3nh2d"]
 

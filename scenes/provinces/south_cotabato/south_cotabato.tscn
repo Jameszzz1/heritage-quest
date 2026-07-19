@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://ba6hxpeosxeim"]
 
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="1_hw0jd"]
-[ext_resource type="Script" uid="uid://buh60n80x2ssm" path="res://scripts/south_cotabato.gd" id="1_r5jdd"]
+[ext_resource type="Script" uid="uid://buh60n80x2ssm" path="res://scripts/longwayscript/south_cotabato.gd" id="1_r5jdd"]
 [ext_resource type="PackedScene" uid="uid://ctr2dnj5k5ox" path="res://scenes/music_manager.tscn" id="2_yka0h"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="3_kb3no"]
 [ext_resource type="Texture2D" uid="uid://c4jwruwaeko0h" path="res://assets/sprites/tiles/grass.png" id="4_b0dwv"]

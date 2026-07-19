@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://npo3s3xsf6u"]
 
-[ext_resource type="Script" uid="uid://crh1spc1dwe8k" path="res://scripts/ui/hud.gd" id="1_6fi6k"]
+[ext_resource type="Script" uid="uid://crh1spc1dwe8k" path="res://scripts/uiscript/hud.gd" id="1_6fi6k"]
 [ext_resource type="PackedScene" uid="uid://cevx861x0sjkw" path="res://scenes/ui/stamina_bar.tscn" id="1_ahhtf"]
 [ext_resource type="PackedScene" uid="uid://dgrayasbr1xws" path="res://scenes/ui/settings.tscn" id="2_h022r"]
 [ext_resource type="PackedScene" uid="uid://doiri4m8ky6e2" path="res://scenes/ui/health_bar.tscn" id="2_oj5la"]

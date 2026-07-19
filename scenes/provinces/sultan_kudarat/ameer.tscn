@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://coso8lmtntg2e"]
 
-[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/ui/npc_dialogue.gd" id="1_se3sk"]
+[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/uiscript/npc_dialogue.gd" id="1_se3sk"]
 [ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="3_8kbqy"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ug8oi"]

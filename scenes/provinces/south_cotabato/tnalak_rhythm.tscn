@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d3rsgxndq2dp6"]
 
-[ext_resource type="Script" uid="uid://cfbhboirj3ie5" path="res://scripts/tnalak_rhythm.gd" id="1_uk1p8"]
+[ext_resource type="Script" uid="uid://cfbhboirj3ie5" path="res://scripts/minigamescript/tnalak_rhythm.gd" id="1_uk1p8"]
 [ext_resource type="Texture2D" uid="uid://c0gd1aylp3cij" path="res://assets/images/mini_games/bg_with_frame.png" id="2_uqh0l"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_agens"]
 [ext_resource type="Texture2D" uid="uid://b3qwfgxj868wu" path="res://assets/images/mini_games/btn_d_idle.png" id="4_0hv81"]

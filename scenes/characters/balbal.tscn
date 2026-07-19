@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c6ebuwyr0shm0"]
 
-[ext_resource type="Script" uid="uid://dhmn33kysjino" path="res://scripts/balbal.gd" id="1_d6sqk"]
+[ext_resource type="Script" uid="uid://dhmn33kysjino" path="res://scripts/enemiesscript/balbal.gd" id="1_d6sqk"]
 [ext_resource type="Texture2D" uid="uid://conmyc0yphrxn" path="res://assets/sprites/characters/bat.png" id="2_1k26v"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dqow6"]

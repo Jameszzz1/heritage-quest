@@ -10,7 +10,8 @@
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="6_k7k33"]
 [ext_resource type="Texture2D" uid="uid://bvw4hucudqxyw" path="res://assets/sprites/things/16x32 trees.png" id="6_y66hy"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="7_a38we"]
-[ext_resource type="Texture2D" uid="uid://dcspiej3yklk8" path="res://assets/images/provinces/south_cotabato/WSouthCotabato.png" id="10_dwfn3"]
+[ext_resource type="Texture2D" uid="uid://bnkyn3jrjt06l" path="res://assets/images/provinces/south_cotabato/thiswaylrightway.png" id="10_eepbd"]
+[ext_resource type="Texture2D" uid="uid://cx3u5vxsdrp0g" path="res://assets/images/provinces/south_cotabato/thiswayleftway.png" id="11_y66hy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o5yn1"]
 texture = ExtResource("1_nclud")
@@ -135,12 +136,15 @@ position = Vector2(53.000015, -69)
 
 [node name="Camera2D" type="Camera2D" parent="Y-Sort/James" unique_id=1106883265]
 
-[node name="Thisway" type="Sprite2D" parent="Y-Sort" unique_id=1480351828]
-position = Vector2(-247.00003, -295)
-scale = Vector2(0.13302204, 0.09500367)
-texture = ExtResource("10_dwfn3")
-region_enabled = true
-region_rect = Rect2(344.11493, 32.90252, 218.25635, 349.40506)
+[node name="longway" type="Sprite2D" parent="Y-Sort" unique_id=1270342936]
+position = Vector2(-247.00003, -245)
+scale = Vector2(0.09381664, 0.07471815)
+texture = ExtResource("10_eepbd")
+
+[node name="shortway" type="Sprite2D" parent="Y-Sort" unique_id=1004007625]
+position = Vector2(-325, -204.00002)
+scale = Vector2(0.09738957, 0.08258483)
+texture = ExtResource("11_y66hy")
 
 [node name="ToSouthCotabatoLongway" type="Area2D" parent="." unique_id=1303935645]
 script = ExtResource("6_k7k33")
@@ -157,7 +161,7 @@ shape = SubResource("RectangleShape2D_jfdqy")
 [node name="ToSouthCotabatoShortway" type="Area2D" parent="." unique_id=684001768]
 script = ExtResource("6_k7k33")
 target_scene = "res://scenes/short_provinces/south_cotabato_shortway.tscn"
-spawn_pos = Vector2(806, 326)
+spawn_pos = Vector2(760, 255)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabatoShortway" unique_id=77514609]
 position = Vector2(-601, -198)

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bgdpdtfj1fx41"]
 
-[ext_resource type="Script" uid="uid://dmq7k8g22mr6c" path="res://scripts/characters/ascent_james.gd" id="1_1h1gs"]
+[ext_resource type="Script" uid="uid://dmq7k8g22mr6c" path="res://scripts/charactersscript/ascent_james.gd" id="1_1h1gs"]
 [ext_resource type="Texture2D" uid="uid://m65t8i7am364" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentwalking.png" id="1_m0pe3"]
 [ext_resource type="Texture2D" uid="uid://b4tup1dmpxum1" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentjump.png" id="2_1h1gs"]
 [ext_resource type="Texture2D" uid="uid://blvxangruag71" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentidle.png" id="2_btns8"]

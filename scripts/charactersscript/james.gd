@@ -127,11 +127,6 @@ func handle_movement(delta):
 
 	input_dir = input_dir.normalized()
 
-	var iso_dir = Vector2(
-		input_dir.x - input_dir.y,
-		(input_dir.x + input_dir.y) / 2
-	)
-
 	var current_speed = walk_speed
 	var is_sprinting = Input.is_action_pressed("sprint")
 
@@ -145,7 +140,7 @@ func handle_movement(delta):
 	else:
 		current_speed = walk_speed
 
-	velocity = iso_dir * current_speed
+	velocity = input_dir * current_speed
 	move_and_slide()
 	update_animations(input_dir)
 
@@ -232,16 +227,25 @@ func die():
 
 func update_animations(direction: Vector2):
 	var suffix = "_torch" if has_torch else ""
+	var sprint_prefix = "sprint_" if (Input.is_action_pressed("sprint") and direction != Vector2.ZERO and stamina > 0 and not exhausted) else ""
 
 	if direction == Vector2.ZERO:
 		animated_sprite.play("idle" + suffix)
 		return
 
-	if direction.y < 0:
-		animated_sprite.play("up" + suffix)
+	if direction.y < 0 and direction.x < 0:
+		animated_sprite.play(sprint_prefix + "up_left" + suffix)
+	elif direction.y < 0 and direction.x > 0:
+		animated_sprite.play(sprint_prefix + "up_right" + suffix)
+	elif direction.y > 0 and direction.x < 0:
+		animated_sprite.play(sprint_prefix + "down_left" + suffix)
+	elif direction.y > 0 and direction.x > 0:
+		animated_sprite.play(sprint_prefix + "down_right" + suffix)
+	elif direction.y < 0:
+		animated_sprite.play(sprint_prefix + "up" + suffix)
 	elif direction.y > 0:
-		animated_sprite.play("down" + suffix)
+		animated_sprite.play(sprint_prefix + "down" + suffix)
 	elif direction.x < 0:
-		animated_sprite.play("left" + suffix)
+		animated_sprite.play(sprint_prefix + "left" + suffix)
 	elif direction.x > 0:
-		animated_sprite.play("right" + suffix)
+		animated_sprite.play(sprint_prefix + "right" + suffix)

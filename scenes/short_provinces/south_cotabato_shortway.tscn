@@ -162,6 +162,10 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
+[node name="NightOverlay" type="CanvasModulate" parent="." unique_id=875234630]
+visible = false
+script = ExtResource("13_3j67a")
+
 [node name="Water" type="TileMapLayer" parent="." unique_id=524976323]
 y_sort_enabled = true
 texture_filter = 1
@@ -177,114 +181,107 @@ tile_set = SubResource("TileSet_j0k36")
 
 [node name="Y-sort" type="Node2D" parent="." unique_id=251625512]
 
+[node name="James" parent="Y-sort" unique_id=636874803 instance=ExtResource("10_m0hrg")]
+position = Vector2(625, 220)
+
+[node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
+
 [node name="Trees" type="TileMapLayer" parent="Y-sort" unique_id=944628351]
 y_sort_enabled = true
 texture_filter = 1
 tile_map_data = PackedByteArray("AAAyAJj/AQABAAAAAAAyAJ3/AQABAAAAAAAzAKH/AQABAAAAAAAzAKb/AQABAAAAAAAyAKv/AQABAAAAAAA0AK7/AQABAAAAAAAyALH/AQABAAAAAAA0ALP/AQABAAAAAAAyALn/AQABAAAAAAA0AL//AQABAAAAAAAyAMX/AQABAAAAAAA0AM3/AQABAAAAAAAyANP/AQABAAAAAAA1ANr/AQABAAAAAAAzAOL/AQABAAAAAAA1AOj/AQABAAAAAAAyAO//AQABAAAAAAA1APT/AQABAAAAAAAzAPz/AQABAAAAAAA1AAEAAQABAAAAAAAzAAQAAQABAAAAAAAzAA8AAQABAAAAAAAzABwAAQABAAAAAAA1ACEAAQABAAAAAAAzACwAAQABAAAAAAA1ADUAAQABAAAAAAAzADkAAQABAAAAAAA1AEAAAQABAAAAAAArAFMAAQABAAAAAAApAFQAAQABAAAAAAAnAE8AAQABAAAAAAAkAFAAAQABAAAAAAAlAFYAAQABAAAAAAAgAFAAAQABAAAAAAAiAFYAAQABAAAAAAAdAFcAAQABAAAAAAAcAE8AAQABAAAAAAAbAFcAAQABAAAAAAAYAFgAAQABAAAAAAAZAFEAAQABAAAAAAAUAFAAAQABAAAAAAAVAFoAAQABAAAAAAAWAFEAAQABAAAAAAASAFEAAQABAAAAAAATAFoAAQABAAAAAAAPAFEAAQABAAAAAAARAFgAAQABAAAAAAANAFIAAQABAAAAAAAMAFwAAQABAAAAAAAKAFIAAQABAAAAAAAIAFsAAQABAAAAAAAHAFIAAQABAAAAAAAFAF0AAQABAAAAAAAEAFMAAQABAAAAAAABAFwAAQABAAAAAAAAAFIAAQABAAAAAAAAAFMAAQABAAAAAAADAFkAAQABAAAAAAD8/1MAAQABAAAAAAD9/10AAQABAAAAAAD7/1gAAQABAAAAAAD5/1EAAQABAAAAAAD4/10AAQABAAAAAAD4/14AAQABAAAAAAD2/1EAAQABAAAAAAD2/14AAQABAAAAAAD1/1cAAQABAAAAAADy/1QAAQABAAAAAADu/1MAAQABAAAAAAD0/1kAAQABAAAAAADu/10AAQABAAAAAADw/1gAAQABAAAAAADx/10AAQABAAAAAADz/10AAQABAAAAAAD0/1wAAQABAAAAAAD0/10AAQABAAAAAADt/0sAAQABAAAAAADr/0QAAQABAAAAAADt/0AAAQABAAAAAADq/zUAAQABAAAAAADt/zAAAQABAAAAAADq/ycAAQABAAAAAADt/x4AAQABAAAAAADq/xcAAQABAAAAAADt/wwAAQABAAAAAADq/wkAAQABAAAAAADs/xEAAQABAAAAAADr//3/AQABAAAAAADs//f/AQABAAAAAADq//D/AQABAAAAAADt/+r/AQABAAAAAADq/+P/AQABAAAAAADs/93/AQABAAAAAADq/9P/AQABAAAAAADt/9D/AQABAAAAAADq/8f/AQABAAAAAADs/7v/AQABAAAAAADs/67/AQABAAAAAADq/6X/AQABAAAAAADs/53/AQABAAAAAADs/6P/AQABAAAAAADu/5H/AQABAAAAAADv/5b/AQABAAAAAADx/5H/AQABAAAAAADx/5b/AQABAAAAAAD0/5H/AQABAAAAAADz/5P/AQABAAAAAAD2/5b/AQABAAAAAAD3/5P/AQABAAAAAAD6/5H/AQABAAAAAAD7/5b/AQABAAAAAAD+/5D/AQABAAAAAAD5/5T/AQABAAAAAAAAAJb/AQABAAAAAAD+/5T/AQABAAAAAAACAI//AQABAAAAAAADAJT/AQABAAAAAAAAAI//AQABAAAAAAAFAJb/AQABAAAAAAAHAJH/AQABAAAAAAAFAJL/AQABAAAAAAAJAJb/AQABAAAAAAAHAJT/AQABAAAAAAAMAJD/AQABAAAAAAANAJX/AQABAAAAAAAKAJX/AQABAAAAAAAQAJX/AQABAAAAAAATAJf/AQACAAAAAAAXAJf/AQACAAAAAAAXAJH/AQACAAAAAAAXAIn/AQACAAAAAAATAJH/AQACAAAAAAATAIv/AQACAAAAAAATAIX/AQACAAAAAAAXAIP/AQACAAAAAAAZAJX/AQABAAAAAAAbAJD/AQABAAAAAAAcAJX/AQABAAAAAAAeAJH/AQABAAAAAAAgAJX/AQABAAAAAAAfAJT/AQABAAAAAAAjAI//AQABAAAAAAAkAJP/AQABAAAAAAAoAJT/AQABAAAAAAAkAJb/AQABAAAAAAAnAI7/AQABAAAAAAArAJX/AQABAAAAAAAqAJL/AQABAAAAAAA0AJb/AQABAAAAAAAyAI//AQABAAAA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")
 tile_set = SubResource("TileSet_i5btb")
 
-[node name="James" parent="Y-sort" unique_id=636874803 instance=ExtResource("10_m0hrg")]
-position = Vector2(739, 256)
-
-[node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
-
 [node name="Sandawa" parent="Y-sort" unique_id=2100318797 instance=ExtResource("11_tjr3i")]
 position = Vector2(-181.99997, -379)
 
-[node name="NightOverlay" type="CanvasModulate" parent="Y-sort" unique_id=875234630]
-script = ExtResource("13_3j67a")
+[node name="Enemies" type="Node" parent="Y-sort" unique_id=558640517]
 
-[node name="Y-sort Balbal" type="Node2D" parent="." unique_id=2144943388]
-
-[node name="Balbal" parent="Y-sort Balbal" unique_id=809701892 instance=ExtResource("14_65r2j")]
+[node name="Balbal" parent="Y-sort/Enemies" unique_id=809701892 instance=ExtResource("14_65r2j")]
 position = Vector2(595, 235)
 
-[node name="Balbal2" parent="Y-sort Balbal" unique_id=425713866 instance=ExtResource("14_65r2j")]
+[node name="Balbal2" parent="Y-sort/Enemies" unique_id=425713866 instance=ExtResource("14_65r2j")]
 position = Vector2(623, 218)
 
-[node name="Balbal3" parent="Y-sort Balbal" unique_id=615209917 instance=ExtResource("14_65r2j")]
+[node name="Balbal3" parent="Y-sort/Enemies" unique_id=615209917 instance=ExtResource("14_65r2j")]
 position = Vector2(655, 240)
 
-[node name="Balbal4" parent="Y-sort Balbal" unique_id=689299817 instance=ExtResource("14_65r2j")]
+[node name="Balbal4" parent="Y-sort/Enemies" unique_id=689299817 instance=ExtResource("14_65r2j")]
 position = Vector2(630, 262)
 
-[node name="Balbal5" parent="Y-sort Balbal" unique_id=239766504 instance=ExtResource("14_65r2j")]
+[node name="Balbal5" parent="Y-sort/Enemies" unique_id=239766504 instance=ExtResource("14_65r2j")]
 position = Vector2(663, 278)
 
-[node name="Balbal6" parent="Y-sort Balbal" unique_id=494562636 instance=ExtResource("14_65r2j")]
+[node name="Balbal6" parent="Y-sort/Enemies" unique_id=494562636 instance=ExtResource("14_65r2j")]
 position = Vector2(768, 172)
 
-[node name="Balbal7" parent="Y-sort Balbal" unique_id=38136298 instance=ExtResource("14_65r2j")]
+[node name="Balbal7" parent="Y-sort/Enemies" unique_id=38136298 instance=ExtResource("14_65r2j")]
 position = Vector2(653, 213)
 
-[node name="Balbal8" parent="Y-sort Balbal" unique_id=442878305 instance=ExtResource("14_65r2j")]
+[node name="Balbal8" parent="Y-sort/Enemies" unique_id=442878305 instance=ExtResource("14_65r2j")]
 position = Vector2(796, 173)
 
-[node name="Balbal9" parent="Y-sort Balbal" unique_id=1578755654 instance=ExtResource("14_65r2j")]
+[node name="Balbal9" parent="Y-sort/Enemies" unique_id=1578755654 instance=ExtResource("14_65r2j")]
 position = Vector2(784, 152)
 
-[node name="Y-sort Gahum" type="Node2D" parent="." unique_id=1190325110]
-
-[node name="Gahum" parent="Y-sort Gahum" unique_id=32252268 instance=ExtResource("15_8beri")]
+[node name="Gahum" parent="Y-sort/Enemies" unique_id=32252268 instance=ExtResource("15_8beri")]
 position = Vector2(254, -255)
 
-[node name="Gahum2" parent="Y-sort Gahum" unique_id=864966531 instance=ExtResource("15_8beri")]
+[node name="Gahum2" parent="Y-sort/Enemies" unique_id=864966531 instance=ExtResource("15_8beri")]
 position = Vector2(458, -203)
 
-[node name="Gahum3" parent="Y-sort Gahum" unique_id=1492204042 instance=ExtResource("15_8beri")]
+[node name="Gahum3" parent="Y-sort/Enemies" unique_id=1492204042 instance=ExtResource("15_8beri")]
 position = Vector2(149.99998, -214.99997)
 
-[node name="Gahum4" parent="Y-sort Gahum" unique_id=650291689 instance=ExtResource("15_8beri")]
+[node name="Gahum4" parent="Y-sort/Enemies" unique_id=650291689 instance=ExtResource("15_8beri")]
 position = Vector2(-16, -263)
 
-[node name="Gahum5" parent="Y-sort Gahum" unique_id=1550626419 instance=ExtResource("15_8beri")]
+[node name="Gahum5" parent="Y-sort/Enemies" unique_id=1550626419 instance=ExtResource("15_8beri")]
 position = Vector2(202.00002, -119.99999)
 
-[node name="Gahum6" parent="Y-sort Gahum" unique_id=784872568 instance=ExtResource("15_8beri")]
+[node name="Gahum6" parent="Y-sort/Enemies" unique_id=784872568 instance=ExtResource("15_8beri")]
 position = Vector2(1, -193.99998)
 
-[node name="Gahum7" parent="Y-sort Gahum" unique_id=1999646110 instance=ExtResource("15_8beri")]
+[node name="Gahum7" parent="Y-sort/Enemies" unique_id=1999646110 instance=ExtResource("15_8beri")]
 position = Vector2(494.99994, -253)
 
-[node name="Gahum8" parent="Y-sort Gahum" unique_id=552427166 instance=ExtResource("15_8beri")]
+[node name="Gahum8" parent="Y-sort/Enemies" unique_id=552427166 instance=ExtResource("15_8beri")]
 position = Vector2(362, -76.00001)
 
-[node name="Gahum9" parent="Y-sort Gahum" unique_id=1969578196 instance=ExtResource("15_8beri")]
+[node name="Gahum9" parent="Y-sort/Enemies" unique_id=1969578196 instance=ExtResource("15_8beri")]
 position = Vector2(477.99997, -138)
 
-[node name="Gahum10" parent="Y-sort Gahum" unique_id=259079291 instance=ExtResource("15_8beri")]
+[node name="Gahum10" parent="Y-sort/Enemies" unique_id=259079291 instance=ExtResource("15_8beri")]
 position = Vector2(338, -206)
 
-[node name="Y-sort Maragtas" type="Node2D" parent="." unique_id=1855309020]
-
-[node name="Maragtas" parent="Y-sort Maragtas" unique_id=1119949917 instance=ExtResource("16_j010d")]
+[node name="Maragtas" parent="Y-sort/Enemies" unique_id=1119949917 instance=ExtResource("16_j010d")]
 position = Vector2(73, 8)
 
-[node name="Maragtas2" parent="Y-sort Maragtas" unique_id=1862639212 instance=ExtResource("16_j010d")]
+[node name="Maragtas2" parent="Y-sort/Enemies" unique_id=1862639212 instance=ExtResource("16_j010d")]
 position = Vector2(74, 195)
 
-[node name="Maragtas3" parent="Y-sort Maragtas" unique_id=1359844506 instance=ExtResource("16_j010d")]
+[node name="Maragtas3" parent="Y-sort/Enemies" unique_id=1359844506 instance=ExtResource("16_j010d")]
 position = Vector2(63, 70)
 
-[node name="Maragtas4" parent="Y-sort Maragtas" unique_id=468648603 instance=ExtResource("16_j010d")]
+[node name="Maragtas4" parent="Y-sort/Enemies" unique_id=468648603 instance=ExtResource("16_j010d")]
 position = Vector2(61, 241)
 
-[node name="Maragtas5" parent="Y-sort Maragtas" unique_id=643076211 instance=ExtResource("16_j010d")]
+[node name="Maragtas5" parent="Y-sort/Enemies" unique_id=643076211 instance=ExtResource("16_j010d")]
 position = Vector2(60, 273)
 
-[node name="Maragtas6" parent="Y-sort Maragtas" unique_id=1003674845 instance=ExtResource("16_j010d")]
+[node name="Maragtas6" parent="Y-sort/Enemies" unique_id=1003674845 instance=ExtResource("16_j010d")]
 position = Vector2(33, -30)
 
-[node name="Maragtas7" parent="Y-sort Maragtas" unique_id=1190790016 instance=ExtResource("16_j010d")]
+[node name="Maragtas7" parent="Y-sort/Enemies" unique_id=1190790016 instance=ExtResource("16_j010d")]
 position = Vector2(-55, -18)
 
-[node name="Maragtas8" parent="Y-sort Maragtas" unique_id=3497945 instance=ExtResource("16_j010d")]
+[node name="Maragtas8" parent="Y-sort/Enemies" unique_id=3497945 instance=ExtResource("16_j010d")]
 position = Vector2(-112, -49)
 
-[node name="Maragtas9" parent="Y-sort Maragtas" unique_id=1743202102 instance=ExtResource("16_j010d")]
+[node name="Maragtas9" parent="Y-sort/Enemies" unique_id=1743202102 instance=ExtResource("16_j010d")]
 position = Vector2(-171, -21)
 
-[node name="Maragtas10" parent="Y-sort Maragtas" unique_id=2103493720 instance=ExtResource("16_j010d")]
+[node name="Maragtas10" parent="Y-sort/Enemies" unique_id=2103493720 instance=ExtResource("16_j010d")]
 position = Vector2(-237, -24)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1866606339]

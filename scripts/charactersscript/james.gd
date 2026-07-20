@@ -21,6 +21,12 @@ var exhausted: bool = false
 var stamina_bar = null
 var health_bar = null
 var energy_bar = null
+var hit_sfx: AudioStreamPlayer
+var death_sfx: AudioStreamPlayer
+var death_screen: ColorRect
+var death_layer: CanvasLayer
+var death_countdown_label: Label
+var is_dead: bool = false
 
 func _ready():
 	add_to_group("player")
@@ -46,11 +52,40 @@ func _ready():
 
 	setup_torch_light()
 	setup_ambient_sight()
+	setup_hit_sfx()
+	setup_death_screen()
 	update_ui()
 
 	if Global.spawn_position != Vector2.ZERO:
 		position = Global.spawn_position
 		Global.spawn_position = Vector2.ZERO
+
+func setup_hit_sfx():
+	hit_sfx = AudioStreamPlayer.new()
+	hit_sfx.stream = load("res://assets/audio/sfx/damage.wav")
+	add_child(hit_sfx)
+
+	death_sfx = AudioStreamPlayer.new()
+	death_sfx.stream = load("res://assets/audio/sfx/death.wav")
+	add_child(death_sfx)
+
+func setup_death_screen():
+	death_layer = CanvasLayer.new()
+	death_layer.layer = 128
+	get_tree().root.add_child(death_layer)
+
+	death_screen = ColorRect.new()
+	death_screen.color = Color(0, 0, 0, 0)
+	death_screen.set_anchors_preset(Control.PRESET_FULL_RECT)
+	death_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	death_layer.add_child(death_screen)
+
+	death_countdown_label = Label.new()
+	death_countdown_label.add_theme_font_size_override("font_size", 32)
+	death_countdown_label.add_theme_color_override("font_color", Color.WHITE)
+	death_countdown_label.set_anchors_preset(Control.PRESET_CENTER)
+	death_countdown_label.visible = false
+	death_layer.add_child(death_countdown_label)
 
 func is_night_scene() -> bool:
 	var scene_path = get_tree().current_scene.scene_file_path
@@ -97,6 +132,8 @@ func setup_ambient_sight():
 	ambient_sight.enabled = is_night_scene()
 
 func _physics_process(delta):
+	if is_dead:
+		return
 	reconnect_ui()
 	handle_movement(delta)
 	handle_torch(delta)
@@ -198,9 +235,13 @@ func update_ui():
 		energy_bar.value = energy
 
 func take_hit(damage: float):
+	if is_dead:
+		return
 	health -= damage
 	health = clamp(health, 0, max_health)
 	update_ui()
+	if hit_sfx:
+		hit_sfx.play()
 	if health <= 0:
 		die()
 
@@ -217,7 +258,26 @@ func restore_stamina(amount: float):
 	stamina = clamp(stamina, 0, max_stamina)
 
 func die():
-	print("Player Died")
+	if is_dead:
+		return
+	is_dead = true
+	print("Player Died - Starting death sequence")
+
+	if death_sfx:
+		death_sfx.play()
+
+	visible = false
+	set_physics_process(false)
+	set_collision_layer_value(1, false)
+	set_collision_mask_value(1, false)
+
+	var hud = get_tree().get_first_node_in_group("hud")
+	if hud:
+		await hud.show_death_sequence()
+	else:
+		print("HUD NOT FOUND - cannot show death screen!")
+		await get_tree().create_timer(10.0).timeout
+
 	Global.spawn_position = Vector2.ZERO
 	Global.current_health = max_health * 0.5
 	Global.current_stamina = max_stamina

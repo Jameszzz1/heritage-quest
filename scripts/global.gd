@@ -1,10 +1,11 @@
 extends Node
-
 var current_health: float = -1
 var current_stamina: float = -1
 var current_energy: float = -1
 var spawn_position: Vector2 = Vector2.ZERO
 var has_torch: bool = false
+var return_scene: String = ""
+var return_spawn_pos: Vector2 = Vector2.ZERO
 
 func save_player_stats(player):
 	current_health = player.health

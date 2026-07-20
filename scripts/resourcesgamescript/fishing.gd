@@ -188,5 +188,5 @@ func update_counter_text():
 		fish_counter_label.text = "Fishes Caught: " + str(fish_count)
 
 func _on_button_pressed() -> void:
-	Global.spawn_position = Vector2(-276.0, 36.0)
-	get_tree().change_scene_to_file("res://scenes/provinces/south_cotabato/south_cotabato.tscn")
+	Global.spawn_position = Global.return_spawn_pos
+	get_tree().change_scene_to_file(Global.return_scene)

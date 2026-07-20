@@ -149,7 +149,7 @@ texture = ExtResource("11_y66hy")
 [node name="ToSouthCotabatoLongway" type="Area2D" parent="." unique_id=1303935645]
 script = ExtResource("6_k7k33")
 target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
-spawn_pos = Vector2(533, 44)
+spawn_pos = Vector2(888, 84)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabatoLongway" unique_id=1110396606]
 position = Vector2(-216.99998, -410.99997)

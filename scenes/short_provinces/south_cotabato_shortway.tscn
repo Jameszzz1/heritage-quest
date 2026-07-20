@@ -161,9 +161,9 @@ offset_bottom = 649.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="NightOverlay" type="CanvasModulate" parent="." unique_id=875234630]
-visible = false
 script = ExtResource("13_3j67a")
 
 [node name="Water" type="TileMapLayer" parent="." unique_id=524976323]

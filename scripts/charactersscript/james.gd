@@ -266,10 +266,12 @@ func die():
 	if death_sfx:
 		death_sfx.play()
 
-	visible = false
 	set_physics_process(false)
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(1, false)
+
+	animated_sprite.play("death")
+	await animated_sprite.animation_finished
 
 	var hud = get_tree().get_first_node_in_group("hud")
 	if hud:
@@ -278,6 +280,7 @@ func die():
 		print("HUD NOT FOUND - cannot show death screen!")
 		await get_tree().create_timer(10.0).timeout
 
+	visible = true
 	Global.spawn_position = Vector2.ZERO
 	Global.current_health = max_health * 0.5
 	Global.current_stamina = max_stamina

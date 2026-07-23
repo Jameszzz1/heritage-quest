@@ -9,11 +9,12 @@ extends Control
 const GRID_SIZE = 8
 const TILE_WIDTH = 21
 const TILE_HEIGHT = 17
-const TARGET_SCORE = 50000
+const TARGET_SCORE = 50000   # 50,000
 
 var score = 0
 var time_left = 120
 var game_over = false
+var game_started = false
 
 var tile_textures = [
 	preload("res://assets/images/provinces/sultan_kudarat/blue.png"),
@@ -35,12 +36,30 @@ var combo_count = 0
 func _ready():
 	randomize()
 	grid_container.columns = GRID_SIZE
-	score_label.text = "SCORE: 0 / " + str(TARGET_SCORE)
+	score_label.text = "SCORE: 0 / 50,000"
 	timer_label.text = "TIME: " + str(time_left) + "s"
 	setup_grid()
 	game_timer.wait_time = 1.0
 	game_timer.one_shot = false
 	game_timer.timeout.connect(_on_timer_timeout)
+	show_instructions_popup()
+
+func show_instructions_popup() -> void:
+	var popup := InstructionsPopup.new()
+	popup.popup_title = "INSTRUCTIONS"
+	popup.popup_subtitle = "SULTAN KUDARAT: Tile Match"
+	popup.start_hint = "Press SPACE to start
+"
+	popup.steps = [
+		{"icon": "match_three", "caption": "Match 3+ identical colors or icons."},
+		{"icon": "tile_click", "caption": "Drag to swap with the adjacent tile."},
+		{"icon": "timer", "caption": "Reach the target score of 50,000 before time runs out."}
+	]
+	popup.dismissed.connect(_on_instructions_dismissed)
+	add_child(popup)
+
+func _on_instructions_dismissed() -> void:
+	game_started = true
 	game_timer.start()
 
 func setup_grid():
@@ -48,11 +67,12 @@ func setup_grid():
 	for x in range(GRID_SIZE):
 		grid_matrix[x] = []
 		grid_matrix[x].resize(GRID_SIZE)
+	
 	for y in range(GRID_SIZE):
 		for x in range(GRID_SIZE):
 			var random_index = randi() % tile_textures.size()
 			while (x > 1 and grid_matrix[x-1][y] != null and grid_matrix[x-1][y].get_meta("tile_type") == random_index and grid_matrix[x-2][y].get_meta("tile_type") == random_index) or \
-				  (y > 1 and grid_matrix[x][y-1] != null and grid_matrix[x][y-1].get_meta("tile_type") == random_index and grid_matrix[x][y-2].get_meta("tile_type") == random_index):
+			  (y > 1 and grid_matrix[x][y-1] != null and grid_matrix[x][y-1].get_meta("tile_type") == random_index and grid_matrix[x][y-2].get_meta("tile_type") == random_index):
 				random_index = randi() % tile_textures.size()
 			create_tile_button(x, y, random_index)
 	check_board_moves_availability()
@@ -71,7 +91,7 @@ func create_tile_button(x, y, type_index):
 	grid_matrix[x][y] = button
 
 func _on_tile_gui_input(tile_button: TextureButton, event: InputEvent):
-	if game_over or is_animating: return
+	if not game_started or game_over or is_animating: return
 	if (event is InputEventMouseButton or event is InputEventScreenTouch) and event.is_pressed():
 		is_holding = true
 		drag_start_pos = event.position
@@ -103,8 +123,7 @@ func _on_tile_gui_input(tile_button: TextureButton, event: InputEvent):
 					target_grid_pos.x += 1 if diff.x > 0 else -1
 				else:
 					target_grid_pos.y += 1 if diff.y > 0 else -1
-				if target_grid_pos.x >= 0 and target_grid_pos.x < GRID_SIZE and \
-				   target_grid_pos.y >= 0 and target_grid_pos.y < GRID_SIZE:
+				if target_grid_pos.x >= 0 and target_grid_pos.x < GRID_SIZE and target_grid_pos.y >= 0 and target_grid_pos.y < GRID_SIZE:
 					var t1 = first_selected_tile
 					var t2 = grid_matrix[target_grid_pos.x][target_grid_pos.y]
 					first_selected_tile = null
@@ -166,8 +185,7 @@ func scan_entire_grid() -> Array:
 			if grid_matrix[x][y] == null: continue
 			var type = grid_matrix[x][y].get_meta("tile_type")
 			if type == -1: continue
-			if grid_matrix[x+1][y].get_meta("tile_type") == type and \
-			   grid_matrix[x+2][y].get_meta("tile_type") == type:
+			if grid_matrix[x+1][y].get_meta("tile_type") == type and grid_matrix[x+2][y].get_meta("tile_type") == type:
 				var combo = [Vector2i(x, y), Vector2i(x+1, y), Vector2i(x+2, y)]
 				var next_x = x + 3
 				while next_x < GRID_SIZE and grid_matrix[next_x][y].get_meta("tile_type") == type:
@@ -181,8 +199,7 @@ func scan_entire_grid() -> Array:
 			if grid_matrix[x][y] == null: continue
 			var type = grid_matrix[x][y].get_meta("tile_type")
 			if type == -1: continue
-			if grid_matrix[x][y+1].get_meta("tile_type") == type and \
-			   grid_matrix[x][y+2].get_meta("tile_type") == type:
+			if grid_matrix[x][y+1].get_meta("tile_type") == type and grid_matrix[x][y+2].get_meta("tile_type") == type:
 				var combo = [Vector2i(x, y), Vector2i(x, y+1), Vector2i(x, y+2)]
 				var next_y = y + 3
 				while next_y < GRID_SIZE and grid_matrix[x][next_y].get_meta("tile_type") == type:
@@ -204,26 +221,31 @@ func process_matches(match_list: Array):
 	elif base == 5: bonus = 300
 	elif base > 5: bonus = 500
 	score += (base * 100) + bonus
-	score_label.text = "SCORE: " + str(score) + " / " + str(TARGET_SCORE)
+	score_label.text = "SCORE: " + str(score) + " / 50,000"
+	
 	if match_sound:
 		match_sound.stop()
 		match_sound.pitch_scale = min(0.9 + (combo_count * 0.15), 2.0)
 		match_sound.play()
+	
 	var fade_tween = create_tween().set_parallel(true)
 	for pos in match_list:
 		var tile = grid_matrix[pos.x][pos.y]
 		fade_tween.tween_property(tile, "scale", Vector2(1.3, 1.3), 0.08).set_trans(Tween.TRANS_BACK)
 		fade_tween.tween_property(tile, "modulate:a", 0.0, 0.15)
 	await fade_tween.finished
+	
 	for pos in match_list:
 		var tile = grid_matrix[pos.x][pos.y]
 		tile.texture_normal = null
 		tile.modulate = Color(1, 1, 1, 1)
 		tile.scale = Vector2(1.0, 1.0)
 		tile.set_meta("tile_type", -1)
+	
 	await drop_tiles_down()
 	await fill_empty_tiles()
 	await get_tree().create_timer(0.15).timeout
+	
 	var chain_matches = scan_entire_grid()
 	if chain_matches.size() > 0:
 		await process_matches(chain_matches)
@@ -233,6 +255,9 @@ func process_matches(match_list: Array):
 			trigger_end_state(true)
 		else:
 			check_board_moves_availability()
+
+# Paste the remaining functions (drop_tiles_down, fill_empty_tiles, etc.) below if needed.
+# Let me know if there are more errors.
 
 func drop_tiles_down():
 	var has_movement = false
@@ -251,6 +276,7 @@ func drop_tiles_down():
 				grid_matrix[x][y].texture_normal = null
 				grid_matrix[x][y].set_meta("tile_type", -1)
 				grid_matrix[x][y].scale = Vector2(1.0, 1.0)
+	
 	if has_movement:
 		var drop_tween = create_tween().set_parallel(true)
 		for x in range(GRID_SIZE):
@@ -261,6 +287,7 @@ func drop_tiles_down():
 	else:
 		await get_tree().create_timer(0.05).timeout
 
+
 func fill_empty_tiles():
 	var empty_tiles = []
 	for x in range(GRID_SIZE):
@@ -269,14 +296,17 @@ func fill_empty_tiles():
 			if grid_matrix[x][y].get_meta("tile_type") == -1:
 				empty_tiles.append({"tile": grid_matrix[x][y], "delay": fill_y * 0.03})
 				fill_y += 1
+	
 	if empty_tiles.size() == 0:
 		return
+	
 	for entry in empty_tiles:
 		var new_type = randi() % tile_textures.size()
 		entry.tile.texture_normal = tile_textures[new_type]
 		entry.tile.set_meta("tile_type", new_type)
 		entry.tile.scale = Vector2(0.3, 0.3)
 		entry.tile.modulate = Color(1, 1, 1, 0)
+	
 	var fill_tween = create_tween().set_parallel(true)
 	for entry in empty_tiles:
 		fill_tween.tween_property(entry.tile, "scale", Vector2(1.0, 1.0), 0.2) \
@@ -285,8 +315,10 @@ func fill_empty_tiles():
 			.set_delay(entry.delay)
 	await fill_tween.finished
 
+
 func check_board_moves_availability():
-	if has_valid_moves_left(): return
+	if has_valid_moves_left(): 
+		return
 	is_animating = true
 	var alert_tween = create_tween()
 	alert_tween.tween_property(score_label, "modulate", Color(1, 0.3, 0.3), 0.15)
@@ -294,6 +326,7 @@ func check_board_moves_availability():
 	alert_tween.tween_property(score_label, "modulate", Color(1, 0.3, 0.3), 0.15)
 	alert_tween.tween_property(score_label, "modulate", Color(1, 1, 1), 0.15)
 	await alert_tween.finished
+	
 	var shuffle_success = false
 	var attempts = 0
 	while not shuffle_success and attempts < 100:
@@ -303,14 +336,17 @@ func check_board_moves_availability():
 			for y in range(GRID_SIZE):
 				all_types.append(grid_matrix[x][y].get_meta("tile_type"))
 		all_types.shuffle()
+		
 		var index = 0
 		for y in range(GRID_SIZE):
 			for x in range(GRID_SIZE):
 				grid_matrix[x][y].set_meta("tile_type", all_types[index])
 				grid_matrix[x][y].texture_normal = tile_textures[all_types[index]]
 				index += 1
+		
 		if scan_entire_grid().size() == 0 and has_valid_moves_left():
 			shuffle_success = true
+	
 	var pop_tween = create_tween().set_parallel(true)
 	for x in range(GRID_SIZE):
 		for y in range(GRID_SIZE):
@@ -321,14 +357,18 @@ func check_board_moves_availability():
 	await pop_tween.finished
 	is_animating = false
 
+
 func has_valid_moves_left() -> bool:
 	for x in range(GRID_SIZE):
 		for y in range(GRID_SIZE):
 			if x < GRID_SIZE - 1:
-				if test_simulated_match(Vector2i(x, y), Vector2i(x + 1, y)): return true
+				if test_simulated_match(Vector2i(x, y), Vector2i(x + 1, y)): 
+					return true
 			if y < GRID_SIZE - 1:
-				if test_simulated_match(Vector2i(x, y), Vector2i(x, y + 1)): return true
+				if test_simulated_match(Vector2i(x, y), Vector2i(x, y + 1)): 
+					return true
 	return false
+
 
 func test_simulated_match(pos1: Vector2i, pos2: Vector2i) -> bool:
 	var type1 = grid_matrix[pos1.x][pos1.y].get_meta("tile_type")
@@ -339,6 +379,7 @@ func test_simulated_match(pos1: Vector2i, pos2: Vector2i) -> bool:
 	grid_matrix[pos1.x][pos1.y].set_meta("tile_type", type1)
 	grid_matrix[pos2.x][pos2.y].set_meta("tile_type", type2)
 	return result
+
 
 func _on_timer_timeout():
 	if game_over: return
@@ -351,6 +392,7 @@ func _on_timer_timeout():
 			flash.tween_property(timer_label, "modulate", Color(1, 1, 1), 0.3)
 	else:
 		trigger_end_state(false)
+
 
 func trigger_end_state(is_victory: bool):
 	game_over = true

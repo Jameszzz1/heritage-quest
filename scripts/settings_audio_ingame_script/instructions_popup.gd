@@ -198,6 +198,12 @@ class IconBox extends Control:
 				_draw_rhythm_keys()
 			"target":
 				_draw_target()
+			"tile_click":
+				_draw_tile_click()
+			"timer":
+				_draw_timer()
+			"match_three":
+				_draw_match_three()
 			_:
 				pass
 
@@ -249,6 +255,45 @@ class IconBox extends Control:
 		draw_arc(center, size.y * 0.42, 0, TAU, 32, Color("#a11f1f"), 2.5, true)
 		draw_arc(center, size.y * 0.27, 0, TAU, 32, Color("#e8c86b"), 2.5, true)
 		draw_circle(center, size.y * 0.10, Color("#2f6b2f"))
+
+	func _draw_tile_click() -> void:
+		var cx: float = size.x / 2.0
+		var cy: float = size.y / 2.0
+		var sq: float = size.y * 0.4
+
+		var left_rect := Rect2(Vector2(cx - sq - 4.0, cy - sq / 2.0), Vector2(sq, sq))
+		draw_rect(left_rect, Color("#e8c86b"))
+		draw_rect(left_rect, Color("#8a5a1f"), false, 1.5)
+
+		var right_rect := Rect2(Vector2(cx + 4.0, cy - sq / 2.0), Vector2(sq, sq))
+		draw_rect(right_rect, Color("#fff8e8"))
+		draw_rect(right_rect, Color("#8a5a1f"), false, 1.5)
+
+		var pts := PackedVector2Array([
+			Vector2(cx - 3.0, cy - 4.0),
+			Vector2(cx + 3.0, cy),
+			Vector2(cx - 3.0, cy + 4.0)
+		])
+		draw_colored_polygon(pts, Color("#c2481c"))
+
+	func _draw_timer() -> void:
+		var center := Vector2(size.x / 2.0, size.y / 2.0)
+		var r: float = size.y * 0.36
+		draw_arc(center, r, 0, TAU, 32, Color("#5c3d21"), 2.5, true)
+		draw_line(center, center + Vector2(0, -r * 0.65), Color("#2f6b2f"), 2.0)
+		draw_line(center, center + Vector2(r * 0.4, 0), Color("#2f6b2f"), 2.0)
+
+	func _draw_match_three() -> void:
+		var cx: float = size.x / 2.0
+		var cy: float = size.y / 2.0
+		var sq: float = size.y * 0.32
+		var spacing: float = sq * 1.15
+		var colors := [Color("#4ab0dc"), Color("#dca134"), Color("#2f6b2f")]
+		for i in range(3):
+			var x: float = cx - spacing + float(i) * spacing
+			var rect := Rect2(Vector2(x - sq / 2.0, cy - sq / 2.0), Vector2(sq, sq))
+			draw_rect(rect, colors[i])
+			draw_rect(rect, Color("#3b2a1a"), false, 1.3)
 
 	func _draw_hazard() -> void:
 		var cx: float = size.x / 2.0

@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://dlg255itcgpvr" path="res://assets/images/mini_games/btn_j_pressed.png" id="9_pwds7"]
 [ext_resource type="Texture2D" uid="uid://pu43al4o2kxb" path="res://assets/images/mini_games/btn_k_idle.png" id="10_ljl7m"]
 [ext_resource type="Texture2D" uid="uid://onvprf835f81" path="res://assets/images/mini_games/btn_k_pressed.png" id="11_fmvba"]
-[ext_resource type="AudioStream" uid="uid://bkpdq185ewa13" path="res://assets/audio/music/tnalak_track.mp3" id="12_amo6l"]
+[ext_resource type="AudioStream" uid="uid://ct1meeqgsx2ch" path="res://assets/audio/mini_game_audio/BayanGong_Rhythm.wav" id="12_uk1p8"]
 
 [node name="TnalakRhythm" type="Control" unique_id=161912630]
 layout_mode = 3
@@ -148,4 +148,4 @@ ignore_texture_size = true
 stretch_mode = 0
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1277493206]
-stream = ExtResource("12_amo6l")
+stream = ExtResource("12_uk1p8")

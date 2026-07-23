@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://b4kimagwm34tg"]
 
 [ext_resource type="Script" uid="uid://bjwuqf6dyw1l2" path="res://scripts/minigamescript/saragani_slide_puzzle_medium.gd" id="1_p77qb"]
+[ext_resource type="Texture2D" uid="uid://bb3fsgt11vbii" path="res://assets/images/provinces/sarangani/background_sarangani_slide_puzzle_asset_.png" id="2_4vhcl"]
 [ext_resource type="Texture2D" uid="uid://cs432qch01gol" path="res://assets/images/provinces/sarangani/SlidePuzzle.png" id="2_sg58u"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_t5ev3"]
 [ext_resource type="AudioStream" uid="uid://dj4uvtluu7tm" path="res://assets/audio/sfx/SaraganiSoundEffect.mp3" id="4_1eqx4"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_48nh2"]
+texture = ExtResource("2_4vhcl")
 
 [node name="SlidePuzzleMedium" type="Control" unique_id=950891294]
 layout_mode = 3
@@ -26,6 +30,19 @@ offset_right = 1.0
 offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_48nh2")
+
+[node name="Title" type="Label" parent="." unique_id=1591682]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -69.0
+offset_right = 89.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("3_t5ev3")
+text = "MAITUM JAR PUZZLE"
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1893383165]
 layout_mode = 1
@@ -98,3 +115,19 @@ text = "Try Again"
 
 [node name="TileSound" type="AudioStreamPlayer" parent="." unique_id=1317523720]
 stream = ExtResource("4_1eqx4")
+
+[node name="ShuffleButton" type="Button" parent="." unique_id=1526044594]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.117000006
+anchor_top = 0.2
+anchor_right = 0.117000006
+anchor_bottom = 0.2
+offset_left = -30.440002
+offset_top = -12.0
+offset_right = 30.559998
+offset_bottom = 12.0
+theme_type_variation = &"FlatButton"
+theme_override_fonts/font = ExtResource("3_t5ev3")
+text = "SHUFFLE"
+flat = true

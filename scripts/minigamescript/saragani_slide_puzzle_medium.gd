@@ -6,14 +6,18 @@ extends Control
 @onready var try_again_button = $TryAgainButton
 @onready var tile_sound = $TileSound
 
-const GRID_SIZE = 6
-const IMAGE_SIZE = 1254.0
+# LINKED NA ULIT SA NODE NA ILALAGAY MO SA EDITOR
+@onready var shuffle_button = $ShuffleButton
+
+const GRID_COLS = 3
+const GRID_ROWS = 4
 
 var puzzle_texture = preload("res://assets/images/provinces/sarangani/SlidePuzzle.png")
 var grid_matrix = []
-var blank_tile_pos = Vector2i(5, 5)
+var blank_tile_pos = Vector2i(2, 3) # Bottom-right position
 var is_shuffling = false
-var display_tile_size = 0.0
+var display_tile_size_x = 0.0
+var display_tile_size_y = 0.0
 var selected_tile = null
 var glow_tween = null
 
@@ -22,20 +26,33 @@ var timer_running = false
 
 func _ready():
 	randomize()
-	grid_container.columns = GRID_SIZE
+	grid_container.columns = GRID_COLS
 	game_over_label.visible = false
 	try_again_button.visible = false
 	try_again_button.pressed.connect(_on_try_again_pressed)
 
+	# IKONEKTA ANG CLICK SIGNAL SA SHUFFLE BUTTON
+	if shuffle_button != null:
+		shuffle_button.pressed.connect(_on_shuffle_button_pressed)
+
 	var viewport_size = get_viewport().get_visible_rect().size
-	display_tile_size = floor(min(viewport_size.x, viewport_size.y) * 0.85 / GRID_SIZE)
-	var total_grid_px = display_tile_size * GRID_SIZE
+
+	# Sizing calculation para sa 3x4 grid
+	display_tile_size_x = floor(viewport_size.x * 0.75 / GRID_COLS)
+	display_tile_size_y = floor(viewport_size.y * 0.75 / GRID_ROWS)
+
+	var tile_size = min(display_tile_size_x, display_tile_size_y)
+	display_tile_size_x = tile_size
+	display_tile_size_y = tile_size
+
+	var total_px_x = display_tile_size_x * GRID_COLS
+	var total_px_y = display_tile_size_y * GRID_ROWS
 
 	grid_container.position = Vector2(
-		(viewport_size.x - total_grid_px) / 2.0,
-		(viewport_size.y - total_grid_px) / 2.0
+		(viewport_size.x - total_px_x) / 2.0,
+		(viewport_size.y - total_px_y) / 2.0
 	)
-	grid_container.custom_minimum_size = Vector2(total_grid_px, total_grid_px)
+	grid_container.custom_minimum_size = Vector2(total_px_x, total_px_y)
 	grid_container.add_theme_constant_override("h_separation", 0)
 	grid_container.add_theme_constant_override("v_separation", 0)
 
@@ -43,7 +60,37 @@ func _ready():
 	shuffle_board()
 
 	timer_label.text = "Time: 5:00"
+
+	# Huwag munang tumakbo ang timer hanggang ma-dismiss ang instructions popup
+	show_instructions_popup()
+
+func show_instructions_popup() -> void:
+	var popup := InstructionsPopup.new()
+	popup.popup_title = "INSTRUCTIONS"
+	popup.popup_subtitle = "SARANGANI: Slide Puzzle"
+	popup.start_hint = "Press SPACE to start"
+	popup.steps = [
+		{"icon": "tile_click", "caption": "Tap the tile next to the blank space to move it."},
+		{"icon": "timer", "caption": "Finish before time runs out."}
+	]
+	popup.dismissed.connect(_on_instructions_dismissed)
+	add_child(popup)
+
+func _on_instructions_dismissed() -> void:
 	timer_running = true
+
+# FUNCTION KAPAG PININDOT ANG SHUFFLE BUTTON MO
+func _on_shuffle_button_pressed():
+	if not timer_running or is_shuffling:
+		return
+
+	remove_glow_from_tile(selected_tile)
+	selected_tile = null
+
+	shuffle_board()
+
+	if tile_sound != null:
+		tile_sound.play()
 
 func _process(delta):
 	if not timer_running:
@@ -69,8 +116,10 @@ func _process(delta):
 func trigger_game_over():
 	game_over_label.visible = true
 	try_again_button.visible = true
+	if shuffle_button != null:
+		shuffle_button.visible = false
 	timer_label.modulate = Color(1, 0.3, 0.3)
-	grid_container.visible = false  # ITINATAGO YUNG PUZZLE
+	grid_container.visible = false
 
 func _on_try_again_pressed():
 	time_left = 300.0
@@ -78,8 +127,10 @@ func _on_try_again_pressed():
 	timer_label.modulate = Color(1, 1, 1)
 	game_over_label.visible = false
 	try_again_button.visible = false
-	grid_container.visible = true  # ISINASALABAS ULIT YUNG PUZZLE
-	blank_tile_pos = Vector2i(5, 5)
+	if shuffle_button != null:
+		shuffle_button.visible = true
+	grid_container.visible = true
+	blank_tile_pos = Vector2i(2, 3)
 	selected_tile = null
 	setup_puzzle_grid()
 	shuffle_board()
@@ -88,31 +139,28 @@ func setup_puzzle_grid():
 	for child in grid_container.get_children():
 		child.queue_free()
 
-	grid_matrix.resize(GRID_SIZE)
-	for x in range(GRID_SIZE):
+	grid_matrix.resize(GRID_COLS)
+	for x in range(GRID_COLS):
 		grid_matrix[x] = []
-		grid_matrix[x].resize(GRID_SIZE)
+		grid_matrix[x].resize(GRID_ROWS)
 
-	var original_tile_size = IMAGE_SIZE / GRID_SIZE
+	var orig_tile_w = puzzle_texture.get_width() / float(GRID_COLS)
+	var orig_tile_h = puzzle_texture.get_height() / float(GRID_ROWS)
 	var tile_index = 0
 
-	for y in range(GRID_SIZE):
-		for x in range(GRID_SIZE):
+	for y in range(GRID_ROWS):
+		for x in range(GRID_COLS):
 			var container = Panel.new()
-			container.custom_minimum_size = Vector2(display_tile_size, display_tile_size)
-			container.size = Vector2(display_tile_size, display_tile_size)
+			container.custom_minimum_size = Vector2(display_tile_size_x, display_tile_size_y)
+			container.size = Vector2(display_tile_size_x, display_tile_size_y)
 
 			var normal_style = StyleBoxFlat.new()
 			normal_style.bg_color = Color(0, 0, 0, 0)
-			normal_style.border_width_left = 0
-			normal_style.border_width_right = 0
-			normal_style.border_width_top = 0
-			normal_style.border_width_bottom = 0
 			container.add_theme_stylebox_override("panel", normal_style)
 
 			var button = TextureButton.new()
-			button.custom_minimum_size = Vector2(display_tile_size, display_tile_size)
-			button.size = Vector2(display_tile_size, display_tile_size)
+			button.custom_minimum_size = Vector2(display_tile_size_x, display_tile_size_y)
+			button.size = Vector2(display_tile_size_x, display_tile_size_y)
 			button.ignore_texture_size = true
 			button.stretch_mode = TextureButton.STRETCH_SCALE
 			button.position = Vector2(0, 0)
@@ -120,14 +168,14 @@ func setup_puzzle_grid():
 			var atlas_tex = AtlasTexture.new()
 			atlas_tex.atlas = puzzle_texture
 			atlas_tex.region = Rect2(
-				x * original_tile_size,
-				y * original_tile_size,
-				original_tile_size,
-				original_tile_size
+				x * orig_tile_w,
+				y * orig_tile_h,
+				orig_tile_w,
+				orig_tile_h
 			)
 			atlas_tex.filter_clip = true
 
-			if x == GRID_SIZE - 1 and y == GRID_SIZE - 1:
+			if x == GRID_COLS - 1 and y == GRID_ROWS - 1:
 				button.texture_normal = null
 				button.set_meta("is_blank", true)
 			else:
@@ -240,11 +288,14 @@ func _on_tile_pressed(tile_button: TextureButton):
 		remove_glow_from_tile(selected_tile)
 		selected_tile = null
 		swap_tiles(current_pos, blank_tile_pos)
-		tile_sound.play()
+		if tile_sound != null:
+			tile_sound.play()
 		if not is_shuffling and check_victory():
 			timer_running = false
 			timer_label.text = "SOLVED! 🎉"
 			timer_label.modulate = Color(0.3, 1, 0.3)
+			if shuffle_button != null:
+				shuffle_button.visible = false
 	else:
 		if selected_tile == tile_button:
 			remove_glow_from_tile(selected_tile)
@@ -272,20 +323,20 @@ func swap_tiles(pos1: Vector2i, pos2: Vector2i):
 		blank_tile_pos = pos2
 
 func get_tile_grid_pos(tile_button: TextureButton) -> Vector2i:
-	for x in range(GRID_SIZE):
-		for y in range(GRID_SIZE):
+	for x in range(GRID_COLS):
+		for y in range(GRID_ROWS):
 			if grid_matrix[x][y] == tile_button:
 				return Vector2i(x, y)
 	return Vector2i(-1, -1)
 
 func shuffle_board():
 	is_shuffling = true
-	for i in range(200):
+	for i in range(80):
 		var valid_neighbors = []
 		var directions = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
 		for dir in directions:
 			var target = blank_tile_pos + dir
-			if target.x >= 0 and target.x < GRID_SIZE and target.y >= 0 and target.y < GRID_SIZE:
+			if target.x >= 0 and target.x < GRID_COLS and target.y >= 0 and target.y < GRID_ROWS:
 				valid_neighbors.append(target)
 		var random_target = valid_neighbors[randi() % valid_neighbors.size()]
 		swap_tiles(blank_tile_pos, random_target)
@@ -293,8 +344,8 @@ func shuffle_board():
 
 func check_victory() -> bool:
 	var expected_id = 0
-	for y in range(GRID_SIZE):
-		for x in range(GRID_SIZE):
+	for y in range(GRID_ROWS):
+		for x in range(GRID_COLS):
 			if grid_matrix[x][y].get_meta("original_id") != expected_id:
 				return false
 			expected_id += 1

@@ -22,12 +22,9 @@ extends Node2D
 @export var final_platform_surface_y_ratio: float = 0.70
 @export var final_platform_collision_height: float = 12.0
 
-# --- INSPECTOR TWEAKS PARA SA NORMAL PLATFORMS ---
 @export var level_surface_y_ratio: float = 0.65
 @export var level_collision_height: float = 16.0
 
-# --- NEW: INSPECTOR TWEAKS PARA SA CLOUD PLATFORMS (PARA BUMAON ANG PAA) ---
-# Ang 0.45 ibig sabihin ibababa natin ang tinatapakan para lumubog si James sa ulap.
 @export var cloud_surface_y_ratio: float = 0.45
 @export var cloud_collision_height: float = 12.0
 
@@ -37,15 +34,39 @@ extends Node2D
 @export var camera_follow_threshold: float = 30.0
 @export var camera_start_margin: float = 50.0
 
+# --- SANDAWA NPC ---
+@export var sandawa_offset: Vector2 = Vector2(-70, -20)  # relative sa final platform center
+@export var sandawa_scale: float = 0.3
+@export_range(0, 7) var sandawa_frame_index: int = 0  # piliin dito kung aling pose (0-7)
+@export var sandawa_trigger_radius: float = 26.0  # gaano kalapit dapat si James para mag-trigger
+
+# --- NEXT SCENE (Descent minigame) ---
+@export var descent_scene_path: String = "res://scenes/provinces/cotabato/descent_game.tscn"
+
 var level1_texture: Texture2D = preload("res://assets/sprites/characters/AscentSpriteAssetJames/ascentlevel1.png")
 var level2_texture: Texture2D = preload("res://assets/sprites/characters/AscentSpriteAssetJames/ascentlevel2.png")
 var level3_texture: Texture2D = preload("res://assets/sprites/characters/AscentSpriteAssetJames/ascentlevel3.png")
 var clouds_texture: Texture2D = preload("res://assets/sprites/characters/AscentSpriteAssetJames/ascentclouds.png")
 var final_texture: Texture2D = preload("res://assets/sprites/characters/AscentSpriteAssetJames/ascentfinal.png")
 var bg_texture: Texture2D = preload("res://assets/sprites/characters/AscentSpriteAssetJames/ascentbackground.png")
+var sandawa_texture: Texture2D = preload("res://assets/images/provinces/cotabato/descent_sandawa_sprite.png")
+var ui_font: Font = preload("res://assets/fonts/GrapeSoda.ttf")
+
+# Eksaktong mga rehiyon ng bawat frame (na-detect na mula sa larawan mo)
+const SANDAWA_FRAMES: Array = [
+	Rect2(55, 3, 88, 197),
+	Rect2(222, 2, 87, 199),
+	Rect2(385, 4, 88, 197),
+	Rect2(522, 5, 97, 196),
+	Rect2(682, 5, 88, 196),
+	Rect2(816, 4, 87, 197),
+	Rect2(969, 4, 86, 197),
+	Rect2(1113, 6, 89, 195),
+]
 
 @onready var player: CharacterBody2D = $AscentPlayer
 @onready var background: Sprite2D = $Background
+@onready var sandawa_cutscene: VideoStreamPlayer = $CutsceneLayer/SandawaCutscene
 var camera: Camera2D
 
 var camera_target_y: float = 0.0
@@ -58,17 +79,22 @@ var final_platform_y: float = 0.0
 var is_game_over: bool = false
 var has_won: bool = false
 var final_platform_spawned: bool = false
+var game_started: bool = false
 
 var platforms: Array[Node] = []
 var cloud_platforms: Array[Node] = []
 
 var ui_layer: CanvasLayer
 var game_over_label: Label
-var win_label: Label
+var win_popup_label: Label
+var win_popup_timer: Timer
 
-# --- PROGRESS BAR ---
 var procedural_progress_bar: AscentProgressBar
 var start_player_y: float = 0.0
+
+# --- Sandawa cutscene trigger ---
+var sandawa_trigger: Area2D
+var cutscene_has_played: bool = false
 
 func _ready() -> void:
 	randomize()
@@ -82,11 +108,14 @@ func _ready() -> void:
 	if background != null:
 		background.texture = bg_texture
 
+	sandawa_cutscene.visible = false
+	sandawa_cutscene.finished.connect(_on_cutscene_finished)
+
 	create_ui()
 	setup_background()
 	create_background_filler(player.position.y)
 
-	camera_target_y = player.global_position.y - screen_height / 2.0 
+	camera_target_y = player.global_position.y - screen_height / 2.0
 	camera.global_position = Vector2(0, camera_target_y)
 
 	camera.limit_left = int(-screen_width / 2.0)
@@ -104,8 +133,36 @@ func _ready() -> void:
 		if final_platform_spawned:
 			break
 		spawn_next_platform()
-		
+
 	start_player_y = player.position.y
+
+	# Ifreeze ang player hanggang ma-dismiss ang instructions popup
+	if player.has_method("set_control_enabled"):
+		player.set_control_enabled(false)
+	else:
+		player.set_physics_process(false)
+
+	show_instructions_popup()
+
+func show_instructions_popup() -> void:
+	var popup := InstructionsPopup.new()
+	popup.popup_title = "INSTRUCTIONS"
+	popup.popup_subtitle = "ASCENT: Climbing the mountain"
+	popup.start_hint = "PRESS SPACE TO START"
+	popup.steps = [
+		{"icon": "move", "caption": "PRESS A , D LEFT/RIGHT"},
+		{"icon": "jump", "caption": "PRESS SPACE TO JUMP"},
+		{"icon": "goal_up", "caption": "CLIMB TO THE PEAK"}
+	]
+	popup.dismissed.connect(_on_instructions_dismissed)
+	ui_layer.add_child(popup)
+
+func _on_instructions_dismissed() -> void:
+	game_started = true
+	if player.has_method("set_control_enabled"):
+		player.set_control_enabled(true)
+	else:
+		player.set_physics_process(true)
 
 func setup_background() -> void:
 	if background == null or background.texture == null:
@@ -163,9 +220,12 @@ func _on_player_jumped_from(platform_node: Node) -> void:
 		fade_and_remove_platform(platform_node)
 
 func _process(delta: float) -> void:
+	if not game_started:
+		return
+
 	update_cloud_movement(delta)
 
-	if is_game_over or has_won:
+	if is_game_over:
 		if Input.is_key_pressed(KEY_R):
 			restart_game()
 		return
@@ -176,7 +236,7 @@ func _process(delta: float) -> void:
 	if procedural_progress_bar != null and not has_won:
 		var current_climb: float = start_player_y - player.position.y
 		var target_distance: float = start_player_y - final_platform_y
-		
+
 		if target_distance > 0:
 			var progress_percentage: float = (current_climb / target_distance) * 100.0
 			procedural_progress_bar.update_progress(progress_percentage)
@@ -184,7 +244,7 @@ func _process(delta: float) -> void:
 	if not final_platform_spawned and player.position.y < highest_platform_y + screen_height:
 		spawn_next_platform()
 
-	if final_platform_spawned and player.is_on_floor() and player.position.y <= final_platform_y + 5.0:
+	if final_platform_spawned and not has_won and player.is_on_floor() and player.position.y <= final_platform_y + 5.0:
 		trigger_win()
 
 	if player.position.y > camera.global_position.y + screen_height / 2.0 + fall_death_margin:
@@ -331,7 +391,6 @@ func spawn_next_platform() -> void:
 	var scale_factor: float = target_platform_width / tex_size.x
 	var scaled_height: float = tex_size.y * scale_factor
 
-	# FIXED: May magkahiwalay na offset engine na ngayon para sa Normal at Cloud Platforms
 	if is_cloud:
 		var cloud_surface_offset: float = (cloud_surface_y_ratio * scaled_height) - (scaled_height / 2.0)
 		create_platform(Vector2(new_x, new_y), data["texture"], true, target_platform_width, cloud_collision_height, cloud_surface_offset)
@@ -385,6 +444,25 @@ func spawn_final_platform() -> void:
 
 	final_platform_spawned = true
 
+	create_sandawa_npc(surface_offset_from_center)
+
+# --- Sandawa NPC: static lang, hindi na naglalaro ng animation ---
+func create_sandawa_npc(final_surface_offset: float) -> void:
+	var sandawa := Sprite2D.new()
+	sandawa.name = "Sandawa"
+
+	var atlas := AtlasTexture.new()
+	atlas.atlas = sandawa_texture
+	atlas.region = SANDAWA_FRAMES[sandawa_frame_index]
+	sandawa.texture = atlas
+
+	sandawa.scale = Vector2(sandawa_scale, sandawa_scale)
+	sandawa.position = Vector2(sandawa_offset.x, final_platform_y + final_surface_offset + sandawa_offset.y)
+
+	add_child(sandawa)
+
+	_setup_sandawa_trigger(sandawa.position)
+
 func cleanup_old_platforms() -> void:
 	for p in platforms.duplicate():
 		if p.position.y > camera.global_position.y + screen_height:
@@ -404,6 +482,7 @@ func create_ui() -> void:
 
 	game_over_label = Label.new()
 	game_over_label.text = "GAME OVER\nPress R to Restart"
+	game_over_label.add_theme_font_override("font", ui_font)
 	game_over_label.add_theme_font_size_override("font_size", 12)
 	game_over_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	game_over_label.size = Vector2(160, 40)
@@ -411,25 +490,98 @@ func create_ui() -> void:
 	game_over_label.visible = false
 	ui_layer.add_child(game_over_label)
 
-	win_label = Label.new()
-	win_label.text = "YOU WIN!\nPress R to Restart"
-	win_label.add_theme_font_size_override("font_size", 12)
-	win_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	win_label.size = Vector2(160, 40)
-	win_label.position = Vector2(viewport_size.x / 2.0 - 80, viewport_size.y / 2.0 - 20)
-	win_label.visible = false
-	ui_layer.add_child(win_label)
+	# --- Pansamantalang popup message (2 seconds) ---
+	win_popup_label = Label.new()
+	win_popup_label.text = "Talk to Sandawa to claim the final token."
+	win_popup_label.add_theme_font_override("font", ui_font)
+	win_popup_label.add_theme_font_size_override("font_size", 12)
+	win_popup_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	win_popup_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	win_popup_label.size = Vector2(260, 40)
+	win_popup_label.position = Vector2(viewport_size.x / 2.0 - 130, 20)
+	win_popup_label.visible = false
+	win_popup_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	ui_layer.add_child(win_popup_label)
+
+	win_popup_timer = Timer.new()
+	win_popup_timer.wait_time = 2.0
+	win_popup_timer.one_shot = true
+	win_popup_timer.timeout.connect(_on_win_popup_timeout)
+	add_child(win_popup_timer)
+
+func _on_win_popup_timeout() -> void:
+	win_popup_label.visible = false
 
 func trigger_game_over() -> void:
 	is_game_over = true
+	if player.has_method("set_control_enabled"):
+		player.set_control_enabled(false)
+	else:
+		player.set_physics_process(false)
 	game_over_label.visible = true
 
 func trigger_win() -> void:
 	has_won = true
-	win_label.visible = true
+	win_popup_label.visible = true
+	win_popup_timer.start()
 
 func restart_game() -> void:
 	get_tree().reload_current_scene()
+
+# =========================================================================
+#  SANDAWA CUTSCENE TRIGGER
+# =========================================================================
+func _setup_sandawa_trigger(sandawa_pos: Vector2) -> void:
+	sandawa_trigger = Area2D.new()
+	sandawa_trigger.name = "SandawaTrigger"
+
+	var collision_shape := CollisionShape2D.new()
+	var shape := CircleShape2D.new()
+	shape.radius = sandawa_trigger_radius
+	collision_shape.shape = shape
+	sandawa_trigger.add_child(collision_shape)
+
+	sandawa_trigger.position = sandawa_pos
+	add_child(sandawa_trigger)
+
+	sandawa_trigger.body_entered.connect(_on_sandawa_trigger_entered)
+
+func _on_sandawa_trigger_entered(body: Node2D) -> void:
+	if body == player and not cutscene_has_played:
+		_play_sandawa_cutscene()
+
+func _play_sandawa_cutscene() -> void:
+	cutscene_has_played = true
+
+	if player.has_method("set_control_enabled"):
+		player.set_control_enabled(false)
+	else:
+		player.set_physics_process(false)
+
+	win_popup_label.visible = false
+	if procedural_progress_bar != null:
+		procedural_progress_bar.visible = false
+	sandawa_cutscene.visible = true
+	sandawa_cutscene.play()
+
+func _on_cutscene_finished() -> void:
+	sandawa_cutscene.visible = false
+	sandawa_cutscene.stop()
+	if procedural_progress_bar != null:
+		procedural_progress_bar.visible = false
+
+	# Diretso na papunta sa Descent minigame pagkatapos ng cutscene
+	go_to_descent_scene()
+
+func go_to_descent_scene() -> void:
+	var error := get_tree().change_scene_to_file(descent_scene_path)
+	if error != OK:
+		push_error("Hindi ma-load ang Descent scene: " + descent_scene_path + " (error code: " + str(error) + ")")
+
+func _unhandled_input(event: InputEvent) -> void:
+	if sandawa_cutscene.visible and event.is_action_pressed("ui_accept"):
+		sandawa_cutscene.stop()
+		_on_cutscene_finished()
 
 
 # =========================================================================
@@ -439,7 +591,7 @@ class AscentProgressBar extends Control:
 	var bar_width: float = 6.0
 	var bar_height: float = 130.0
 	var current_value: float = 0.0
-	
+
 	var face_texture: Texture2D = preload("res://assets/images/mini_map/marker_james.png")
 
 	func _ready() -> void:
@@ -449,27 +601,27 @@ class AscentProgressBar extends Control:
 		var center_x: float = size.x / 2.0
 		var start_y: float = 20.0
 		var end_y: float = start_y + bar_height
-		
+
 		draw_line(Vector2(center_x, start_y), Vector2(center_x, end_y), Color("#2e2219"), bar_width + 4.0, true)
 		draw_line(Vector2(center_x, start_y), Vector2(center_x, end_y), Color("#1a1310"), bar_width, true)
-		
+
 		var current_head_y: float = end_y
-		
+
 		if current_value > 0.0:
 			var fill_ratio: float = current_value / 100.0
 			var fill_length: float = bar_height * fill_ratio
 			var fill_start_y: float = end_y
 			var fill_end_y: float = end_y - fill_length
-			
+
 			current_head_y = fill_end_y
-			
+
 			draw_line(Vector2(center_x, fill_start_y), Vector2(center_x, fill_end_y), Color("#dca134"), bar_width - 2.0, true)
 			draw_line(Vector2(center_x - 1, fill_start_y), Vector2(center_x - 1, fill_end_y), Color("#f7d070"), 1.0, true)
 
 		var blimp_center := Vector2(center_x, 10.0)
 		draw_rect(Rect2(blimp_center.x - 7, blimp_center.y - 7, 14, 14), Color("#2e2219"), false, 2.0)
 		draw_rect(Rect2(blimp_center.x - 6, blimp_center.y - 6, 12, 12), Color("#4a3728"), true)
-		
+
 		var icon_color: Color = Color("#dca134") if current_value >= 100.0 else Color("#82664d")
 		draw_rect(Rect2(blimp_center.x - 4, blimp_center.y - 3, 8, 6), icon_color, true)
 		draw_rect(Rect2(blimp_center.x - 5, blimp_center.y - 2, 1, 4), icon_color, true)
@@ -479,14 +631,14 @@ class AscentProgressBar extends Control:
 		var base_center := Vector2(center_x, end_y + 10.0)
 		draw_rect(Rect2(base_center.x - 7, base_center.y - 6, 14, 12), Color("#2e2219"), false, 2.0)
 		draw_rect(Rect2(base_center.x - 6, base_center.y - 5, 12, 10), Color("#4a3728"), true)
-		
+
 		var base_color := Color("#9a7d66")
 		draw_rect(Rect2(base_center.x - 3, base_center.y + 1, 6, 3), base_color, true)
 		draw_rect(Rect2(base_center.x - 2, base_center.y - 3, 4, 4), base_color, true)
 		draw_rect(Rect2(base_center.x - 4, base_center.y - 4, 8, 1), Color("#dca134"), true)
 
 		if face_texture != null:
-			var face_size: float = 16.0 
+			var face_size: float = 16.0
 			var face_rect := Rect2(center_x - (face_size / 2.0), current_head_y - (face_size / 2.0), face_size, face_size)
 			draw_texture_rect(face_texture, face_rect, false)
 

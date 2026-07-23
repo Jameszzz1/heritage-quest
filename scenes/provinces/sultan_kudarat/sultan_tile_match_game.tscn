@@ -2,10 +2,13 @@
 
 [ext_resource type="Script" uid="uid://dxp6b0p1otsbi" path="res://scripts/minigamescript/tile_match_game.gd" id="1_pd7og"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_3nh2d"]
+[ext_resource type="Texture2D" uid="uid://c2g1ibgt3cril" path="res://assets/images/provinces/sultan_kudarat/bgtilesmatch.png" id="2_l1bqs"]
 [ext_resource type="AudioStream" uid="uid://cnu2jv3kq8uwo" path="res://assets/audio/sfx/sultantilesoundeffect.mp3" id="3_3nh2d"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xh432"]
+texture = ExtResource("2_l1bqs")
+
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_pd7og"]
-load_path = "res://.godot/imported/bgtilesmatch.png-4c2cf5c63d0aaed95a179da083729414.ctex"
 
 [node name="TileMatchGame" type="Control" unique_id=1890055166]
 layout_mode = 3
@@ -15,6 +18,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_pd7og")
+
+[node name="Panel" type="Panel" parent="." unique_id=31776664]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_xh432")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1775023114]
 modulate = Color(0.66245234, 0.66245234, 0.6624523, 1)

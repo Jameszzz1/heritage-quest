@@ -172,15 +172,27 @@ func _ready():
 		load("res://assets/images/mini_games/btn_j_pressed.png"),
 		load("res://assets/images/mini_games/btn_k_pressed.png"),
 	]
-	
+
 	var font = load("res://assets/fonts/GrapeSoda.ttf")
 	label_countdown.add_theme_font_override("font", font)
 	label_countdown.add_theme_font_size_override("font_size", 80)
 	label_countdown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label_countdown.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label_countdown.set_anchors_preset(Control.PRESET_CENTER)
-	
-	start_countdown()
+
+	show_instructions_popup()
+
+func show_instructions_popup() -> void:
+	var popup := InstructionsPopup.new()
+	popup.popup_title = "INSTRUCTIONS"
+	popup.popup_subtitle = "T'NALAK RHYTHM: Tugtugin ang Habi"
+	popup.start_hint = "Pindutin ang SPACE para magsimula"
+	popup.steps = [
+		{"icon": "rhythm_keys", "caption": "PINDUTIN ANG D F J K KAPAG UMABOT SA LINE ANG NOTE"},
+		{"icon": "target", "caption": "MAKAMIT ANG TARGET NA SCORE AT COMBO"}
+	]
+	popup.dismissed.connect(start_countdown)
+	add_child(popup)
 
 func start_countdown():
 	var countdown_values = ["3", "2", "1", "START!"]
@@ -228,6 +240,8 @@ func move_notes(delta):
 			miss()
 
 func _input(event):
+	if not game_started or game_ended:
+		return
 	if event is InputEventKey and not event.echo:
 		for i in range(4):
 			if event.keycode == lane_keys[i]:

@@ -1,0 +1,107 @@
+[gd_scene format=3 uid="uid://dcxo0g5sfhmm2"]
+
+[ext_resource type="Script" uid="uid://02cpv3n00rrc" path="res://scripts/charactersscript/descent_james.gd" id="1_cgt7l"]
+[ext_resource type="Texture2D" uid="uid://cbv1w78blsgft" path="res://assets/sprites/characters/DescentSpriteAssetJames/descent_left_sprite_A.png" id="1_dplik"]
+[ext_resource type="Texture2D" uid="uid://dtai0mi7wvs6r" path="res://assets/sprites/characters/DescentSpriteAssetJames/descent_falling_sprite.png" id="2_bkf2s"]
+[ext_resource type="Texture2D" uid="uid://1817r3t8apw" path="res://assets/sprites/characters/DescentSpriteAssetJames/descent_right_sprite_D.png" id="2_cgt7l"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xoylg"]
+atlas = ExtResource("2_bkf2s")
+region = Rect2(0, 0, 162, 255)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xi2c3"]
+atlas = ExtResource("2_bkf2s")
+region = Rect2(0, 255, 162, 255)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qvlxi"]
+atlas = ExtResource("2_bkf2s")
+region = Rect2(162, 255, 162, 255)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bkf2s"]
+atlas = ExtResource("1_dplik")
+region = Rect2(324, 0, 162, 255)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8e6l"]
+atlas = ExtResource("2_cgt7l")
+region = Rect2(0, 0, 162, 255)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yu31d"]
+atlas = ExtResource("1_dplik")
+region = Rect2(162, 255, 162, 255)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xs717"]
+atlas = ExtResource("1_dplik")
+region = Rect2(0, 255, 162, 255)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_me2uo"]
+atlas = ExtResource("2_cgt7l")
+region = Rect2(324, 255, 162, 255)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ia58o"]
+atlas = ExtResource("2_cgt7l")
+region = Rect2(162, 255, 162, 255)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xoylg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xoylg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xi2c3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qvlxi")
+}],
+"loop": false,
+"name": &"descent_hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bkf2s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s8e6l")
+}],
+"loop": true,
+"name": &"descent_idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yu31d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xs717")
+}],
+"loop": true,
+"name": &"descent_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_me2uo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ia58o")
+}],
+"loop": true,
+"name": &"descent_right",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xi2c3"]
+radius = 46.666664
+height = 180.0
+
+[node name="DescentJames" type="CharacterBody2D" unique_id=2090927404]
+scale = Vector2(0.2, 0.2)
+script = ExtResource("1_cgt7l")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=148462936]
+sprite_frames = SubResource("SpriteFrames_xoylg")
+animation = &"descent_hit"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=551916055]
+shape = SubResource("CapsuleShape2D_xi2c3")

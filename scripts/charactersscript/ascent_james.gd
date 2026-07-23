@@ -11,13 +11,21 @@ var jump_grunt_sounds: Array = [
 	preload("res://assets/audio/sfx/ascent_jump_effort_grunt_male.wav"),
 	preload("res://assets/audio/sfx/ascent_jump_effort_grunt2_male.wav")
 ]
-var audio_player: AudioStreamPlayer2D
 
+var audio_player: AudioStreamPlayer2D
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 signal jumped_from_platform(platform_node)
-
 var current_floor_platform: Node = null
+
+# --- CUTSCENE CONTROL LOCK ---
+var control_enabled: bool = true
+
+func set_control_enabled(enabled: bool) -> void:
+	control_enabled = enabled
+	if enabled:
+		# i-reset ang animation papuntang idle kapag nabalik ang control
+		sprite.play("ascent_idle")
 
 func _ready() -> void:
 	# Gumawa tayo ng Audio Player node dynamically
@@ -26,6 +34,14 @@ func _ready() -> void:
 	add_child(audio_player)
 
 func _physics_process(delta: float) -> void:
+	# --- KAPAG NAKA-LOCK ANG CONTROLS (habang cutscene) ---
+	if not control_enabled:
+		if not is_on_floor():
+			velocity.y += gravity * delta
+		velocity.x = move_toward(velocity.x, 0, speed)
+		move_and_slide()
+		return
+
 	# 1. APPLY GRAVITY
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -71,7 +87,6 @@ func update_animation(direction: float) -> void:
 			sprite.play("ascent_jump_right")
 		else:
 			sprite.play("ascent_jump")
-
 	# --- ANIMATION MECHANICS KAPAG NASA GROUND (GROUNDED) ---
 	else:
 		if direction < 0:

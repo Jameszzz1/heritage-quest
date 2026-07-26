@@ -1,13 +1,12 @@
 extends Node
-
 var grass_sound = preload("res://assets/audio/sfx/grass_footsteps.wav")
 var dirt_sound = preload("res://assets/audio/sfx/dirt_footsteps.wav")
-
 var audio_player = AudioStreamPlayer.new()
 var footstep_timer = 0.0
 var footstep_interval = 0.4
 
 func _ready():
+	audio_player.bus = "SFX"
 	add_child(audio_player)
 
 func play_footstep(surface: String, delta: float, is_moving: bool, is_sprinting: bool):

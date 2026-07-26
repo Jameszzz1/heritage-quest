@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://cbtrtp3tpvlp4" path="res://assets/images/menu/background.png" id="2_4ovp2"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_1mexh"]
 [ext_resource type="AudioStream" uid="uid://yo0ct2n0eu0j" path="res://assets/audio/music/MainmenuBG.mp3" id="4_6ud2m"]
-[ext_resource type="Script" uid="uid://cr44v6d33lxk" path="res://scripts/settings_audio_ingame_script/audio_control.gd" id="5_qqxfm"]
 [ext_resource type="Script" uid="uid://djdlkyki5s0gm" path="res://scripts/settings_audio_ingame_script/fullscreen_control.gd" id="6_ktljq"]
 [ext_resource type="Texture2D" uid="uid://dy5l2u8h3lhul" path="res://assets/images/menu/AchivementBackground.png" id="7_rbask"]
 [ext_resource type="Script" uid="uid://b1lqa3w8fei5x" path="res://scripts/achievements_container.gd" id="8_e6a60"]
@@ -57,14 +56,6 @@ corner_radius_bottom_left = 16
 corner_detail = 16
 shadow_size = 5
 shadow_offset = Vector2(0, 3.41)
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_jix8l"]
-color = Color(1, 1, 1, 1)
-thickness = 6
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_glbon"]
-color = Color(0, 1, 0, 1)
-thickness = 6
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j5v2v"]
 texture = ExtResource("7_rbask")
@@ -179,6 +170,7 @@ text = "EXIT"
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=508031387]
 stream = ExtResource("4_6ud2m")
 autoplay = true
+bus = &"MUSIC"
 
 [node name="Logout" type="Button" parent="." unique_id=635887972]
 layout_mode = 0
@@ -200,7 +192,6 @@ text = "LOGOUT
 "
 
 [node name="Options" type="Panel" parent="." unique_id=1693388400]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -227,65 +218,34 @@ theme_override_fonts/font = ExtResource("3_1mexh")
 theme_override_font_sizes/font_size = 34
 text = "SETTINGS"
 
-[node name="AudioControl" type="HSlider" parent="Options" unique_id=965750336]
-layout_mode = 0
-offset_left = 143.0
-offset_top = 59.0
-offset_right = 245.0
-offset_bottom = 75.0
-theme_override_styles/slider = SubResource("StyleBoxLine_jix8l")
-theme_override_styles/grabber_area = SubResource("StyleBoxLine_glbon")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxLine_glbon")
-max_value = 1.0
-step = 0.05
-value = 1.0
-script = ExtResource("5_qqxfm")
-audio_bus_name = "Music"
-
 [node name="FullscreenControl" type="CheckButton" parent="Options" unique_id=1476773957]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.15900001
-anchor_top = 0.5
-anchor_right = 0.15900001
-anchor_bottom = 0.5
-offset_left = 0.11999512
-offset_top = -11.0
-offset_right = 127.119995
-offset_bottom = 13.0
+anchor_left = 0.58000004
+anchor_top = 0.906
+anchor_right = 0.58000004
+anchor_bottom = 0.906
+offset_left = -110.600006
+offset_top = -12.080002
+offset_right = 16.399994
+offset_bottom = 11.919998
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("3_1mexh")
 theme_override_font_sizes/font_size = 12
 text = "Fullscreen"
 script = ExtResource("6_ktljq")
 
-[node name="Music Volume" type="Label" parent="Options" unique_id=2105482927]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.178
-anchor_top = 0.372
-anchor_right = 0.178
-anchor_bottom = 0.372
-offset_left = 0.040000916
-offset_top = -5.959999
-offset_right = 64.04
-offset_bottom = 6.040001
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("3_1mexh")
-theme_override_font_sizes/font_size = 12
-text = "Music Volume"
-
 [node name="Back" type="Button" parent="Options" unique_id=1076464629]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.99100006
-anchor_top = 0.94400007
-anchor_right = 0.99100006
-anchor_bottom = 0.94400007
-offset_left = -33.120026
-offset_top = -4.9200134
-offset_right = -0.120025635
-offset_bottom = 5.0799866
+anchor_left = 0.93600005
+anchor_top = 0.92800003
+anchor_right = 0.93600005
+anchor_bottom = 0.92800003
+offset_left = -16.52002
+offset_top = -5.0400085
+offset_right = 16.47998
+offset_bottom = 4.9599915
 grow_horizontal = 0
 grow_vertical = 0
 size_flags_vertical = 3
@@ -299,6 +259,47 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
 theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
 text = "Back"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options" unique_id=803486648]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.5
+offset_top = -47.0
+offset_right = 90.5
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MasterLabel2" type="Label" parent="Options/VBoxContainer" unique_id=924395216]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 11
+text = "Master Volume"
+
+[node name="MasterSlider" type="HSlider" parent="Options/VBoxContainer" unique_id=791292473]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="Options/VBoxContainer" unique_id=567767625]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 11
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="Options/VBoxContainer" unique_id=871887529]
+layout_mode = 2
+
+[node name="SFXLabel" type="Label" parent="Options/VBoxContainer" unique_id=668139453]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 11
+text = "SFX Volume"
+
+[node name="SFXSlider" type="HSlider" parent="Options/VBoxContainer" unique_id=297298633]
+layout_mode = 2
 
 [node name="Achievements" type="Panel" parent="." unique_id=599565214]
 visible = false
@@ -782,7 +783,6 @@ autowrap_mode = 3
 [connection signal="pressed" from="Options2" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="Logout" to="." method="_on_logout_pressed"]
-[connection signal="value_changed" from="Options/AudioControl" to="Options/AudioControl" method="_on_value_changed"]
 [connection signal="toggled" from="Options/FullscreenControl" to="Options/FullscreenControl" method="_on_toggled"]
 [connection signal="pressed" from="Options/Back" to="." method="_on_back_options_pressed"]
 [connection signal="pressed" from="Achievements/Back" to="." method="_on_back_achie_pressed"]

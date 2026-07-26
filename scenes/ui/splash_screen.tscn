@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://oc55ws06grmr"]
+
+[ext_resource type="Script" uid="uid://rjnl62fwyoto" path="res://scripts/uiscript/splash_screen.gd" id="1_eina6"]
+[ext_resource type="VideoStream" uid="uid://cycb6llna6dqo" path="res://assets/cutscenes/splashscreen.ogv" id="1_m0ilf"]
+[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_eina6"]
+
+[node name="SplashScreen" type="Control" unique_id=1027517815]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_eina6")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=2066292333]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("1_m0ilf")
+autoplay = true
+expand = true
+
+[node name="SkipLabel" type="Label" parent="." unique_id=318757894]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_eina6")
+theme_override_font_sizes/font_size = 12
+text = "Press any key to skip"

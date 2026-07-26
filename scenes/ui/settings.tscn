@@ -40,7 +40,7 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Title" type="Label" parent="Background/Panel/VBoxContainer" unique_id=2098582563]
+[node name="SettingsLabel" type="Label" parent="Background/Panel/VBoxContainer" unique_id=2098582563]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_h175o")
 theme_override_font_sizes/font_size = 20
@@ -53,6 +53,11 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("2_h175o")
 text = "Switch to fullscreen"
 
+[node name="VolumeSettingsButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=248711772]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+text = "Audio Settings"
+
 [node name="SaveButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=2037519183]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_h175o")
@@ -63,18 +68,69 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("2_h175o")
 text = "MainMenu"
 
-[node name="VolumeLevel" type="Label" parent="Background/Panel/VBoxContainer" unique_id=973908130]
+[node name="VolumePopup" type="Panel" parent="Background" unique_id=986209632]
+layout_mode = 0
+offset_right = 203.0
+offset_bottom = 150.0
+
+[node name="AudioSettingsLabel" type="Label" parent="Background/VolumePopup" unique_id=1073536253]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -32.5
+offset_right = 32.5
+offset_bottom = 20.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("2_h175o")
+theme_override_font_sizes/font_size = 20
+text = "Audio Settings"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/VolumePopup" unique_id=1872209599]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.5
+offset_top = -47.0
+offset_right = 90.5
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MasterLabel2" type="Label" parent="Background/VolumePopup/VBoxContainer" unique_id=116135554]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_h175o")
-text = "Volume "
+theme_override_font_sizes/font_size = 11
+text = "Master Volume"
 
-[node name="VolumeSlider" type="HSlider" parent="Background/Panel/VBoxContainer" unique_id=535437985]
+[node name="MasterSlider" type="HSlider" parent="Background/VolumePopup/VBoxContainer" unique_id=660357035]
 layout_mode = 2
-min_value = 1.0
-step = 0.01
-value = 1.0
 
-[connection signal="pressed" from="Background/Panel/VBoxContainer/FullscreenButton" to="." method="_on_fullscreen_button_pressed"]
-[connection signal="pressed" from="Background/Panel/VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="Background/Panel/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
-[connection signal="value_changed" from="Background/Panel/VBoxContainer/VolumeSlider" to="." method="_on_volume_slider_value_changed"]
+[node name="MusicLabel" type="Label" parent="Background/VolumePopup/VBoxContainer" unique_id=367840844]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+theme_override_font_sizes/font_size = 11
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="Background/VolumePopup/VBoxContainer" unique_id=542618189]
+layout_mode = 2
+
+[node name="SFXLabel" type="Label" parent="Background/VolumePopup/VBoxContainer" unique_id=1087912152]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+theme_override_font_sizes/font_size = 11
+text = "SFX Volume"
+
+[node name="SFXSlider" type="HSlider" parent="Background/VolumePopup/VBoxContainer" unique_id=1690177253]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Background/VolumePopup/VBoxContainer" unique_id=192210648]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_h175o")
+text = "Back"

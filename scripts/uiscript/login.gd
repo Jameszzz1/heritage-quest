@@ -10,14 +10,19 @@ extends Control
 @onready var otp_status = $otpUI/OTPStatus
 var current_email = ""
 var is_login_otp = false
+
 func _ready() -> void:
 	login_ui.show()
 	create_account_ui.hide()
 	otp_ui.hide()
+
 func _on_create_acc_pressed() -> void:
+	MusicManager.play_button_sfx()
 	login_ui.hide()
 	create_account_ui.show()
+
 func _on_loginn_pressed() -> void:
+	MusicManager.play_button_sfx()
 	var email = login_email_field.text
 	var password = login_password_field.text
 	if email == "" or password == "":
@@ -40,7 +45,9 @@ func _on_loginn_pressed() -> void:
 		otp_status.text = "OTP sent to: " + email
 	else:
 		print("❌ LOGIN ERROR: ", str(result.error))
+
 func _on_verify_pressed() -> void:
+	MusicManager.play_button_sfx()
 	var token = otp_input.text.strip_edges()
 	if token == "":
 		otp_status.text = "❌ Enter the OTP!"
@@ -57,7 +64,9 @@ func _on_verify_pressed() -> void:
 	else:
 		otp_status.text = "❌ Wrong or expired OTP. Try again."
 		print("OTP Failed: ", result.error)
+
 func _on_register_pressed() -> void:
+	MusicManager.play_button_sfx()
 	var email = email_field.text
 	var password = password_field.text
 	if email == "" or password == "":
@@ -75,6 +84,8 @@ func _on_register_pressed() -> void:
 		otp_status.text = "OTP sent to: " + email
 	else:
 		print("❌ REGISTER ERROR: ", str(result.error))
+
 func _on_button_pressed() -> void:
+	MusicManager.play_button_sfx()
 	create_account_ui.hide()
 	login_ui.show()

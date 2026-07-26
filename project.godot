@@ -16,13 +16,13 @@ anonpublic="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 [application]
 
 config/name="huhu"
-run/main_scene="uid://klyn4xlonjaf"
+run/main_scene="uid://oc55ws06grmr"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [audio]
 
-buses/default_bus_layout=""
+buses/default_bus_layout="uid://hgry7scpvyhg"
 
 [autoload]
 

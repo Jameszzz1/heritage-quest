@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://oc55ws06grmr"]
 
 [ext_resource type="Script" uid="uid://rjnl62fwyoto" path="res://scripts/uiscript/splash_screen.gd" id="1_eina6"]
-[ext_resource type="VideoStream" uid="uid://cycb6llna6dqo" path="res://assets/cutscenes/splashscreen.ogv" id="1_m0ilf"]
+[ext_resource type="VideoStream" uid="uid://dqfjep30p5ahy" path="res://assets/cutscenes/splashscreen.ogv" id="1_m0ilf"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_eina6"]
 
 [node name="SplashScreen" type="Control" unique_id=1027517815]

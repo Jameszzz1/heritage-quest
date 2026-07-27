@@ -2,6 +2,13 @@
 
 [ext_resource type="Script" uid="uid://c6ahr67to4n77" path="res://scripts/ingame_settings.gd" id="1_7pacj"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_h175o"]
+[ext_resource type="Texture2D" uid="uid://b1k4s6opx0yq3" path="res://assets/images/menu/ui_panel_settings.png" id="2_ptynm"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ncfhn"]
+texture = ExtResource("2_ptynm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h175o"]
+texture = ExtResource("2_ptynm")
 
 [node name="Settings" type="Control" unique_id=2094690682]
 process_mode = 3
@@ -20,25 +27,31 @@ anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -101.0
-offset_right = 102.0
-offset_bottom = -30.0
+offset_top = -9.0
+offset_right = 105.0
+offset_bottom = -49.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0)
 
 [node name="Panel" type="PanelContainer" parent="Background" unique_id=585171921]
+visible = false
 custom_minimum_size = Vector2(200, 150)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 13.0
+offset_bottom = 62.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ncfhn")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Background/Panel" unique_id=197039451]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="SettingsLabel" type="Label" parent="Background/Panel/VBoxContainer" unique_id=2098582563]
 layout_mode = 2
@@ -50,37 +63,48 @@ horizontal_alignment = 1
 [node name="FullscreenButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=262344501]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("2_h175o")
 text = "Switch to fullscreen"
 
 [node name="VolumeSettingsButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=248711772]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_h175o")
 text = "Audio Settings"
 
 [node name="SaveButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=2037519183]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_h175o")
 text = "Save Game"
 
 [node name="MainMenuButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=1191590502]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_h175o")
 text = "MainMenu"
 
 [node name="VolumePopup" type="Panel" parent="Background" unique_id=986209632]
-layout_mode = 0
-offset_right = 203.0
-offset_bottom = 150.0
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.143
+anchor_bottom = 0.143
+offset_top = -26.02
+offset_right = 219.0
+offset_bottom = 175.98
+theme_override_styles/panel = SubResource("StyleBoxTexture_h175o")
 
 [node name="AudioSettingsLabel" type="Label" parent="Background/VolumePopup" unique_id=1073536253]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -32.5
-offset_right = 32.5
-offset_bottom = 20.0
+offset_left = -56.5
+offset_top = 24.0
+offset_right = 60.5
+offset_bottom = 44.0
 grow_horizontal = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
@@ -96,15 +120,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -80.5
-offset_top = -47.0
-offset_right = 90.5
-offset_bottom = 60.0
+offset_left = -72.75
+offset_top = -58.0
+offset_right = 75.5
+offset_bottom = 74.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MasterLabel2" type="Label" parent="Background/VolumePopup/VBoxContainer" unique_id=116135554]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_h175o")
 theme_override_font_sizes/font_size = 11
 text = "Master Volume"
@@ -114,6 +139,7 @@ layout_mode = 2
 
 [node name="MusicLabel" type="Label" parent="Background/VolumePopup/VBoxContainer" unique_id=367840844]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_h175o")
 theme_override_font_sizes/font_size = 11
 text = "Music Volume"
@@ -123,6 +149,7 @@ layout_mode = 2
 
 [node name="SFXLabel" type="Label" parent="Background/VolumePopup/VBoxContainer" unique_id=1087912152]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_h175o")
 theme_override_font_sizes/font_size = 11
 text = "SFX Volume"
@@ -132,5 +159,7 @@ layout_mode = 2
 
 [node name="BackButton" type="Button" parent="Background/VolumePopup/VBoxContainer" unique_id=192210648]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("2_h175o")
 text = "Back"

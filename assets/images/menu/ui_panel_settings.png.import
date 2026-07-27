@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ryek5wdle305"
-path="res://.godot/imported/sprintsprite.png-7e279acbf11b54911c3b4cd654cb3f27.ctex"
+uid="uid://b1k4s6opx0yq3"
+path="res://.godot/imported/ui_panel_settings.png-16f635c60a42755281652bd3d5572566.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/characters/JamesSprites/sprintsprite.png"
-dest_files=["res://.godot/imported/sprintsprite.png-7e279acbf11b54911c3b4cd654cb3f27.ctex"]
+source_file="res://assets/images/menu/ui_panel_settings.png"
+dest_files=["res://.godot/imported/ui_panel_settings.png-16f635c60a42755281652bd3d5572566.ctex"]
 
 [params]
 

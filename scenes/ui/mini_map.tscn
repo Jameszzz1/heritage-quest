@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://df0pt04c10hdf" path="res://scripts/uiscript/mini_map.gd" id="1_1wrf6"]
 [ext_resource type="Texture2D" uid="uid://dif17anni6log" path="res://assets/images/mini_map/minimap_frame.png" id="2_ytmag"]
 [ext_resource type="Texture2D" uid="uid://d3kmk5xc7hwve" path="res://assets/images/mini_map/marker_james.png" id="3_wxlrw"]
+[ext_resource type="Texture2D" uid="uid://duibvwlrpwe08" path="res://assets/images/mini_map/marker_bai_linay.png" id="4_wt7x8"]
+[ext_resource type="Texture2D" uid="uid://dsrqxtu78rtm3" path="res://assets/images/mini_map/marker_ayu.png" id="5_4c3vm"]
+[ext_resource type="Texture2D" uid="uid://cgkf6opdrugb7" path="res://assets/images/mini_map/marker_ustadz_ameer.png" id="6_et8qq"]
+[ext_resource type="Texture2D" uid="uid://drnh257fjhy4u" path="res://assets/images/mini_map/marker_apo_sandawa.png" id="7_aemdj"]
 
 [node name="MiniMap" type="Control" unique_id=492215546]
 layout_mode = 3
@@ -50,4 +54,48 @@ offset_right = 157.0
 offset_bottom = 106.0
 mouse_filter = 2
 texture = ExtResource("3_wxlrw")
+expand_mode = 1
+
+[node name="BaiLinayMarker" type="TextureRect" parent="." unique_id=1653188017]
+visible = false
+layout_mode = 0
+offset_left = 152.0
+offset_top = 82.0
+offset_right = 167.0
+offset_bottom = 97.0
+mouse_filter = 2
+texture = ExtResource("4_wt7x8")
+expand_mode = 1
+
+[node name="AyuMarker" type="TextureRect" parent="." unique_id=185892582]
+visible = false
+layout_mode = 0
+offset_left = 131.0
+offset_top = 82.0
+offset_right = 146.0
+offset_bottom = 97.0
+mouse_filter = 2
+texture = ExtResource("5_4c3vm")
+expand_mode = 1
+
+[node name="AmeerMarker" type="TextureRect" parent="." unique_id=1201138151]
+visible = false
+layout_mode = 0
+offset_left = 153.0
+offset_top = 98.0
+offset_right = 168.0
+offset_bottom = 113.0
+mouse_filter = 2
+texture = ExtResource("6_et8qq")
+expand_mode = 1
+
+[node name="SandawaMarker" type="TextureRect" parent="." unique_id=353039493]
+visible = false
+layout_mode = 0
+offset_left = 133.0
+offset_top = 97.0
+offset_right = 148.0
+offset_bottom = 112.0
+mouse_filter = 2
+texture = ExtResource("7_aemdj")
 expand_mode = 1

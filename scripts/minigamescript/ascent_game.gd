@@ -574,9 +574,7 @@ func _on_cutscene_finished() -> void:
 	go_to_descent_scene()
 
 func go_to_descent_scene() -> void:
-	var error := get_tree().change_scene_to_file(descent_scene_path)
-	if error != OK:
-		push_error("Hindi ma-load ang Descent scene: " + descent_scene_path + " (error code: " + str(error) + ")")
+	LoadingScreen.change_scene(descent_scene_path)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if sandawa_cutscene.visible and event.is_action_pressed("ui_accept"):

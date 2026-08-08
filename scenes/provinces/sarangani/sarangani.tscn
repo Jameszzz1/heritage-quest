@@ -141,7 +141,10 @@ pattern_0 = SubResource("TileMapPattern_b0dwv")
 pattern_1 = SubResource("TileMapPattern_yka0h")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_81sr2"]
-size = Vector2(24.302967, 58.549904)
+size = Vector2(24.302967, 56.01252)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_em1xq"]
+b = Vector2(1.152832, 59.1391)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2nl4l"]
 size = Vector2(16.625, 9.125)
@@ -198,7 +201,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 308.17163, 455)
 
 [node name="Thisway" type="Sprite2D" parent="Y-Sort" unique_id=1117849719]
-position = Vector2(-670, -334)
+position = Vector2(-682, -335.00003)
 scale = Vector2(0.15463394, 0.110539034)
 texture = ExtResource("15_hq11y")
 flip_h = true
@@ -326,26 +329,27 @@ theme_override_font_sizes/font_size = 85
 text = "TSUNAMI WARNING! "
 
 [node name="ToSouthCotabato" type="Area2D" parent="." unique_id=1739753565]
+position = Vector2(-21, -729)
 script = ExtResource("19_87wo0")
 target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
-spawn_pos = Vector2(-93, -375)
+spawn_pos = Vector2(-21, -729)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabato" unique_id=2036236236]
-position = Vector2(886.8526, 148.47961)
+position = Vector2(909, 878)
 rotation = 0.6161012
 skew = 0.42935097
 shape = SubResource("RectangleShape2D_81sr2")
 
 [node name="ToSultanKudarat" type="Area2D" parent="." unique_id=728115850]
-position = Vector2(-716, -307)
+position = Vector2(-713, -310)
 script = ExtResource("19_87wo0")
 target_scene = "res://scenes/provinces/sultan_kudarat/sultankudarat.tscn"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSultanKudarat" unique_id=1578417798]
-position = Vector2(0, -1.7881393e-07)
+position = Vector2(21, -20)
 rotation = 0.6422812
 skew = 0.42935097
-shape = SubResource("RectangleShape2D_81sr2")
+shape = SubResource("SegmentShape2D_em1xq")
 
 [node name="border" type="StaticBody2D" parent="." unique_id=712224009]
 

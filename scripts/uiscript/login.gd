@@ -60,7 +60,7 @@ func _on_verify_pressed() -> void:
 	print("OTP Error: ", result.error)
 	if result.error == null and result.data != null and result.data.has("access_token"):
 		print("✅ OTP Verified!")
-		get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+		LoadingScreen.change_scene("res://scenes/ui/main_menu.tscn")
 	else:
 		otp_status.text = "❌ Wrong or expired OTP. Try again."
 		print("OTP Failed: ", result.error)

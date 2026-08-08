@@ -37,6 +37,7 @@ npc_name = "Bai Linay"
 dialogue_file = "res://dialogues/bai_linay.json"
 minigame_scene = "res://scenes/provinces/south_cotabato/tnalak_rhythm.tscn"
 has_minigame = true
+marker_id = "bai_linay"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=239521770]
 texture = ExtResource("1_fivpj")

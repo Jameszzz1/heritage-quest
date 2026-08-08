@@ -6,7 +6,6 @@ extends Control
 @onready var exit_btn = $Exit
 @onready var logout_btn = $Logout
 @onready var achievements_btn = $Achievements2
-
 @onready var master_slider = $Options/VBoxContainer/MasterSlider
 @onready var music_slider = $Options/VBoxContainer/MusicSlider
 @onready var sfx_slider = $Options/VBoxContainer/SFXSlider
@@ -20,17 +19,14 @@ func setup_volume_sliders() -> void:
 	master_slider.max_value = 1
 	master_slider.step = 0.01
 	master_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master")))
-
 	music_slider.min_value = 0
 	music_slider.max_value = 1
 	music_slider.step = 0.01
 	music_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("MUSIC")))
-
 	sfx_slider.min_value = 0
 	sfx_slider.max_value = 1
 	sfx_slider.step = 0.01
 	sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("SFX")))
-
 	master_slider.value_changed.connect(_on_master_slider_value_changed)
 	music_slider.value_changed.connect(_on_music_slider_value_changed)
 	sfx_slider.value_changed.connect(_on_sfx_slider_value_changed)
@@ -73,7 +69,7 @@ func show_achievements() -> void:
 
 func _on_start_pressed() -> void:
 	MusicManager.play_button_sfx()
-	get_tree().change_scene_to_file("res://scenes/ui/introduction.tscn")
+	LoadingScreen.change_scene("res://scenes/ui/introduction.tscn")
 
 func _on_settings_pressed() -> void:
 	MusicManager.play_button_sfx()
@@ -94,7 +90,7 @@ func _on_back_achie_pressed() -> void:
 func _on_logout_pressed() -> void:
 	MusicManager.play_button_sfx()
 	Supabase.auth._session = {}
-	get_tree().change_scene_to_file("res://scenes/ui/login.tscn")
+	LoadingScreen.change_scene("res://scenes/ui/login.tscn")
 
 func _on_exit_pressed() -> void:
 	MusicManager.play_button_sfx()

@@ -45,6 +45,7 @@ var drum_sfx = {
 @onready var buttons = [$HitZone/BtnD, $HitZone/BtnF, $HitZone/BtnJ, $HitZone/BtnK]
 
 func _ready():
+	MusicManager.stop_music()
 	load_drum_chart()
 	
 	note_textures = [

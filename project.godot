@@ -31,6 +31,7 @@ MusicManager="*uid://ctr2dnj5k5ox"
 Global="*uid://cbl3hpdotpdjv"
 Gamestate="*uid://fiyeagjvdheg"
 FootstepManager="*uid://dhrcapppt0m6q"
+LoadingScreen="*uid://btqv3ys540wj0"
 
 [display]
 

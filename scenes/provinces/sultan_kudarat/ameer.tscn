@@ -39,6 +39,7 @@ script = ExtResource("1_se3sk")
 npc_name = "Ameer"
 minigame_scene = "res://scenes/provinces/sultan_kudarat/sultan_tile_match_game.tscn"
 has_minigame = true
+marker_id = "ameer"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=239521770]
 texture = SubResource("CompressedTexture2D_ug8oi")

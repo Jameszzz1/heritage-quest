@@ -149,3 +149,4 @@ stretch_mode = 0
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1277493206]
 stream = ExtResource("12_uk1p8")
+bus = &"MUSIC"

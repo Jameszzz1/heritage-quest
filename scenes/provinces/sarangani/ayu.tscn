@@ -38,6 +38,7 @@ npc_name = "Ayu"
 dialogue_file = "res://dialogues/ayu.json"
 minigame_scene = "res://scenes/provinces/sarangani/saragani_slide_puzzle_medium.tscn"
 has_minigame = true
+marker_id = "ayu"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=239521770]
 texture = ExtResource("2_bvu7j")

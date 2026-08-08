@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/uiscript/npc_dialogue.gd" id="1_7rr4k"]
 [ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="2_jeial"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_25xlx"]
-load_path = "res://.godot/imported/1_RoyalGuide.png-da1ec9ba1015c3f27e5a37e0acfb434f.ctex"
+[ext_resource type="Texture2D" uid="uid://co2uiasrq31by" path="res://assets/images/provinces/cotabato/aposandawa.png" id="2_s2gc0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hv80j"]
 radius = 9.999998
@@ -37,12 +35,17 @@ border_color = Color(0, 0, 0, 1)
 scale = Vector2(0.2, 0.2)
 script = ExtResource("1_7rr4k")
 npc_name = "Sandawa"
+minigame_scene = "res://scenes/provinces/cotabato/ascent_game.tscn"
 has_minigame = true
+marker_id = "sandawa"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=239521770]
-texture = SubResource("CompressedTexture2D_25xlx")
+position = Vector2(0.25000143, 5.0000005)
+scale = Vector2(1.0084747, 1.1392405)
+texture = ExtResource("2_s2gc0")
+flip_h = true
 region_enabled = true
-region_rect = Rect2(341.05466, 188.3, 39.510223, 75.39143)
+region_rect = Rect2(311.265, 99.83201, 59.89502, 79.86001)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2070637459]
 position = Vector2(0, 5)

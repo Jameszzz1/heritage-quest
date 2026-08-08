@@ -3,7 +3,6 @@ extends Control
 @onready var volume_settings_btn = $Background/Panel/VBoxContainer/VolumeSettingsButton
 @onready var save_btn = $Background/Panel/VBoxContainer/SaveButton
 @onready var main_menu_btn = $Background/Panel/VBoxContainer/MainMenuButton
-
 @onready var volume_popup = $Background/VolumePopup
 @onready var main_panel = $Background/Panel
 @onready var master_slider = $Background/VolumePopup/VBoxContainer/MasterSlider
@@ -14,22 +13,18 @@ extends Control
 func _ready():
 	visible = false
 	volume_popup.visible = false
-
 	master_slider.min_value = 0
 	master_slider.max_value = 1
 	master_slider.step = 0.01
 	master_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master")))
-
 	music_slider.min_value = 0
 	music_slider.max_value = 1
 	music_slider.step = 0.01
 	music_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("MUSIC")))
-
 	sfx_slider.min_value = 0
 	sfx_slider.max_value = 1
 	sfx_slider.step = 0.01
 	sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("SFX")))
-
 	fullscreen_btn.pressed.connect(_on_fullscreen_button_pressed)
 	save_btn.pressed.connect(_on_save_button_pressed)
 	main_menu_btn.pressed.connect(_on_main_menu_button_pressed)
@@ -38,7 +33,6 @@ func _ready():
 	master_slider.value_changed.connect(_on_master_slider_value_changed)
 	music_slider.value_changed.connect(_on_music_slider_value_changed)
 	sfx_slider.value_changed.connect(_on_sfx_slider_value_changed)
-
 	_update_fullscreen_text()
 
 func toggle():
@@ -91,4 +85,4 @@ func _on_main_menu_button_pressed():
 	MusicManager.play_button_sfx()
 	get_tree().paused = false
 	MusicManager.stop_music()
-	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+	LoadingScreen.change_scene("res://scenes/ui/main_menu.tscn")

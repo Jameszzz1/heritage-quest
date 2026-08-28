@@ -6,7 +6,6 @@ extends Control
 @onready var try_again_button = $TryAgainButton
 @onready var tile_sound = $TileSound
 
-# LINKED NA ULIT SA NODE NA ILALAGAY MO SA EDITOR
 @onready var shuffle_button = $ShuffleButton
 
 const GRID_COLS = 3
@@ -14,7 +13,7 @@ const GRID_ROWS = 4
 
 var puzzle_texture = preload("res://assets/images/provinces/sarangani/SlidePuzzle.png")
 var grid_matrix = []
-var blank_tile_pos = Vector2i(2, 3) # Bottom-right position
+var blank_tile_pos = Vector2i(2, 3)
 var is_shuffling = false
 var display_tile_size_x = 0.0
 var display_tile_size_y = 0.0
@@ -31,13 +30,11 @@ func _ready():
 	try_again_button.visible = false
 	try_again_button.pressed.connect(_on_try_again_pressed)
 
-	# IKONEKTA ANG CLICK SIGNAL SA SHUFFLE BUTTON
 	if shuffle_button != null:
 		shuffle_button.pressed.connect(_on_shuffle_button_pressed)
 
 	var viewport_size = get_viewport().get_visible_rect().size
 
-	# Sizing calculation para sa 3x4 grid
 	display_tile_size_x = floor(viewport_size.x * 0.75 / GRID_COLS)
 	display_tile_size_y = floor(viewport_size.y * 0.75 / GRID_ROWS)
 
@@ -61,7 +58,6 @@ func _ready():
 
 	timer_label.text = "Time: 5:00"
 
-	# Huwag munang tumakbo ang timer hanggang ma-dismiss ang instructions popup
 	show_instructions_popup()
 
 func show_instructions_popup() -> void:
@@ -79,7 +75,6 @@ func show_instructions_popup() -> void:
 func _on_instructions_dismissed() -> void:
 	timer_running = true
 
-# FUNCTION KAPAG PININDOT ANG SHUFFLE BUTTON MO
 func _on_shuffle_button_pressed():
 	if not timer_running or is_shuffling:
 		return
@@ -296,6 +291,7 @@ func _on_tile_pressed(tile_button: TextureButton):
 			timer_label.modulate = Color(0.3, 1, 0.3)
 			if shuffle_button != null:
 				shuffle_button.visible = false
+			return_to_previous_scene()
 	else:
 		if selected_tile == tile_button:
 			remove_glow_from_tile(selected_tile)
@@ -304,6 +300,11 @@ func _on_tile_pressed(tile_button: TextureButton):
 			remove_glow_from_tile(selected_tile)
 			selected_tile = tile_button
 			apply_glow_to_tile(tile_button)
+
+func return_to_previous_scene():
+	await get_tree().create_timer(2.0).timeout
+	Global.spawn_position = Global.return_spawn_pos
+	get_tree().change_scene_to_file(Global.return_scene)
 
 func swap_tiles(pos1: Vector2i, pos2: Vector2i):
 	var tile1 = grid_matrix[pos1.x][pos1.y]

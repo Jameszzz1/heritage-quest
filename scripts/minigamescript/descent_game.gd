@@ -12,6 +12,11 @@ extends Node2D
 
 @export var camera_follow_threshold: float = 30.0
 
+# I-set ito sa Inspector: saan babalik si James pagkatapos matapos ang FINAL na laro
+@export var return_scene_path: String = "res://scenes/homebase/homebase.tscn"
+@export var return_spawn_pos: Vector2 = Vector2.ZERO
+@export var win_delay_seconds: float = 3.0
+
 # ---------- ASSETS ----------
 var bg_texture: Texture2D = preload("res://assets/sprites/characters/AscentSpriteAssetJames/ascentbackground.png")
 
@@ -117,7 +122,7 @@ func _process(delta: float) -> void:
 		return
 
 	if is_game_over or has_won:
-		if Input.is_key_pressed(KEY_R):
+		if Input.is_key_pressed(KEY_R) and is_game_over:
 			restart_game()
 		return
 
@@ -273,6 +278,20 @@ func trigger_win() -> void:
 	else:
 		player.set_physics_process(false)
 	win_popup_label.visible = true
+
+	# Antayin munang makita ng player ang win message, tapos bumalik sa homebase
+	return_to_homebase()
+
+func return_to_homebase() -> void:
+	await get_tree().create_timer(win_delay_seconds).timeout
+	if return_scene_path == "":
+		print("ERROR: return_scene_path is empty!")
+		return
+	Global.spawn_position = return_spawn_pos
+	if has_node("/root/LoadingScreen"):
+		LoadingScreen.change_scene(return_scene_path)
+	else:
+		get_tree().change_scene_to_file(return_scene_path)
 
 func restart_game() -> void:
 	get_tree().reload_current_scene()

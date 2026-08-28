@@ -214,7 +214,9 @@ position = Vector2(846, 116)
 [node name="Camera2D" type="Camera2D" parent="Y-Sort/James" unique_id=1863879979]
 
 [node name="Ayu" parent="Y-Sort" unique_id=2100318797 instance=ExtResource("15_2nl4l")]
-position = Vector2(67, -371)
+position = Vector2(72, -369)
+return_scene_path = "res://scenes/provinces/sarangani/sarangani.tscn"
+return_spawn_pos = Vector2(104, -365)
 
 [node name="Y-Sort Gahum" type="Node2D" parent="Y-Sort" unique_id=1123770854]
 y_sort_enabled = true

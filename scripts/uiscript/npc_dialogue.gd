@@ -4,6 +4,11 @@ extends CharacterBody2D
 @export var minigame_scene: String = ""
 @export var has_minigame: bool = false
 @export var marker_id: String = ""
+
+# I-set ito sa Inspector kada NPC (Bai Linay, Ayu, etc.) - iba-iba per instance
+@export var return_scene_path: String = ""
+@export var return_spawn_pos: Vector2 = Vector2.ZERO
+
 var dialogue: Array = []
 var player_nearby = false
 var dialogue_index = 0
@@ -62,6 +67,10 @@ func _process(_delta):
 			show_dialogue()
 		if Input.is_key_pressed(KEY_2) and has_minigame:
 			choice_mode = false
+			# Gagamitin na ang per-NPC return values (hindi na hardcoded)
+			if return_scene_path != "":
+				Global.return_scene = return_scene_path
+				Global.return_spawn_pos = return_spawn_pos
 			LoadingScreen.change_scene(minigame_scene)
 
 # ----------------------------

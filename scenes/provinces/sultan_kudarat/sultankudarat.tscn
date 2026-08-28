@@ -172,6 +172,8 @@ y_sort_enabled = true
 
 [node name="Ameer" parent="Y-sort" unique_id=2100318797 instance=ExtResource("8_mla1v")]
 position = Vector2(184.00002, 31)
+return_scene_path = "res://scenes/provinces/sultan_kudarat/sultankudarat.tscn"
+return_spawn_pos = Vector2(228, 37)
 
 [node name="Trees" type="TileMapLayer" parent="Y-sort" unique_id=1949078514]
 y_sort_enabled = true

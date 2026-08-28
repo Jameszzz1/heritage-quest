@@ -6,6 +6,7 @@
 
 [node name="DescentGame" type="Node2D" unique_id=1819073296]
 script = ExtResource("1_gwd4n")
+return_scene_path = "res://scenes/provinces/south_cotabato/homebase.tscn"
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1842403537]
 texture = ExtResource("2_3c0n2")

@@ -174,7 +174,9 @@ position = Vector2(852, 101)
 [node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
 
 [node name="Sandawa" parent="Y-sort" unique_id=2100318797 instance=ExtResource("11_5wi1g")]
-position = Vector2(740, 107)
+position = Vector2(669.99994, 94.99994)
+return_scene_path = "res://scenes/provinces/south_cotabato/homebase.tscn"
+return_spawn_pos = Vector2(131, -38)
 
 [node name="Welcome" type="Sprite2D" parent="Y-sort" unique_id=1719227653]
 position = Vector2(894, 68)

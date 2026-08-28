@@ -305,6 +305,10 @@ func show_result(success: bool):
 	vbox.add_child(btn)
 
 	if success:
-		btn.pressed.connect(func(): popup.queue_free())
+		btn.pressed.connect(func():
+			popup.queue_free()
+			Global.spawn_position = Global.return_spawn_pos
+			get_tree().change_scene_to_file(Global.return_scene)
+		)
 	else:
 		btn.pressed.connect(func(): get_tree().reload_current_scene())

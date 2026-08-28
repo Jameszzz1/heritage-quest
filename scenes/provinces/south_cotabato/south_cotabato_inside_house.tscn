@@ -63,6 +63,8 @@ scale = Vector2(0.2, 0.2)
 [node name="BaiLinay" parent="Node2D" unique_id=2100318797 instance=ExtResource("5_7ltd8")]
 position = Vector2(-90, 30)
 scale = Vector2(0.99999994, 0.99999994)
+return_scene_path = "res://scenes/provinces/south_cotabato/south_cotabato_inside_house.tscn"
+return_spawn_pos = Vector2(-275, 45)
 
 [node name="James" parent="Node2D" unique_id=636874803 instance=ExtResource("2_hncgv")]
 position = Vector2(-520, 140)

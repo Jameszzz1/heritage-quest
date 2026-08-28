@@ -1,7 +1,11 @@
 extends CharacterBody2D
-
 var can_talk = false
 var current_phase = 0 # 0: Lore, 1-5: Questions
+
+# --- IDINAGDAG: minigame + return coordinates ---
+@export var minigame_scene: String = "res://scenes/minigames/sarangani_slide_puzzle.tscn"
+@export var return_scene_path: String = ""
+@export var return_spawn_pos: Vector2 = Vector2.ZERO
 
 func _ready():
 	# Siguraduhin na ang Area2D ay child ng Ayu node mo
@@ -11,6 +15,9 @@ func _ready():
 func _input(event):
 	if can_talk and event.is_action_pressed("ui_accept"):
 		start_interaction()
+	# IDINAGDAG: pindot ng "2" para maglaro ng minigame, pagkatapos ng quiz (phase 0 na ulit)
+	if can_talk and current_phase == 0 and Input.is_key_pressed(KEY_2):
+		start_minigame()
 
 func _on_area_2d_body_entered(body):
 	if "Player" in body.name: # Dapat "Player" ang pangalan ng node ni James
@@ -57,4 +64,12 @@ func ask_question(num):
 	current_phase += 1
 	if current_phase > 5:
 		print("Ayu: Maraming salamat, James. Alam mo na ang kasaysayan ng Sarangani!")
+		print("Ayu: [Pindutin ang 2 kung gusto mong maglaro ng Slide Puzzle!]")
 		current_phase = 0 # Reset para pwede ulit kausapin
+
+# --- IDINAGDAG: function na mag-la-launch ng minigame ---
+func start_minigame():
+	if return_scene_path != "":
+		Global.return_scene = return_scene_path
+		Global.return_spawn_pos = return_spawn_pos
+	LoadingScreen.change_scene(minigame_scene)

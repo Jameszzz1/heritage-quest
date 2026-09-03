@@ -22,7 +22,7 @@ config/icon="res://icon.svg"
 
 [audio]
 
-buses/default_bus_layout="uid://hgry7scpvyhg"
+buses/default_bus_layout=""
 
 [autoload]
 

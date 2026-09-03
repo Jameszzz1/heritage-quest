@@ -153,14 +153,18 @@ func reconnect_ui():
 func handle_movement(delta):
 	var input_dir = Vector2.ZERO
 
+	# Isometric movement
 	if Input.is_action_pressed("move_up"):
-		input_dir.y -= 1
+		input_dir += Vector2(1, -0.5)
+
 	if Input.is_action_pressed("move_down"):
-		input_dir.y += 1
+		input_dir += Vector2(-1, 0.5)
+
 	if Input.is_action_pressed("move_left"):
-		input_dir.x -= 1
+		input_dir += Vector2(-1, -0.5)
+
 	if Input.is_action_pressed("move_right"):
-		input_dir.x += 1
+		input_dir += Vector2(1, 0.5)
 
 	input_dir = input_dir.normalized()
 
@@ -179,11 +183,18 @@ func handle_movement(delta):
 
 	velocity = input_dir * current_speed
 	move_and_slide()
+
 	update_animations(input_dir)
 
 	var is_moving = input_dir != Vector2.ZERO
 	var surface = get_surface_type()
-	FootstepManager.play_footstep(surface, delta, is_moving, is_sprinting)
+
+	FootstepManager.play_footstep(
+		surface,
+		delta,
+		is_moving,
+		is_sprinting
+	)
 
 func get_surface_type() -> String:
 	var tilemap = get_tree().get_first_node_in_group("land_tilemap")

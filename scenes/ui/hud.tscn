@@ -112,8 +112,10 @@ theme_override_font_sizes/font_size = 8
 text = "Close"
 
 [node name="MiniMap" parent="." unique_id=492215546 instance=ExtResource("6_047uy")]
-offset_top = 48.0
-offset_bottom = -97.0
+offset_left = 250.0
+offset_top = 113.0
+offset_right = 0.0
+offset_bottom = -1.0
 
 [node name="SettingsButton" type="Button" parent="." unique_id=1121677931]
 process_mode = 3

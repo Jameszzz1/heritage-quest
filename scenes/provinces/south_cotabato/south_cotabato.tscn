@@ -129,7 +129,7 @@ pattern_1 = SubResource("TileMapPattern_yka0h")
 size = Vector2(16.625, 9.125)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8o4x2"]
-size = Vector2(36.075626, 25.297949)
+size = Vector2(38.29887, 21.072645)
 
 [node name="SouthCotabato" type="Node2D" unique_id=211237635]
 script = ExtResource("1_r5jdd")
@@ -188,10 +188,10 @@ position = Vector2(-445, 22)
 script = ExtResource("11_luvia")
 
 [node name="SouthCotabatoHouse1" parent="Y-Sort" unique_id=1623192595 instance=ExtResource("7_40rh6")]
-position = Vector2(-445, 222)
+position = Vector2(-364, 228)
 
 [node name="SouthCotabatoHouse2" parent="Y-Sort" unique_id=279760798 instance=ExtResource("8_aupoh")]
-position = Vector2(-473, 168)
+position = Vector2(-459, 172)
 
 [node name="SouthCotabatoHouse3" parent="Y-Sort" unique_id=926720113 instance=ExtResource("9_8o4x2")]
 position = Vector2(-986, -45.000004)
@@ -371,10 +371,10 @@ target_scene = "res://scenes/provinces/sarangani/sarangani.tscn"
 spawn_pos = Vector2(846, 116)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSarangani" unique_id=381837129]
-position = Vector2(10.999972, -746.00006)
+position = Vector2(12.999966, -742)
 rotation = -0.7382742
 scale = Vector2(0.99999964, 0.9999999)
-skew = -0.17453301
+skew = -0.45727634
 shape = SubResource("RectangleShape2D_8o4x2")
 
 [node name="ToHomebase" type="Area2D" parent="ToSarangani" unique_id=588385674]

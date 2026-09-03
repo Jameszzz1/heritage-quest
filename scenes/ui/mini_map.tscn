@@ -15,8 +15,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 133.0
 offset_top = 47.0
-offset_right = -151.0
-offset_bottom = -98.0
+offset_right = -187.0
+offset_bottom = -133.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1wrf6")
@@ -24,34 +24,30 @@ script = ExtResource("1_1wrf6")
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=13220680]
 clip_contents = true
 layout_mode = 0
-offset_right = 80.0
-offset_bottom = 80.0
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=2123336182]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(80, 80)
+size = Vector2i(2, 2)
 render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport" unique_id=180949880]
 
 [node name="Frame" type="TextureRect" parent="." unique_id=862303427]
 layout_mode = 0
-offset_left = 116.0
-offset_top = 64.0
-offset_right = 185.0
-offset_bottom = 129.0
+offset_right = 69.0
+offset_bottom = 65.0
 mouse_filter = 2
 texture = ExtResource("2_ytmag")
 expand_mode = 1
 
 [node name="PlayerMarker" type="TextureRect" parent="." unique_id=960430476]
 layout_mode = 0
-offset_left = 142.0
-offset_top = 91.0
-offset_right = 157.0
-offset_bottom = 106.0
+offset_left = 27.0
+offset_top = 27.0
+offset_right = 42.0
+offset_bottom = 42.0
 mouse_filter = 2
 texture = ExtResource("3_wxlrw")
 expand_mode = 1
@@ -59,10 +55,8 @@ expand_mode = 1
 [node name="BaiLinayMarker" type="TextureRect" parent="." unique_id=1653188017]
 visible = false
 layout_mode = 0
-offset_left = 152.0
-offset_top = 82.0
-offset_right = 167.0
-offset_bottom = 97.0
+offset_right = 15.0
+offset_bottom = 15.0
 mouse_filter = 2
 texture = ExtResource("4_wt7x8")
 expand_mode = 1
@@ -70,10 +64,8 @@ expand_mode = 1
 [node name="AyuMarker" type="TextureRect" parent="." unique_id=185892582]
 visible = false
 layout_mode = 0
-offset_left = 131.0
-offset_top = 82.0
-offset_right = 146.0
-offset_bottom = 97.0
+offset_right = 15.0
+offset_bottom = 15.0
 mouse_filter = 2
 texture = ExtResource("5_4c3vm")
 expand_mode = 1
@@ -81,10 +73,8 @@ expand_mode = 1
 [node name="AmeerMarker" type="TextureRect" parent="." unique_id=1201138151]
 visible = false
 layout_mode = 0
-offset_left = 153.0
-offset_top = 98.0
-offset_right = 168.0
-offset_bottom = 113.0
+offset_right = 15.0
+offset_bottom = 15.0
 mouse_filter = 2
 texture = ExtResource("6_et8qq")
 expand_mode = 1
@@ -92,10 +82,8 @@ expand_mode = 1
 [node name="SandawaMarker" type="TextureRect" parent="." unique_id=353039493]
 visible = false
 layout_mode = 0
-offset_left = 133.0
-offset_top = 97.0
-offset_right = 148.0
-offset_bottom = 112.0
+offset_right = 15.0
+offset_bottom = 15.0
 mouse_filter = 2
 texture = ExtResource("7_aemdj")
 expand_mode = 1

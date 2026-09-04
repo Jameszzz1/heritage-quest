@@ -13,6 +13,7 @@ var patrol_timer: float = 0.0
 var idle_timer: float = 0.0
 var is_idle: bool = false
 var attack_timer: float = 0.0
+var enemy_id := "maragtas"
 
 func _ready():
 	add_to_group("minimap_enemy")

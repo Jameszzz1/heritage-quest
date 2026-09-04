@@ -6,12 +6,35 @@ extends Control
 @onready var player_marker = $PlayerMarker
 @onready var frame = $Frame
 
+
+# ============================================================
+# MARKER STORAGE
+# ============================================================
+
 var npc_marker_nodes: Dictionary = {}
 
 var enemy_dot_pool: Array[TextureRect] = []
 
 
+# ============================================================
+# ENEMY MARKER TEXTURES
+# ============================================================
+
+var dog_marker_texture = preload(
+	"res://assets/sprites/characters/dog-marker.png"
+)
+
+var snake_marker_texture = preload(
+	"res://assets/sprites/characters/snake-marker.png"
+)
+
+
+# ============================================================
+# READY
+# ============================================================
+
 func _ready():
+
 	minimap_cam.zoom = Vector2(0.3, 0.3)
 
 	_setup_npc_marker_nodes()
@@ -25,7 +48,10 @@ func _ready():
 # ============================================================
 
 func _center_player_marker() -> void:
-	var center = frame.position + (frame.size / 2.0)
+
+	var center = frame.position + (
+		frame.size / 2.0
+	)
 
 	player_marker.position = (
 		center - (player_marker.size / 2.0)
@@ -48,10 +74,13 @@ func _setup_npc_marker_nodes() -> void:
 	for id in possible_ids.keys():
 
 		var node_name: String = possible_ids[id]
+
 		var node = get_node_or_null(node_name)
 
 		if node != null:
+
 			npc_marker_nodes[id] = node
+
 			node.visible = false
 
 
@@ -62,13 +91,20 @@ func _setup_npc_marker_nodes() -> void:
 func _world_to_minimap(world_pos: Vector2) -> Vector2:
 
 	if not is_instance_valid(player):
-		return frame.position + frame.size / 2.0
+
+		return frame.position + (
+			frame.size / 2.0
+		)
 
 	# Distance between object and player
-	var relative = world_pos - player.global_position
+	var relative = (
+		world_pos - player.global_position
+	)
 
 	# Center of circular minimap
-	var center = frame.position + (frame.size / 2.0)
+	var center = frame.position + (
+		frame.size / 2.0
+	)
 
 	# Convert world distance to minimap distance
 	var result = center + (
@@ -85,20 +121,25 @@ func _world_to_minimap(world_pos: Vector2) -> Vector2:
 func _is_inside_minimap(world_pos: Vector2) -> bool:
 
 	if not is_instance_valid(player):
+
 		return false
 
-	var relative = world_pos - player.global_position
+	var relative = (
+		world_pos - player.global_position
+	)
 
 	var minimap_offset = (
 		relative * minimap_cam.zoom.x
 	)
 
-	var center = frame.position + (frame.size / 2.0)
+	var center = frame.position + (
+		frame.size / 2.0
+	)
 
 	var marker_pos = center + minimap_offset
 
 	# Circle radius
-	# -8 keeps markers away from the gold border
+	# Smaller value keeps markers away from border
 	var radius = (
 		min(frame.size.x, frame.size.y) / 2.0
 	) - 8.0
@@ -113,6 +154,7 @@ func _is_inside_minimap(world_pos: Vector2) -> bool:
 func _process(_delta):
 
 	if not is_instance_valid(player):
+
 		return
 
 
@@ -121,7 +163,9 @@ func _process(_delta):
 	# ========================================================
 
 	# Camera follows player
-	minimap_cam.global_position = player.global_position
+	minimap_cam.global_position = (
+		player.global_position
+	)
 
 
 	# ========================================================
@@ -138,6 +182,7 @@ func _process(_delta):
 
 	# Hide all NPC markers first
 	for marker in npc_marker_nodes.values():
+
 		marker.visible = false
 
 
@@ -149,15 +194,21 @@ func _process(_delta):
 	for npc in npcs:
 
 		if not is_instance_valid(npc):
+
 			continue
 
 		if not "marker_id" in npc:
+
 			continue
 
 		if npc.marker_id == "":
+
 			continue
 
-		if not npc_marker_nodes.has(npc.marker_id):
+		if not npc_marker_nodes.has(
+			npc.marker_id
+		):
+
 			continue
 
 
@@ -176,7 +227,7 @@ func _process(_delta):
 		)
 
 
-		# Only show NPC if inside circle
+		# Only show NPC inside circle
 		marker.visible = _is_inside_minimap(
 			npc.global_position
 		)
@@ -191,21 +242,73 @@ func _process(_delta):
 	)
 
 
-	_ensure_dot_pool(enemies.size())
+	_ensure_dot_pool(
+		enemies.size()
+	)
 
 
-	for i in range(enemy_dot_pool.size()):
+	for i in range(
+		enemy_dot_pool.size()
+	):
 
 		var dot := enemy_dot_pool[i]
 
 
+		# ====================================================
+		# CHECK ENEMY
+		# ====================================================
+
 		if (
 			i < enemies.size()
-			and is_instance_valid(enemies[i])
+			and is_instance_valid(
+				enemies[i]
+			)
 		):
 
+			var enemy = enemies[i]
+
+
+			# =================================================
+			# CHOOSE MARKER
+			# =================================================
+
+			if "enemy_id" in enemy:
+
+				if enemy.enemy_id == "maragtas":
+
+					# 🐍 Snake
+					dot.texture = (
+						snake_marker_texture
+					)
+
+				elif enemy.enemy_id == "gahum":
+
+					# 🐕 Dog
+					dot.texture = (
+						dog_marker_texture
+					)
+
+				else:
+
+					# Default to dog
+					dot.texture = (
+						dog_marker_texture
+					)
+
+			else:
+
+				# Default marker
+				dot.texture = (
+					dog_marker_texture
+				)
+
+
+			# =================================================
+			# POSITION
+			# =================================================
+
 			var enemy_pos = _world_to_minimap(
-				enemies[i].global_position
+				enemy.global_position
 			)
 
 
@@ -214,10 +317,14 @@ func _process(_delta):
 			)
 
 
-			# Only show enemy if inside circle
+			# =================================================
+			# ONLY SHOW INSIDE CIRCLE
+			# =================================================
+
 			dot.visible = _is_inside_minimap(
-				enemies[i].global_position
+				enemy.global_position
 			)
+
 
 		else:
 
@@ -228,7 +335,9 @@ func _process(_delta):
 # ENEMY MARKER POOL
 # ============================================================
 
-func _ensure_dot_pool(needed_count: int) -> void:
+func _ensure_dot_pool(
+	needed_count: int
+) -> void:
 
 	while enemy_dot_pool.size() < needed_count:
 
@@ -236,18 +345,27 @@ func _ensure_dot_pool(needed_count: int) -> void:
 
 
 		# ====================================================
-		# DOG MARKER SIZE
+		# MARKER SIZE
 		# ====================================================
 
-		dot.custom_minimum_size = Vector2(8, 8)
-		dot.size = Vector2(8, 8)
+		dot.custom_minimum_size = Vector2(
+			8,
+			8
+		)
+
+		dot.size = Vector2(
+			8,
+			8
+		)
 
 
 		# ====================================================
 		# PIXEL ART SETTINGS
 		# ====================================================
 
-		dot.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		dot.expand_mode = (
+			TextureRect.EXPAND_IGNORE_SIZE
+		)
 
 		dot.stretch_mode = (
 			TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -255,16 +373,15 @@ func _ensure_dot_pool(needed_count: int) -> void:
 
 
 		# ====================================================
-		# DOG MARKER IMAGE
+		# DEFAULT TEXTURE
 		# ====================================================
 
-		dot.texture = load(
-			"res://assets/sprites/characters/dog-marker.png"
-		)
-
+		dot.texture = dog_marker_texture
 
 		dot.visible = false
 
+
+		# Add to minimap
 		add_child(dot)
 
 		enemy_dot_pool.append(dot)

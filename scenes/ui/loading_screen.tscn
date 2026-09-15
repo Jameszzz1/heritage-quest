@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://btqv3ys540wj0"]
 
-[ext_resource type="Script" uid="uid://kmce3lklv4rf" path="res://scripts/uiscript/loading_screen.gd" id="1_rqdcv"]
+[ext_resource type="Script" uid="uid://kmce3lklv4rf" path="res://scripts/ui/loading_screen.gd" id="1_rqdcv"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_q4fso"]
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=483412796]

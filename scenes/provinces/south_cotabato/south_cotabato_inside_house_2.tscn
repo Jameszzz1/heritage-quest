@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://dopa5kc5nbdq2"]
 
-[ext_resource type="Texture2D" uid="uid://bb418vkxsgmkg" path="res://assets/sprites/tiles/wood_floor_outlined.png" id="1_vk20a"]
+[ext_resource type="Texture2D" uid="uid://bb418vkxsgmkg" path="res://assets/sprites/tiles/outlined wood.png" id="1_vk20a"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="3_0e5wb"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="3_0mi8e"]
 [ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="3_p0jbp"]

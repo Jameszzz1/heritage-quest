@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://8jwgoomyutsl" path="res://assets/images/35813b3a-4719-473a-9ca0-a3cb6f85bf32.png" id="1_fiwxd"]
 [ext_resource type="Script" uid="uid://6g8gx5guuxpu" path="res://scripts/introduction.gd" id="1_tgans"]
-[ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_e3kje"]
+[ext_resource type="Texture2D" uid="uid://bjppr32kgp2ls" path="res://assets/sprites/characters/james/MainCharacter_James.png" id="4_2no76"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="4_nvvsg"]
 
 [node name="Introduction" type="Node2D" unique_id=794592155]
@@ -36,7 +36,7 @@ offset_top = 20.0
 offset_right = 114.0
 offset_bottom = 56.0
 grow_horizontal = 2
-theme_override_fonts/font = ExtResource("3_e3kje")
+theme_override_fonts/font = ExtResource("4_nvvsg")
 theme_override_font_sizes/font_size = 35
 text = "Heritage Quest"
 
@@ -72,3 +72,7 @@ grow_vertical = 0
 theme_override_fonts/font = ExtResource("4_nvvsg")
 theme_override_font_sizes/font_size = 10
 text = "Press Enter to skip"
+
+[node name="MainCharacterJames" type="Sprite2D" parent="." unique_id=2131208757]
+position = Vector2(284, 411)
+texture = ExtResource("4_2no76")

@@ -1,22 +1,21 @@
 [gd_scene format=4 uid="uid://ba6hxpeosxeim"]
 
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="1_hw0jd"]
-[ext_resource type="Script" uid="uid://buh60n80x2ssm" path="res://scripts/longwayscript/south_cotabato.gd" id="1_r5jdd"]
+[ext_resource type="Script" uid="uid://buh60n80x2ssm" path="res://scripts/provinces/south_cotabato.gd" id="1_r5jdd"]
 [ext_resource type="PackedScene" uid="uid://ctr2dnj5k5ox" path="res://scenes/music_manager.tscn" id="2_yka0h"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="3_kb3no"]
 [ext_resource type="Texture2D" uid="uid://c4jwruwaeko0h" path="res://assets/sprites/tiles/grass.png" id="4_b0dwv"]
 [ext_resource type="Texture2D" uid="uid://be1nodjreedgw" path="res://assets/sprites/tiles/dark water.png" id="4_ymg2u"]
-[ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/rock.png" id="5_yka0h"]
+[ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/cobblestone.png" id="5_yka0h"]
 [ext_resource type="PackedScene" uid="uid://dv6pm8p1uq0cg" path="res://scenes/provinces/south_cotabato/south_cotabato_house_1.tscn" id="7_40rh6"]
 [ext_resource type="Texture2D" uid="uid://bvw4hucudqxyw" path="res://assets/sprites/things/16x32 trees.png" id="7_b0dwv"]
 [ext_resource type="PackedScene" uid="uid://dplyu3h281s5t" path="res://scenes/provinces/south_cotabato/south_cotabato_house_2.tscn" id="8_aupoh"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="8_yka0h"]
 [ext_resource type="PackedScene" uid="uid://4vtt5j2okwer" path="res://scenes/provinces/south_cotabato/south_cotabato_house_3.tscn" id="9_8o4x2"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="10_v5m28"]
-[ext_resource type="Script" uid="uid://cdtmy6ssndnl" path="res://scripts/uiscript/static_minimap_marker.gd.gd" id="11_luvia"]
+[ext_resource type="Script" uid="uid://cdtmy6ssndnl" path="res://scripts/ui/static_minimap_marker.gd.gd" id="11_luvia"]
 [ext_resource type="Texture2D" uid="uid://dcspiej3yklk8" path="res://assets/images/provinces/south_cotabato/WSouthCotabato.png" id="17_8o4x2"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="17_aupoh"]
-[ext_resource type="Script" uid="uid://dtd101wljs0vv" path="res://scripts/to_fishing_zone.gd" id="18_d5sx8"]
 [ext_resource type="Texture2D" uid="uid://db0bqkdmw5hvd" path="res://assets/images/provinces/sarangani/WSarangani.png" id="18_v5m28"]
 [ext_resource type="Texture2D" uid="uid://far3mwd1q8vc" path="res://assets/images/provinces/south_cotabato/landmark_asset_southcotabato1.png" id="18_ymg2u"]
 [ext_resource type="Texture2D" uid="uid://m25q7a5jind8" path="res://assets/images/provinces/south_cotabato/landmark_asset_southcotabato2.png" id="19_kbv5j"]
@@ -197,7 +196,7 @@ position = Vector2(-459, 172)
 position = Vector2(-986, -45.000004)
 
 [node name="James" parent="Y-Sort" unique_id=636874803 groups=["player"] instance=ExtResource("10_v5m28")]
-position = Vector2(888, 84)
+position = Vector2(882, 82)
 
 [node name="Camera2D" type="Camera2D" parent="Y-Sort/James" unique_id=1531890778]
 
@@ -356,10 +355,10 @@ polygon = PackedVector2Array(-922, -97, -935, -89, -931, -84, -936, -79, -931, -
 
 [node name="FishingZone" type="Area2D" parent="." unique_id=1303011924]
 position = Vector2(-940, -27)
-script = ExtResource("18_d5sx8")
+script = ExtResource("17_aupoh")
 target_scene = "res://scenes/fishing.tscn"
 return_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
-return_spawn_pos = Vector2(-957, -23)
+return_spawn_pos = Vector2(-972, -24)
 
 [node name="FishCollisionShape2D" type="CollisionShape2D" parent="FishingZone" unique_id=675528529]
 position = Vector2(1, 3)

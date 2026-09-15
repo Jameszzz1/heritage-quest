@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://bs535asobvvqk"]
 
-[ext_resource type="Texture2D" uid="uid://bb418vkxsgmkg" path="res://assets/sprites/tiles/wood_floor_outlined.png" id="1_7hqe8"]
-[ext_resource type="Texture2D" uid="uid://dfebcqsa3r7ug" path="res://assets/sprites/tiles/wood_floor.png" id="2_cfgkd"]
+[ext_resource type="Texture2D" uid="uid://bb418vkxsgmkg" path="res://assets/sprites/tiles/outlined wood.png" id="1_7hqe8"]
+[ext_resource type="Texture2D" uid="uid://dfebcqsa3r7ug" path="res://assets/sprites/tiles/wood.png" id="2_cfgkd"]
 [ext_resource type="Texture2D" uid="uid://bjuw8de8h70kf" path="res://assets/sprites/things/bed.png" id="2_kuo5g"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="4_cfgkd"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="5_iallg"]

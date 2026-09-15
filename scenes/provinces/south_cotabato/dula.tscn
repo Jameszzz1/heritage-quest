@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cxxgpoyg25kf4"]
 
-[ext_resource type="Script" uid="uid://ci7y3wbwiugvc" path="res://scenes/provinces/south_cotabato/dula.gd" id="1_avsrw"]
+[ext_resource type="Script" uid="uid://ci7y3wbwiugvc" path="res://scripts/dula.gd" id="1_avsrw"]
 [ext_resource type="Texture2D" uid="uid://h7d5ev3jwr38" path="res://assets/sprites/characters/2_TboliNPC.png" id="1_uika4"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_avsrw"]

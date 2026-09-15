@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b4kimagwm34tg"]
 
-[ext_resource type="Script" uid="uid://bjwuqf6dyw1l2" path="res://scripts/minigamescript/saragani_slide_puzzle_medium.gd" id="1_p77qb"]
+[ext_resource type="Script" uid="uid://bjwuqf6dyw1l2" path="res://scripts/mini_games/saragani_slide_puzzle_medium.gd" id="1_p77qb"]
 [ext_resource type="Texture2D" uid="uid://bb3fsgt11vbii" path="res://assets/images/provinces/sarangani/background_sarangani_slide_puzzle_asset_.png" id="2_4vhcl"]
 [ext_resource type="Texture2D" uid="uid://cs432qch01gol" path="res://assets/images/provinces/sarangani/SlidePuzzle.png" id="2_sg58u"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_t5ev3"]

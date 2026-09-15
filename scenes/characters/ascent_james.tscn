@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://bgdpdtfj1fx41"]
 
-[ext_resource type="Script" uid="uid://dmq7k8g22mr6c" path="res://scripts/charactersscript/ascent_james.gd" id="1_1h1gs"]
-[ext_resource type="Texture2D" uid="uid://m65t8i7am364" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentwalking.png" id="1_m0pe3"]
-[ext_resource type="Texture2D" uid="uid://b4tup1dmpxum1" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentjump.png" id="2_1h1gs"]
-[ext_resource type="Texture2D" uid="uid://blvxangruag71" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentidle.png" id="2_btns8"]
-[ext_resource type="Texture2D" uid="uid://cx2d4pi3gpmak" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentwalking2left.png" id="3_btns8"]
-[ext_resource type="Texture2D" uid="uid://bxmrv6jsnyoub" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentjumpleft.png" id="4_fahsj"]
-[ext_resource type="Texture2D" uid="uid://c1cs50uawrsg2" path="res://assets/sprites/characters/AscentSpriteAssetJames/ascentjumpright.png" id="5_igmgv"]
+[ext_resource type="Script" uid="uid://dmq7k8g22mr6c" path="res://scripts/characters/ascent_james.gd" id="1_1h1gs"]
+[ext_resource type="Texture2D" uid="uid://m65t8i7am364" path="res://assets/sprites/characters/ascent/ascentwalking.png" id="1_m0pe3"]
+[ext_resource type="Texture2D" uid="uid://b4tup1dmpxum1" path="res://assets/sprites/characters/ascent/ascentjump.png" id="2_1h1gs"]
+[ext_resource type="Texture2D" uid="uid://blvxangruag71" path="res://assets/sprites/characters/ascent/ascentidle.png" id="2_btns8"]
+[ext_resource type="Texture2D" uid="uid://cx2d4pi3gpmak" path="res://assets/sprites/characters/ascent/ascentwalking2left.png" id="3_btns8"]
+[ext_resource type="Texture2D" uid="uid://bxmrv6jsnyoub" path="res://assets/sprites/characters/ascent/ascentjumpleft.png" id="4_fahsj"]
+[ext_resource type="Texture2D" uid="uid://c1cs50uawrsg2" path="res://assets/sprites/characters/ascent/ascentjumpright.png" id="5_igmgv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_londq"]
 atlas = ExtResource("2_btns8")

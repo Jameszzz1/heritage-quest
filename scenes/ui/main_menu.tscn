@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://evf7oc8gy8rm"]
 
-[ext_resource type="Script" uid="uid://c26e25310crnr" path="res://scripts/uiscript/main_menu.gd" id="1_qch7b"]
+[ext_resource type="Script" uid="uid://c26e25310crnr" path="res://scripts/ui/main_menu.gd" id="1_qch7b"]
 [ext_resource type="Texture2D" uid="uid://cbtrtp3tpvlp4" path="res://assets/images/menu/background.png" id="2_4ovp2"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_1mexh"]
 [ext_resource type="AudioStream" uid="uid://yo0ct2n0eu0j" path="res://assets/audio/music/MainmenuBG.mp3" id="4_6ud2m"]
@@ -170,7 +170,6 @@ text = "EXIT"
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=508031387]
 stream = ExtResource("4_6ud2m")
 autoplay = true
-bus = &"MUSIC"
 
 [node name="Logout" type="Button" parent="." unique_id=635887972]
 layout_mode = 0

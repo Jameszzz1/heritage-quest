@@ -1,11 +1,11 @@
 [gd_scene format=4 uid="uid://h2l7roknl3p8"]
 
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="1_pd4ea"]
-[ext_resource type="Script" uid="uid://c3n5mm3uewcs8" path="res://scripts/longwayscript/cotabato.gd" id="1_peene"]
+[ext_resource type="Script" uid="uid://c3n5mm3uewcs8" path="res://scripts/provinces/cotabato.gd" id="1_peene"]
 [ext_resource type="Texture2D" uid="uid://be1nodjreedgw" path="res://assets/sprites/tiles/dark water.png" id="2_5wi1g"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="3_0t51a"]
 [ext_resource type="Texture2D" uid="uid://c4jwruwaeko0h" path="res://assets/sprites/tiles/grass.png" id="4_8uoxm"]
-[ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/rock.png" id="5_w84fh"]
+[ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/cobblestone.png" id="5_w84fh"]
 [ext_resource type="Texture2D" uid="uid://bvw4hucudqxyw" path="res://assets/sprites/things/16x32 trees.png" id="7_68d6s"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="8_2cbu3"]
 [ext_resource type="Texture2D" uid="uid://cickprqx43ws" path="res://assets/sprites/things/48x48cocotree.png" id="9_lbmng"]
@@ -133,7 +133,7 @@ pattern_1 = SubResource("TileMapPattern_yka0h")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hrqf7"]
 size = Vector2(47.086876, 18.279453)
 
-[node name="cotabato" type="Node2D" unique_id=1066175384]
+[node name="Cotabato" type="Node2D" unique_id=1066175384]
 script = ExtResource("1_peene")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=143821237]

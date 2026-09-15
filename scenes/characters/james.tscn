@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://d4hfn5wfmdob0"]
 
-[ext_resource type="Script" uid="uid://bc6f21tb6x0il" path="res://scripts/charactersscript/james.gd" id="1_8i33a"]
-[ext_resource type="Texture2D" uid="uid://dk1s24vyg6wpv" path="res://assets/sprites/characters/JamesSprites/deathsprite.png" id="2_8y6tc"]
-[ext_resource type="Texture2D" uid="uid://cijdr303hookp" path="res://assets/sprites/characters/JamesSprites/walksprite.png" id="2_xjxc2"]
+[ext_resource type="Script" uid="uid://bc6f21tb6x0il" path="res://scripts/characters/james.gd" id="1_8i33a"]
+[ext_resource type="Texture2D" uid="uid://dk1s24vyg6wpv" path="res://assets/sprites/characters/james/deathsprite.png" id="2_8y6tc"]
+[ext_resource type="Texture2D" uid="uid://cijdr303hookp" path="res://assets/sprites/characters/james/walksprite.png" id="2_xjxc2"]
 [ext_resource type="Texture2D" uid="uid://o5n8wocjbedr" path="res://assets/sprites/things/torch.png" id="3_1ioj8"]
 [ext_resource type="PackedScene" uid="uid://npo3s3xsf6u" path="res://scenes/ui/hud.tscn" id="4_2tmx1"]
-[ext_resource type="Texture2D" uid="uid://cuphrxnbpflg6" path="res://assets/sprites/characters/JamesSprites/idlesprite.png" id="4_xjxc2"]
-[ext_resource type="Texture2D" uid="uid://b1xddgguuc7lo" path="res://assets/sprites/characters/JamesSprites/rightsprint.png" id="7_8h8ef"]
-[ext_resource type="Texture2D" uid="uid://cb5yr3bip8h0a" path="res://assets/sprites/characters/JamesSprites/leftsprint.png" id="7_theor"]
+[ext_resource type="Texture2D" uid="uid://cuphrxnbpflg6" path="res://assets/sprites/characters/james/idlesprite.png" id="4_xjxc2"]
+[ext_resource type="Texture2D" uid="uid://b1xddgguuc7lo" path="res://assets/sprites/characters/james/rightsprint.png" id="7_8h8ef"]
+[ext_resource type="Texture2D" uid="uid://cb5yr3bip8h0a" path="res://assets/sprites/characters/james/leftsprint.png" id="7_theor"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l2wma"]
 atlas = ExtResource("2_8y6tc")

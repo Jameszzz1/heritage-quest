@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://lakc8wyw5ac4"]
 
-[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/uiscript/npc_dialogue.gd" id="1_7rr4k"]
+[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/ui/npc_dialogue.gd" id="1_7rr4k"]
 [ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="2_jeial"]
 [ext_resource type="Texture2D" uid="uid://co2uiasrq31by" path="res://assets/images/provinces/cotabato/aposandawa.png" id="2_s2gc0"]
 

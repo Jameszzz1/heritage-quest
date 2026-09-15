@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d3rsgxndq2dp6"]
 
-[ext_resource type="Script" uid="uid://cfbhboirj3ie5" path="res://scripts/minigamescript/tnalak_rhythm.gd" id="1_uk1p8"]
+[ext_resource type="Script" uid="uid://cfbhboirj3ie5" path="res://scripts/mini_games/tnalak_rhythm.gd" id="1_uk1p8"]
 [ext_resource type="Texture2D" uid="uid://c0gd1aylp3cij" path="res://assets/images/mini_games/bg_with_frame.png" id="2_uqh0l"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_agens"]
 [ext_resource type="Texture2D" uid="uid://b3qwfgxj868wu" path="res://assets/images/mini_games/btn_d_idle.png" id="4_0hv81"]
@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://dlg255itcgpvr" path="res://assets/images/mini_games/btn_j_pressed.png" id="9_pwds7"]
 [ext_resource type="Texture2D" uid="uid://pu43al4o2kxb" path="res://assets/images/mini_games/btn_k_idle.png" id="10_ljl7m"]
 [ext_resource type="Texture2D" uid="uid://onvprf835f81" path="res://assets/images/mini_games/btn_k_pressed.png" id="11_fmvba"]
-[ext_resource type="AudioStream" uid="uid://ct1meeqgsx2ch" path="res://assets/audio/mini_game_audio/BayanGong_Rhythm.wav" id="12_uk1p8"]
+[ext_resource type="AudioStream" uid="uid://ct1meeqgsx2ch" path="res://assets/audio/sfx/mini_games/BayanGong_Rhythm.wav" id="12_uk1p8"]
 
 [node name="TnalakRhythm" type="Control" unique_id=161912630]
 layout_mode = 3
@@ -99,7 +99,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="BtnD" type="TextureButton" parent="HitZone" unique_id=759134107]
+[node name="ButtonD" type="TextureButton" parent="HitZone" unique_id=759134107]
 custom_minimum_size = Vector2(2, 0)
 layout_mode = 0
 offset_left = 105.0
@@ -111,7 +111,7 @@ texture_pressed = ExtResource("5_54vu3")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="BtnF" type="TextureButton" parent="HitZone" unique_id=1347752652]
+[node name="ButtonF" type="TextureButton" parent="HitZone" unique_id=1347752652]
 custom_minimum_size = Vector2(2, 0)
 layout_mode = 0
 offset_left = 132.0
@@ -123,7 +123,7 @@ texture_pressed = ExtResource("7_bgydf")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="BtnJ" type="TextureButton" parent="HitZone" unique_id=2059197055]
+[node name="ButtonJ" type="TextureButton" parent="HitZone" unique_id=2059197055]
 custom_minimum_size = Vector2(2, 0)
 layout_mode = 0
 offset_left = 161.0
@@ -135,7 +135,7 @@ texture_pressed = ExtResource("9_pwds7")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="BtnK" type="TextureButton" parent="HitZone" unique_id=1256051471]
+[node name="ButtonK" type="TextureButton" parent="HitZone" unique_id=1256051471]
 custom_minimum_size = Vector2(2, 0)
 layout_mode = 0
 offset_left = 187.0
@@ -149,4 +149,3 @@ stretch_mode = 0
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1277493206]
 stream = ExtResource("12_uk1p8")
-bus = &"MUSIC"

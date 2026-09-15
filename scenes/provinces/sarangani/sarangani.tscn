@@ -1,11 +1,11 @@
 [gd_scene format=4 uid="uid://ccwuprcyk318u"]
 
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="1_0bqa8"]
-[ext_resource type="Script" uid="uid://pkc706bw27f" path="res://scripts/longwayscript/sarangani.gd" id="1_h0cro"]
+[ext_resource type="Script" uid="uid://pkc706bw27f" path="res://scripts/provinces/sarangani.gd" id="1_h0cro"]
 [ext_resource type="Texture2D" uid="uid://7g3vnvxhcbyh" path="res://assets/sprites/tiles/dark_water.png" id="2_h0cro"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="3_wib51"]
 [ext_resource type="Texture2D" uid="uid://c4jwruwaeko0h" path="res://assets/sprites/tiles/grass.png" id="4_ehumt"]
-[ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/rock.png" id="5_g2b2m"]
+[ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/cobblestone.png" id="5_g2b2m"]
 [ext_resource type="Texture2D" uid="uid://bvw4hucudqxyw" path="res://assets/sprites/things/16x32 trees.png" id="6_wsxmw"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="7_hq11y"]
 [ext_resource type="Texture2D" uid="uid://c3n77pba1hkip" path="res://assets/images/provinces/sarangani/2_SCave.png" id="9_0bqa8"]
@@ -19,7 +19,6 @@
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="18_t76up"]
 [ext_resource type="PackedScene" uid="uid://b28itkt7gvj13" path="res://scenes/characters/gahum.tscn" id="19_6ocsf"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="19_87wo0"]
-[ext_resource type="Script" uid="uid://dtd101wljs0vv" path="res://scripts/to_fishing_zone.gd" id="19_ar3vr"]
 [ext_resource type="Texture2D" uid="uid://cednpe7i2u6fg" path="res://assets/images/provinces/sarangani/landmark_asset_sarangani1.png" id="19_em1xq"]
 [ext_resource type="PackedScene" uid="uid://2eqteecvlxxn" path="res://scenes/characters/maragtas.tscn" id="20_44wf4"]
 [ext_resource type="Texture2D" uid="uid://cpi8uwjf2etx0" path="res://assets/images/provinces/sarangani/landmark_asset_sarangani2.png" id="20_xqvxh"]
@@ -200,7 +199,7 @@ texture = ExtResource("14_wsxmw")
 region_enabled = true
 region_rect = Rect2(0, 0, 308.17163, 455)
 
-[node name="Thisway" type="Sprite2D" parent="Y-Sort" unique_id=1117849719]
+[node name="ThisWay" type="Sprite2D" parent="Y-Sort" unique_id=1117849719]
 position = Vector2(-682, -335.00003)
 scale = Vector2(0.15463394, 0.110539034)
 texture = ExtResource("15_hq11y")
@@ -209,7 +208,7 @@ region_enabled = true
 region_rect = Rect2(326.65112, 32.90252, 261.03674, 349.40506)
 
 [node name="James" parent="Y-Sort" unique_id=636874803 instance=ExtResource("18_qtuk6")]
-position = Vector2(846, 116)
+position = Vector2(843, 112)
 
 [node name="Camera2D" type="Camera2D" parent="Y-Sort/James" unique_id=1863879979]
 
@@ -366,10 +365,10 @@ polygon = PackedVector2Array(66, -520, 77, -515, 77, -500, 81, -499, 63, -490, 4
 
 [node name="FishingZone" type="Area2D" parent="." unique_id=1361456845]
 position = Vector2(-1201, -17)
-script = ExtResource("19_ar3vr")
+script = ExtResource("19_87wo0")
 target_scene = "res://scenes/fishing.tscn"
 return_scene = "res://scenes/provinces/sarangani/sarangani.tscn"
-return_spawn_pos = Vector2(-1194, -24)
+return_spawn_pos = Vector2(-1171, -21)
 
 [node name="FishCollisionShape2D" type="CollisionShape2D" parent="FishingZone" unique_id=1324786662]
 shape = SubResource("RectangleShape2D_2nl4l")

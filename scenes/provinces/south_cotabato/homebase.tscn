@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="3_lyv6t"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="4_uqy7y"]
 [ext_resource type="PackedScene" uid="uid://dmdhxi5g77jsp" path="res://scenes/provinces/south_cotabato/james_house.tscn" id="5_06cri"]
-[ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/rock.png" id="5_eepbd"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="6_k7k33"]
 [ext_resource type="Texture2D" uid="uid://bvw4hucudqxyw" path="res://assets/sprites/things/16x32 trees.png" id="6_y66hy"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="7_a38we"]
@@ -49,8 +48,10 @@ texture = ExtResource("3_jfdqy")
 0:0/0/texture_origin = Vector2i(0, -4)
 0:0/0/custom_data_0 = "grass"
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_a38we"]
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lyv6t"]
-texture = ExtResource("5_eepbd")
+texture = SubResource("CompressedTexture2D_a38we")
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, -4)
 

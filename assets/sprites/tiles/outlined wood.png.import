@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bb418vkxsgmkg"
-path="res://.godot/imported/wood_floor_outlined.png-4bd6523e3cd96b30fefe1f1eeddf007f.ctex"
+uid="uid://5jdlssor7tbn"
+path="res://.godot/imported/outlined wood.png-2c12859e040ef2132e80f8bff4de0950.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/tiles/wood_floor_outlined.png"
-dest_files=["res://.godot/imported/wood_floor_outlined.png-4bd6523e3cd96b30fefe1f1eeddf007f.ctex"]
+source_file="res://assets/sprites/tiles/outlined wood.png"
+dest_files=["res://.godot/imported/outlined wood.png-2c12859e040ef2132e80f8bff4de0950.ctex"]
 
 [params]
 

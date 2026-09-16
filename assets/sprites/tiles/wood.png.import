@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfebcqsa3r7ug"
-path="res://.godot/imported/wood_floor.png-e2a8f99d8fc61e46c4e0754d5ce2b9ed.ctex"
+uid="uid://d1kpcsmsl3vao"
+path="res://.godot/imported/wood.png-f2e69efe1612e5d49a14d6dd4018344e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/tiles/wood_floor.png"
-dest_files=["res://.godot/imported/wood_floor.png-e2a8f99d8fc61e46c4e0754d5ce2b9ed.ctex"]
+source_file="res://assets/sprites/tiles/wood.png"
+dest_files=["res://.godot/imported/wood.png-f2e69efe1612e5d49a14d6dd4018344e.ctex"]
 
 [params]
 

@@ -7,8 +7,8 @@ extends Control
 @onready var match_sound = $MatchSound
 
 const GRID_SIZE = 8
-const TILE_WIDTH = 21
-const TILE_HEIGHT = 17
+const TILE_SIZE = 18      # laki ng bawat tile (square). Pwede itaas hanggang 20
+const TILE_GAP = 2        # pagitan ng tiles. Kung TILE_SIZE = 20, gawing 1
 const TARGET_SCORE = 50000   # 50,000
 
 var score = 0
@@ -16,7 +16,7 @@ var time_left = 120
 var game_over = false
 var game_started = false
 
-var tile_textures = [
+var raw_textures = [
 	preload("res://assets/images/provinces/sultan_kudarat/blue.png"),
 	preload("res://assets/images/provinces/sultan_kudarat/yellow.png"),
 	preload("res://assets/images/provinces/sultan_kudarat/purple.png"),
@@ -24,6 +24,9 @@ var tile_textures = [
 	preload("res://assets/images/provinces/sultan_kudarat/green.png"),
 	preload("res://assets/images/provinces/sultan_kudarat/cyan.png")
 ]
+
+# Ito ang ginagamit ng game: yung mga texture na naka-crop na (walang transparent padding)
+var tile_textures = []
 
 var grid_matrix = []
 var first_selected_tile = null
@@ -35,7 +38,10 @@ var combo_count = 0
 
 func _ready():
 	randomize()
+	build_cropped_textures()
 	grid_container.columns = GRID_SIZE
+	grid_container.add_theme_constant_override("h_separation", TILE_GAP)
+	grid_container.add_theme_constant_override("v_separation", TILE_GAP)
 	score_label.text = "SCORE: 0 / 50,000"
 	timer_label.text = "TIME: " + str(time_left) + "s"
 	setup_grid()
@@ -43,6 +49,35 @@ func _ready():
 	game_timer.one_shot = false
 	game_timer.timeout.connect(_on_timer_timeout)
 	show_instructions_popup()
+
+# Tinatanggal ang transparent padding para lumaki ang nakikitang icon sa loob ng tile
+func build_cropped_textures():
+	tile_textures.clear()
+	for tex in raw_textures:
+		tile_textures.append(crop_transparent_padding(tex))
+
+func crop_transparent_padding(tex: Texture2D) -> Texture2D:
+	var img: Image = tex.get_image()
+	if img == null:
+		return tex
+	if img.is_compressed():
+		img.decompress()
+	var used: Rect2i = img.get_used_rect()
+	if used.size == Vector2i.ZERO or used.size == img.get_size():
+		return tex
+	var atlas := AtlasTexture.new()
+	atlas.atlas = tex
+	atlas.region = Rect2(used)
+	return atlas
+
+# Ilalagay sa gitna ng screen ang grid
+func layout_grid():
+	var grid_px = GRID_SIZE * TILE_SIZE + (GRID_SIZE - 1) * TILE_GAP
+	var grid_vec = Vector2(grid_px, grid_px)
+	var area = size if size.x > 0 and size.y > 0 else get_viewport_rect().size
+	grid_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	grid_container.size = grid_vec
+	grid_container.position = ((area - grid_vec) / 2.0).round()
 
 func show_instructions_popup() -> void:
 	var popup := InstructionsPopup.new()
@@ -75,15 +110,16 @@ func setup_grid():
 			  (y > 1 and grid_matrix[x][y-1] != null and grid_matrix[x][y-1].get_meta("tile_type") == random_index and grid_matrix[x][y-2].get_meta("tile_type") == random_index):
 				random_index = randi() % tile_textures.size()
 			create_tile_button(x, y, random_index)
+	layout_grid()
 	check_board_moves_availability()
 
 func create_tile_button(x, y, type_index):
 	var button = TextureButton.new()
-	button.texture_normal = tile_textures[type_index]
 	button.ignore_texture_size = true
-	button.custom_minimum_size = Vector2(TILE_WIDTH, TILE_HEIGHT)
-	button.stretch_mode = TextureButton.STRETCH_SCALE
-	button.pivot_offset = Vector2(TILE_WIDTH / 2, TILE_HEIGHT / 2)
+	button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	button.texture_normal = tile_textures[type_index]
+	button.custom_minimum_size = Vector2(TILE_SIZE, TILE_SIZE)
+	button.pivot_offset = Vector2(TILE_SIZE / 2.0, TILE_SIZE / 2.0)
 	button.set_meta("grid_pos", Vector2i(x, y))
 	button.set_meta("tile_type", type_index)
 	button.gui_input.connect(func(event): _on_tile_gui_input(button, event))
@@ -255,9 +291,6 @@ func process_matches(match_list: Array):
 			trigger_end_state(true)
 		else:
 			check_board_moves_availability()
-
-# Paste the remaining functions (drop_tiles_down, fill_empty_tiles, etc.) below if needed.
-# Let me know if there are more errors.
 
 func drop_tiles_down():
 	var has_movement = false

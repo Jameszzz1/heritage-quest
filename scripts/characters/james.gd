@@ -60,6 +60,11 @@ func _ready():
 		position = Global.spawn_position
 		Global.spawn_position = Vector2.ZERO
 
+func _exit_tree():
+	# Burahin ang death layer pag umalis si James sa scene (para hindi mag-pile up sa root)
+	if is_instance_valid(death_layer):
+		death_layer.queue_free()
+
 func setup_hit_sfx():
 	hit_sfx = AudioStreamPlayer.new()
 	hit_sfx.stream = load("res://assets/audio/sfx/damage.wav")
@@ -72,7 +77,6 @@ func setup_hit_sfx():
 func setup_death_screen():
 	death_layer = CanvasLayer.new()
 	death_layer.layer = 128
-	get_tree().root.add_child(death_layer)
 
 	death_screen = ColorRect.new()
 	death_screen.color = Color(0, 0, 0, 0)
@@ -86,6 +90,9 @@ func setup_death_screen():
 	death_countdown_label.set_anchors_preset(Control.PRESET_CENTER)
 	death_countdown_label.visible = false
 	death_layer.add_child(death_countdown_label)
+
+	# Ito ang fix: deferred ang pag-add sa root para hindi mag-"busy parent" error
+	get_tree().root.add_child.call_deferred(death_layer)
 
 func is_night_scene() -> bool:
 	var scene_path = get_tree().current_scene.scene_file_path

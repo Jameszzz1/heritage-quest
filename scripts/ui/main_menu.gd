@@ -9,8 +9,10 @@ extends Control
 @onready var master_slider = $Options/VBoxContainer/MasterSlider
 @onready var music_slider = $Options/VBoxContainer/MusicSlider
 @onready var sfx_slider = $Options/VBoxContainer/SFXSlider
+@onready var bg_music: AudioStreamPlayer = $AudioStreamPlayer
 
 func _ready() -> void:
+	bg_music.bus = "MUSIC"
 	show_main()
 	setup_volume_sliders()
 

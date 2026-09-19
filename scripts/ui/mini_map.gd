@@ -3,6 +3,7 @@ extends Control
 @export var player: Node2D
 
 @onready var minimap_cam = $SubViewportContainer/SubViewport/Camera2D
+@onready var minimap_viewport = $SubViewportContainer/SubViewport
 @onready var player_marker = $PlayerMarker
 @onready var frame = $Frame
 
@@ -35,13 +36,14 @@ var snake_marker_texture = preload(
 
 func _ready():
 
+	minimap_viewport.world_2d = get_viewport().world_2d
+	minimap_cam.enabled = true
 	minimap_cam.zoom = Vector2(0.3, 0.3)
 
 	_setup_npc_marker_nodes()
 
 	# Put player marker in the center immediately
 	_center_player_marker()
-
 
 # ============================================================
 # PLAYER MARKER

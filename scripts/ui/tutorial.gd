@@ -6,17 +6,33 @@ extends CanvasLayer
 @onready var prompt_label = $NinePatchRect/Prompt
 
 var steps = [
+		{
+		"title": "Welcome",
+		"body": "You are James."
+	},
 	{
-		"title": "Basic Controls",
-		"body": "Use WASD to move James around the plaza."
+		"title": "Your Goal",
+		"body": "Learn about the culture of each province and obtain the token to proceed to the next province."
+	},
+	{
+		"title": "Movement",
+		"body": "Use the W, A, S, and D keys to walk. Hold Shift to sprint."
 	},
 	{
 		"title": "Interaction",
-		"body": "Approach the Heritage Pillar and press E to interact with it"
+		"body": "Press the E key to interact with objects and characters."
 	},
 	{
-		"title": "Survival Mechanic",
-		"body": "James is getting hungry. Head to the pier and complete the Fishing Mini-game to restore his energy."
+		"title": "Backpack and Map",
+		"body": "Press B to open your backpack. Press M to view the minimap."
+	},
+	{
+		"title": "Camera Zoom",
+		"body": "Scroll up to zoom in and scroll down to zoom out. Click the middle mouse button to reset the zoom."
+	},
+	{
+		"title": "Need Help?",
+		"body": "Talk to Maria for more information."
 	}
 ]
 
@@ -25,12 +41,16 @@ var is_active = false
 var prompt_tween: Tween = null
 
 func _ready():
+	layer = 100
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	if Gamestate.tutorial_shown:
 		panel.visible = false
 		set_process_input(false)
 		return
 
 	Gamestate.set_tutorial_shown()
+
 	panel.modulate.a = 0.0
 	panel.self_modulate = Color(1, 1, 1, 0.9)
 	show_step(current_step)
@@ -40,7 +60,10 @@ func show_step(index: int):
 	panel.visible = true
 	title_label.text = steps[index]["title"]
 	body_label.text = steps[index]["body"]
-	prompt_label.text = "Press Enter to continue"
+	if index == steps.size() - 1:
+		prompt_label.text = "Press Enter to close"
+	else:
+		prompt_label.text = "Press Enter to continue"
 	prompt_label.modulate.a = 0.0
 	var tween = create_tween()
 	tween.tween_property(panel, "modulate:a", 1.0, 0.4)
@@ -62,7 +85,8 @@ func _input(event):
 	if not is_active:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_ENTER:
+		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+			get_viewport().set_input_as_handled()
 			next_step()
 
 func next_step():

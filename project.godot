@@ -26,12 +26,13 @@ buses/default_bus_layout=""
 
 [autoload]
 
+Global="*uid://cbl3hpdotpdjv"
 Supabase="*uid://ceredip56jvsl"
 MusicManager="*uid://ctr2dnj5k5ox"
-Global="*uid://cbl3hpdotpdjv"
 Gamestate="*uid://fiyeagjvdheg"
 FootstepManager="*uid://dhrcapppt0m6q"
 LoadingScreen="*uid://btqv3ys540wj0"
+IngameZoomManager="*uid://kugqsac024px"
 
 [display]
 
@@ -108,6 +109,7 @@ jump={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

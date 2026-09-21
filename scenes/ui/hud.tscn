@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://doiri4m8ky6e2" path="res://scenes/ui/health_bar.tscn" id="2_oj5la"]
 [ext_resource type="Texture2D" uid="uid://1rj5c3xxe04s" path="res://assets/sprites/things/backpack.png" id="2_oo0fn"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="5_uo2fv"]
+[ext_resource type="PackedScene" uid="uid://dmf4mccvfnfa6" path="res://scenes/ui/battery_bar.tscn" id="6_4jqwt"]
 [ext_resource type="PackedScene" uid="uid://cov0jyhb0rx5i" path="res://scenes/ui/mini_map.tscn" id="6_047uy"]
 [ext_resource type="PackedScene" uid="uid://pqvdhde0ypbb" path="res://scenes/ui/energy_bar.tscn" id="7_gss2c"]
 
@@ -35,6 +36,12 @@ offset_bottom = -166.0
 offset_left = 11.0
 offset_top = 25.0
 offset_right = -259.0
+offset_bottom = -153.0
+
+[node name="BatteryBar" parent="." unique_id=1905554179 instance=ExtResource("6_4jqwt")]
+offset_left = 74.0
+offset_top = 25.0
+offset_right = -196.0
 offset_bottom = -153.0
 
 [node name="Backpack" type="TextureButton" parent="." unique_id=541575279]

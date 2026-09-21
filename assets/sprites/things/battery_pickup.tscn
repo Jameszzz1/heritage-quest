@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b1lo4mxcwvqlk"]
+
+[ext_resource type="Texture2D" uid="uid://djrdq45s5wvdv" path="res://assets/sprites/things/battery.png" id="1_cvef7"]
+[ext_resource type="Script" uid="uid://b5pgmvfdjcqkb" path="res://scripts/resourcesgamescript/battery_pickup.gd" id="1_kthog"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kthog"]
+radius = 4.0
+
+[node name="BatteryPickup" type="Area2D" unique_id=1296642580]
+script = ExtResource("1_kthog")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=332456994]
+position = Vector2(-1.9999962, 0)
+scale = Vector2(0.02898551, 0.028723408)
+texture = ExtResource("1_cvef7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=454208120]
+position = Vector2(-2, 0)
+shape = SubResource("CircleShape2D_kthog")

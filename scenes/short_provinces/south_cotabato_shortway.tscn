@@ -1,6 +1,5 @@
 [gd_scene format=4 uid="uid://qhntp81ologg"]
 
-[ext_resource type="Script" path="res://scripts/shortwayscript/south_cotabato_shortway.gd" id="1_ko6sf"]
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="1_ydp0y"]
 [ext_resource type="Texture2D" uid="uid://7g3vnvxhcbyh" path="res://assets/sprites/tiles/dark_water.png" id="2_ko6sf"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="3_3j67a"]
@@ -9,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dfebcqsa3r7ug" path="res://assets/sprites/tiles/wood.png" id="6_j010d"]
 [ext_resource type="Texture2D" uid="uid://bvw4hucudqxyw" path="res://assets/sprites/things/16x32 trees.png" id="7_j1ruk"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="8_8s8to"]
+[ext_resource type="PackedScene" uid="uid://b1lo4mxcwvqlk" path="res://assets/sprites/things/battery_pickup.tscn" id="8_j010d"]
 [ext_resource type="Texture2D" uid="uid://cickprqx43ws" path="res://assets/sprites/things/48x48cocotree.png" id="9_th5rv"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="10_m0hrg"]
 [ext_resource type="PackedScene" uid="uid://lakc8wyw5ac4" path="res://scenes/provinces/cotabato/sandawa.tscn" id="11_tjr3i"]
@@ -146,7 +146,6 @@ pattern_1 = SubResource("TileMapPattern_yka0h")
 size = Vector2(66.20485, 22.975252)
 
 [node name="SouthCotabatoShortway" type="Node2D" unique_id=1066175384]
-script = ExtResource("1_ko6sf")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1345688183]
 anchors_preset = 8
@@ -180,6 +179,15 @@ tile_map_data = PackedByteArray("AAAFAPr/AQAAAAAAAAAFAPv/AQAAAAAAAAAFAPz/AQAAAAA
 tile_set = SubResource("TileSet_j0k36")
 
 [node name="Y-sort" type="Node2D" parent="." unique_id=251625512]
+
+[node name="BatteryPickup3" parent="Y-sort" unique_id=1296642580 instance=ExtResource("8_j010d")]
+position = Vector2(387, 273)
+
+[node name="BatteryPickup2" parent="Y-sort" unique_id=773486287 instance=ExtResource("8_j010d")]
+position = Vector2(767, -97)
+
+[node name="BatteryPickup" parent="Y-sort" unique_id=25032998 instance=ExtResource("8_j010d")]
+position = Vector2(-223, -111)
 
 [node name="James" parent="Y-sort" unique_id=636874803 instance=ExtResource("10_m0hrg")]
 position = Vector2(743, 254)

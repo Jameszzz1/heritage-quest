@@ -11,6 +11,8 @@ const TILE_SIZE = 18      # laki ng bawat tile (square). Pwede itaas hanggang 20
 const TILE_GAP = 2        # pagitan ng tiles. Kung TILE_SIZE = 20, gawing 1
 const TARGET_SCORE = 50000   # 50,000
 
+const END_GAME_FONT = preload("res://assets/fonts/GrapeSoda.ttf")
+
 var score = 0
 var time_left = 120
 var game_over = false
@@ -83,8 +85,7 @@ func show_instructions_popup() -> void:
 	var popup := InstructionsPopup.new()
 	popup.popup_title = "INSTRUCTIONS"
 	popup.popup_subtitle = "SULTAN KUDARAT: Tile Match"
-	popup.start_hint = "Press SPACE to start
-"
+	popup.start_hint = "Press SPACE to start"
 	popup.steps = [
 		{"icon": "match_three", "caption": "Match 3+ identical colors or icons."},
 		{"icon": "tile_click", "caption": "Drag to swap with the adjacent tile."},
@@ -437,3 +438,91 @@ func trigger_end_state(is_victory: bool):
 	else:
 		timer_label.text = "TIME'S UP!"
 		score_label.modulate = Color(1, 0.3, 0.3)
+	
+	show_end_game_popup(is_victory)
+
+
+func show_end_game_popup(is_victory: bool):
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.75)
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+
+	var panel = build_end_game_panel()
+	overlay.add_child(panel)
+
+
+func build_end_game_panel() -> Control:
+	var container = CenterContainer.new()
+	container.set_anchors_preset(Control.PRESET_FULL_RECT)
+
+	var box = PanelContainer.new()
+	# Proportional sizing base sa screen, hindi na fixed
+	var screen_size = get_viewport_rect().size
+	var panel_width = clamp(screen_size.x * 0.7, 140, 260)
+	var panel_height = clamp(screen_size.y * 0.7, 110, 190)
+	box.custom_minimum_size = Vector2(panel_width, panel_height)
+
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.1, 0.08, 0.12, 0.95)
+	style.border_width_left = 2
+	style.border_width_right = 2
+	style.border_width_top = 2
+	style.border_width_bottom = 2
+	style.border_color = Color(0.85, 0.65, 0.2)
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	box.add_theme_stylebox_override("panel", style)
+
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_top", 10)
+	margin.add_theme_constant_override("margin_bottom", 10)
+	margin.add_child(vbox)
+	box.add_child(margin)
+
+	var result_label = Label.new()
+	result_label.text = "U WIN!" if score >= TARGET_SCORE else "U LOSE"
+	result_label.add_theme_font_override("font", END_GAME_FONT)
+	result_label.add_theme_font_size_override("font_size", 12)
+	result_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	result_label.modulate = Color(0.3, 1, 0.4) if score >= TARGET_SCORE else Color(1, 0.35, 0.35)
+	vbox.add_child(result_label)
+
+	var score_result_label = Label.new()
+	score_result_label.text = "SCORE: " + str(score) + " / " + str(TARGET_SCORE)
+	score_result_label.add_theme_font_override("font", END_GAME_FONT)
+	score_result_label.add_theme_font_size_override("font_size", 7)
+	score_result_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	score_result_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	score_result_label.modulate = Color(1, 1, 1)
+	vbox.add_child(score_result_label)
+
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 4)
+	vbox.add_child(spacer)
+
+	var retry_button = Button.new()
+	retry_button.text = "TRY AGAIN"
+	retry_button.add_theme_font_override("font", END_GAME_FONT)
+	retry_button.custom_minimum_size = Vector2(80, 20)
+	retry_button.add_theme_font_size_override("font_size", 7)
+	retry_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	retry_button.pressed.connect(_on_try_again_pressed)
+	vbox.add_child(retry_button)
+
+	container.add_child(box)
+	return container
+
+
+func _on_try_again_pressed():
+	get_tree().reload_current_scene()

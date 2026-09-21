@@ -262,18 +262,47 @@ func end_game():
 func show_result(success: bool):
 	var font = load("res://assets/fonts/GrapeSoda.ttf")
 
-	var popup = Panel.new()
-	popup.size = Vector2(500, 300)
-	popup.position = Vector2(
-		(get_viewport_rect().size.x / 2) - 250,
-		(get_viewport_rect().size.y / 2) - 150
-	)
-	add_child(popup)
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.75)
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+
+	var container = CenterContainer.new()
+	container.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(container)
+
+	var box = PanelContainer.new()
+	var screen_size = get_viewport_rect().size
+	var panel_width = clamp(screen_size.x * 0.7, 140, 260)
+	var panel_height = clamp(screen_size.y * 0.7, 110, 190)
+	box.custom_minimum_size = Vector2(panel_width, panel_height)
+
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.1, 0.08, 0.12, 0.95)
+	style.border_width_left = 2
+	style.border_width_right = 2
+	style.border_width_top = 2
+	style.border_width_bottom = 2
+	style.border_color = Color(0.85, 0.65, 0.2)
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	box.add_theme_stylebox_override("panel", style)
 
 	var vbox = VBoxContainer.new()
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.add_theme_constant_override("separation", 6)
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	popup.add_child(vbox)
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_top", 10)
+	margin.add_theme_constant_override("margin_bottom", 10)
+	margin.add_child(vbox)
+	box.add_child(margin)
 
 	var title = Label.new()
 	var msg = Label.new()
@@ -289,24 +318,34 @@ func show_result(success: bool):
 		btn.text = "Try Again"
 
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD
 	title.add_theme_font_override("font", font)
-	title.add_theme_font_size_override("font_size", 40)
+	title.add_theme_font_size_override("font_size", 12)
+	title.modulate = Color(0.3, 1, 0.4) if success else Color(1, 0.35, 0.35)
 
 	msg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	msg.autowrap_mode = TextServer.AUTOWRAP_WORD
 	msg.add_theme_font_override("font", font)
-	msg.add_theme_font_size_override("font_size", 24)
+	msg.add_theme_font_size_override("font_size", 7)
+
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 4)
 
 	btn.add_theme_font_override("font", font)
-	btn.add_theme_font_size_override("font_size", 24)
-	btn.custom_minimum_size = Vector2(200, 50)
+	btn.add_theme_font_size_override("font_size", 7)
+	btn.custom_minimum_size = Vector2(80, 20)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 
 	vbox.add_child(title)
 	vbox.add_child(msg)
+	vbox.add_child(spacer)
 	vbox.add_child(btn)
+
+	container.add_child(box)
 
 	if success:
 		btn.pressed.connect(func():
-			popup.queue_free()
+			overlay.queue_free()
 			Global.spawn_position = Global.return_spawn_pos
 			get_tree().change_scene_to_file(Global.return_scene)
 		)

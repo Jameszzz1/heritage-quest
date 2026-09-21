@@ -5,7 +5,6 @@ extends Control
 @onready var game_over_label = $GameOverLabel
 @onready var try_again_button = $TryAgainButton
 @onready var tile_sound = $TileSound
-
 @onready var shuffle_button = $ShuffleButton
 
 const GRID_COLS = 3
@@ -22,13 +21,15 @@ var glow_tween = null
 
 var time_left = 300.0
 var timer_running = false
+var score = 0
+var max_combo = 0
 
 func _ready():
 	randomize()
 	grid_container.columns = GRID_COLS
-	game_over_label.visible = false
-	try_again_button.visible = false
-	try_again_button.pressed.connect(_on_try_again_pressed)
+	
+	if game_over_label: game_over_label.visible = false
+	if try_again_button: try_again_button.visible = false
 
 	if shuffle_button != null:
 		shuffle_button.pressed.connect(_on_shuffle_button_pressed)
@@ -57,7 +58,6 @@ func _ready():
 	shuffle_board()
 
 	timer_label.text = "Time: 5:00"
-
 	show_instructions_popup()
 
 func show_instructions_popup() -> void:
@@ -81,7 +81,6 @@ func _on_shuffle_button_pressed():
 
 	remove_glow_from_tile(selected_tile)
 	selected_tile = null
-
 	shuffle_board()
 
 	if tile_sound != null:
@@ -109,19 +108,17 @@ func _process(delta):
 		timer_label.modulate = Color(1, 1, 1)
 
 func trigger_game_over():
-	game_over_label.visible = true
-	try_again_button.visible = true
 	if shuffle_button != null:
 		shuffle_button.visible = false
-	timer_label.modulate = Color(1, 0.3, 0.3)
 	grid_container.visible = false
+	show_result(false)
 
 func _on_try_again_pressed():
 	time_left = 300.0
 	timer_running = true
 	timer_label.modulate = Color(1, 1, 1)
-	game_over_label.visible = false
-	try_again_button.visible = false
+	if game_over_label: game_over_label.visible = false
+	if try_again_button: try_again_button.visible = false
 	if shuffle_button != null:
 		shuffle_button.visible = true
 	grid_container.visible = true
@@ -291,7 +288,8 @@ func _on_tile_pressed(tile_button: TextureButton):
 			timer_label.modulate = Color(0.3, 1, 0.3)
 			if shuffle_button != null:
 				shuffle_button.visible = false
-			return_to_previous_scene()
+			grid_container.visible = false
+			show_result(true)
 	else:
 		if selected_tile == tile_button:
 			remove_glow_from_tile(selected_tile)
@@ -300,11 +298,6 @@ func _on_tile_pressed(tile_button: TextureButton):
 			remove_glow_from_tile(selected_tile)
 			selected_tile = tile_button
 			apply_glow_to_tile(tile_button)
-
-func return_to_previous_scene():
-	await get_tree().create_timer(2.0).timeout
-	Global.spawn_position = Global.return_spawn_pos
-	get_tree().change_scene_to_file(Global.return_scene)
 
 func swap_tiles(pos1: Vector2i, pos2: Vector2i):
 	var tile1 = grid_matrix[pos1.x][pos1.y]
@@ -351,3 +344,99 @@ func check_victory() -> bool:
 				return false
 			expected_id += 1
 	return true
+
+func show_result(success: bool):
+	var font = load("res://assets/fonts/GrapeSoda.ttf")
+
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.75)
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+
+	var container = CenterContainer.new()
+	container.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(container)
+
+	var box = PanelContainer.new()
+	var screen_size = get_viewport_rect().size
+	var panel_width = clamp(screen_size.x * 0.7, 140, 260)
+	var panel_height = clamp(screen_size.y * 0.7, 110, 190)
+	box.custom_minimum_size = Vector2(panel_width, panel_height)
+
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.1, 0.08, 0.12, 0.95)
+	style.border_width_left = 2
+	style.border_width_right = 2
+	style.border_width_top = 2
+	style.border_width_bottom = 2
+	style.border_color = Color(0.85, 0.65, 0.2)
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	box.add_theme_stylebox_override("panel", style)
+
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_top", 10)
+	margin.add_theme_constant_override("margin_bottom", 10)
+	margin.add_child(vbox)
+	box.add_child(margin)
+
+	var title = Label.new()
+	var msg = Label.new()
+	var btn = Button.new()
+
+	if success:
+		title.text = "CONGRATULATIONS!"
+		msg.text = "You solved the Slide Puzzle!\nTime Left: " + str(int(time_left)) + "s"
+		btn.text = "Claim Token"
+	else:
+		title.text = "TRY AGAIN!"
+		msg.text = "Time's up! Puzzle not finished."
+		btn.text = "Try Again"
+
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD
+	title.add_theme_font_override("font", font)
+	title.add_theme_font_size_override("font_size", 12)
+	title.modulate = Color(0.3, 1, 0.4) if success else Color(1, 0.35, 0.35)
+
+	msg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	msg.autowrap_mode = TextServer.AUTOWRAP_WORD
+	msg.add_theme_font_override("font", font)
+	msg.add_theme_font_size_override("font_size", 7)
+
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(0, 4)
+
+	btn.add_theme_font_override("font", font)
+	btn.add_theme_font_size_override("font_size", 7)
+	btn.custom_minimum_size = Vector2(80, 20)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+
+	vbox.add_child(title)
+	vbox.add_child(msg)
+	vbox.add_child(spacer)
+	vbox.add_child(btn)
+
+	container.add_child(box)
+
+	if success:
+		btn.pressed.connect(func():
+			overlay.queue_free()
+			Global.spawn_position = Global.return_spawn_pos
+			get_tree().change_scene_to_file(Global.return_scene)
+		)
+	else:
+		btn.pressed.connect(func(): 
+			overlay.queue_free()
+			_on_try_again_pressed()
+		)

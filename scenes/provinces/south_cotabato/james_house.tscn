@@ -1,12 +1,20 @@
 [gd_scene format=3 uid="uid://dmdhxi5g77jsp"]
 
+[ext_resource type="Shader" uid="uid://ccou5creedmms" path="res://materials/spawn_point.gdshader" id="1_2s214"]
 [ext_resource type="Texture2D" uid="uid://fd0tf04nhgpo" path="res://assets/sprites/things/james_house.png" id="1_s02ut"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="2_qf5a5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2t48m"]
+shader = ExtResource("1_2s214")
+shader_parameter/lamp_left_pos = Vector2(0.53, 0.58)
+shader_parameter/lamp_right_pos = Vector2(0.61, 0.53)
+shader_parameter/lamp_color = Color(1, 0.6, 0.2, 0.85)
 
 [node name="JamesHouse" type="StaticBody2D" unique_id=2138113803]
 scale = Vector2(0.11, 0.1)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1502340087]
+material = SubResource("ShaderMaterial_2t48m")
 texture = ExtResource("1_s02ut")
 offset = Vector2(0, -88)
 region_enabled = true

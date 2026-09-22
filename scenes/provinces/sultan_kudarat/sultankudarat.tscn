@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://coso8lmtntg2e" path="res://scenes/provinces/sultan_kudarat/ameer.tscn" id="8_mla1v"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="8_pxtpb"]
 [ext_resource type="Texture2D" uid="uid://cickprqx43ws" path="res://assets/sprites/things/48x48cocotree.png" id="9_hgdfp"]
+[ext_resource type="Shader" uid="uid://dh8b5tp3gyuqv" path="res://materials/trees.gdshader" id="9_tpqfu"]
 [ext_resource type="Texture2D" uid="uid://bdpvjwbmdyjh4" path="res://assets/images/provinces/sultan_kudarat/3_SKCapitolMosque.png" id="11_pxtpb"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="14_icpex"]
 [ext_resource type="Texture2D" uid="uid://dt0jewh86mvv5" path="res://assets/images/provinces/sultan_kudarat/WSultanKudarat.png" id="14_ojv3u"]
@@ -69,6 +70,14 @@ custom_data_layer_0/type = 4
 sources/0 = SubResource("TileSetAtlasSource_tpqfu")
 sources/1 = SubResource("TileSetAtlasSource_mp7ln")
 sources/2 = SubResource("TileSetAtlasSource_4etat")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mp7ln"]
+shader = ExtResource("9_tpqfu")
+shader_parameter/bilis_ng_hangin = 1.5
+shader_parameter/lakas_ng_hangin = 2.5
+shader_parameter/randomness = 30.0
+shader_parameter/tigas_ng_katawan_y = 15.0
+shader_parameter/lambot_ng_dahon = 25.0
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_b0dwv"]
 tile_data = PackedInt32Array(196608, 131073, 0, 262145, 131073, 0, 2, 196609, 0, 327681, 196609, 0, 65538, 131073, 0, 327682, 131073, 0, 393219, 196609, 0, 458755, 65537, 0, 524292, 196609, 0, 589827, 131073, 0, 458756, 1, 0, 524293, 131073, 0, 589828, 131073, 0, 589829, 131073, 0, 655366, 65537, 0, 786439, 131073, 0, 720903, 131073, 0)
@@ -190,6 +199,8 @@ return_spawn_pos = Vector2(228, 37)
 [node name="Trees" type="TileMapLayer" parent="Y-sort" unique_id=1949078514]
 y_sort_enabled = true
 texture_filter = 1
+material = SubResource("ShaderMaterial_mp7ln")
+tile_map_data = PackedByteArray("AADx/zAAAAACAAAAAAD0/ywAAAACAAAAAADx/zkAAAACAAAAAAD2/zUAAAACAAAAAAA=")
 tile_set = SubResource("TileSet_bnsln")
 
 [node name="Mosque" type="Sprite2D" parent="Y-sort" unique_id=922696503]

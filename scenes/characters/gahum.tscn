@@ -2,6 +2,13 @@
 
 [ext_resource type="Script" uid="uid://cyaw8rwqxnya3" path="res://scripts/characters/enemies/gahum.gd" id="1_blspe"]
 [ext_resource type="Texture2D" uid="uid://nwk8icuu2yw2" path="res://assets/sprites/characters/dog.png" id="2_0r5ok"]
+[ext_resource type="Shader" uid="uid://d111f7sd0vatt" path="res://materials/gahum.gdshader" id="2_ktott"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wpqap"]
+shader = ExtResource("2_ktott")
+shader_parameter/breathe_speed = 2.0
+shader_parameter/breathe_strength = 0.03
+shader_parameter/bob_height = 1.5
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s42ax"]
 radius = 46.0
@@ -68,6 +75,7 @@ collision_mask = 0
 script = ExtResource("1_blspe")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=790372547]
+material = SubResource("ShaderMaterial_wpqap")
 texture = ExtResource("2_0r5ok")
 hframes = 3
 vframes = 2

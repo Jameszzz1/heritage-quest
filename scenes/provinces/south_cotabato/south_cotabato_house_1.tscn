@@ -1,7 +1,14 @@
 [gd_scene format=3 uid="uid://dv6pm8p1uq0cg"]
 
+[ext_resource type="Shader" uid="uid://ccou5creedmms" path="res://materials/spawn_point.gdshader" id="1_fe4ea"]
 [ext_resource type="Texture2D" uid="uid://lrly14r5ejrc" path="res://assets/sprites/things/1_SCTnalak.png" id="1_ukmbv"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="2_he08e"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8f5pv"]
+shader = ExtResource("1_fe4ea")
+shader_parameter/lamp_left_pos = Vector2(0.53, 0.58)
+shader_parameter/lamp_right_pos = Vector2(0.61, 0.53)
+shader_parameter/lamp_color = Color(1, 0.6, 0.2, 0.85)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5jkby"]
 size = Vector2(56.666664, 6.666666)
@@ -10,6 +17,7 @@ size = Vector2(56.666664, 6.666666)
 scale = Vector2(0.3, 0.3)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2109295320]
+material = SubResource("ShaderMaterial_8f5pv")
 texture = ExtResource("1_ukmbv")
 region_enabled = true
 region_rect = Rect2(88.48534, 37.62359, 232.90758, 187.07736)

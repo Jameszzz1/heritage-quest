@@ -2,6 +2,13 @@
 
 [ext_resource type="Script" uid="uid://od2ygc3u2xkw" path="res://scripts/characters/enemies/maragtas.gd" id="1_yecsw"]
 [ext_resource type="Texture2D" uid="uid://k3w2fxpw2rpk" path="res://assets/sprites/characters/snake.png" id="2_6qm58"]
+[ext_resource type="Shader" uid="uid://bfxwqgaeck3ww" path="res://materials/maragtas.gdshader" id="2_i6o4a"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o6h3g"]
+shader = ExtResource("2_i6o4a")
+shader_parameter/wave_speed = 4.0
+shader_parameter/wave_amplitude = 3.0
+shader_parameter/wave_frequency = 8.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yecsw"]
 radius = 11.0
@@ -67,6 +74,7 @@ collision_mask = 0
 script = ExtResource("1_yecsw")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=984996761]
+material = SubResource("ShaderMaterial_o6h3g")
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_6qm58")
 hframes = 3

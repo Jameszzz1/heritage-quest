@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/cobblestone.png" id="5_w84fh"]
 [ext_resource type="Texture2D" uid="uid://bvw4hucudqxyw" path="res://assets/sprites/things/16x32 trees.png" id="7_68d6s"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="8_2cbu3"]
+[ext_resource type="Shader" uid="uid://dh8b5tp3gyuqv" path="res://materials/trees.gdshader" id="8_t120p"]
 [ext_resource type="Texture2D" uid="uid://cickprqx43ws" path="res://assets/sprites/things/48x48cocotree.png" id="9_lbmng"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="10_vywch"]
 [ext_resource type="PackedScene" uid="uid://lakc8wyw5ac4" path="res://scenes/provinces/cotabato/sandawa.tscn" id="11_5wi1g"]
@@ -66,6 +67,14 @@ custom_data_layer_0/type = 4
 sources/0 = SubResource("TileSetAtlasSource_5mwbx")
 sources/1 = SubResource("TileSetAtlasSource_tyfkp")
 sources/2 = SubResource("TileSetAtlasSource_hrqf7")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5mwbx"]
+shader = ExtResource("8_t120p")
+shader_parameter/bilis_ng_hangin = 1.5
+shader_parameter/lakas_ng_hangin = 2.5
+shader_parameter/randomness = 30.0
+shader_parameter/tigas_ng_katawan_y = 15.0
+shader_parameter/lambot_ng_dahon = 25.0
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_b0dwv"]
 tile_data = PackedInt32Array(196608, 131073, 0, 262145, 131073, 0, 2, 196609, 0, 327681, 196609, 0, 65538, 131073, 0, 327682, 131073, 0, 393219, 196609, 0, 458755, 65537, 0, 524292, 196609, 0, 589827, 131073, 0, 458756, 1, 0, 524293, 131073, 0, 589828, 131073, 0, 589829, 131073, 0, 655366, 65537, 0, 786439, 131073, 0, 720903, 131073, 0)
@@ -178,6 +187,8 @@ tile_set = SubResource("TileSet_jwlbc")
 [node name="Trees" type="TileMapLayer" parent="Y-sort" unique_id=944628351]
 y_sort_enabled = true
 texture_filter = 1
+material = SubResource("ShaderMaterial_5mwbx")
+tile_map_data = PackedByteArray("AADx/+D/AAACAAAAAAD4/7v/AAACAAAAAAAEAOT/AAACAAAAAADt/9H/AAACAAAAAAAHAMv/AAACAAAAAAD1//f/AAACAAAAAAA=")
 tile_set = SubResource("TileSet_i5btb")
 
 [node name="James" parent="Y-sort" unique_id=636874803 instance=ExtResource("10_vywch")]

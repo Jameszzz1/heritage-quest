@@ -6,7 +6,7 @@ extends Control
 @onready var minimap_viewport = $SubViewportContainer/SubViewport
 @onready var player_marker = $PlayerMarker
 @onready var frame = $Frame
-
+@onready var location_label = $LocationLabel
 
 # ============================================================
 # MARKER STORAGE
@@ -35,20 +35,23 @@ var snake_marker_texture = preload(
 # ============================================================
 
 func _ready():
-
+	
 	minimap_viewport.world_2d = get_viewport().world_2d
 	minimap_cam.enabled = true
-	minimap_cam.zoom = Vector2(0.3, 0.3)
+	minimap_cam.zoom = Vector2(0.2, 0.2)
 
 	_setup_npc_marker_nodes()
 
 	# Put player marker in the center immediately
 	_center_player_marker()
+	location_label.text
 
 # ============================================================
 # PLAYER MARKER
 # ============================================================
 
+
+	
 func _center_player_marker() -> void:
 
 	var center = frame.position + (
@@ -158,6 +161,8 @@ func _process(_delta):
 	if not is_instance_valid(player):
 
 		return
+	_center_player_marker()
+	location_label.text = Global.current_location
 
 
 	# ========================================================

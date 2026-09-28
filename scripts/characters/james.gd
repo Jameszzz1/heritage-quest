@@ -273,42 +273,33 @@ func reconnect_ui():
 			battery_bar.max_value = max_battery
 
 func handle_movement(delta):
-	var input_dir = Vector2.ZERO
+	var input_direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	
+	var iso_direction = Vector2(
+	input_direction.x - input_direction.y,
+	(input_direction.x + input_direction.y) / 2.0
+	).normalized()
 
-	# Screen-accurate: W = pataas, A = pakaliwa, S = pababa, D = pakanan
-	if Input.is_action_pressed("move_up"):
-		input_dir.y -= 1
-	if Input.is_action_pressed("move_down"):
-		input_dir.y += 1
-	if Input.is_action_pressed("move_left"):
-		input_dir.x -= 1
-	if Input.is_action_pressed("move_right"):
-		input_dir.x += 1
-
-	input_dir = input_dir.normalized()
-
-	if input_dir != Vector2.ZERO:
-		facing_dir = input_dir
-
+	
 	var current_speed = walk_speed
 	var is_sprinting = Input.is_action_pressed("sprint")
 
 	if exhausted:
 		is_sprinting = false
 
-	if is_sprinting and input_dir != Vector2.ZERO and stamina > 0:
+	if is_sprinting and iso_direction != Vector2.ZERO and stamina > 0:
 		current_speed = walk_speed * sprint_multiplier
 		stamina -= 20 * delta
 		energy -= 3 * delta
 	else:
 		current_speed = walk_speed
 
-	velocity = input_dir * current_speed
+	velocity = iso_direction * current_speed
 	move_and_slide()
 
-	update_animations(input_dir)
+	update_animations(iso_direction)
 
-	var is_moving = input_dir != Vector2.ZERO
+	var is_moving = iso_direction != Vector2.ZERO
 	var surface = get_surface_type()
 
 	FootstepManager.play_footstep(

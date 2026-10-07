@@ -19,16 +19,14 @@ var game_ended = false
 var song_time = 0.0
 var chart_index = 0
 
-# Travel time mula itaas ($Y=29.0$) hanggang HitZone ($Y=147.0$)
 var travel_time = (147.0 - 29.0) / note_speed
 
-# --- TIMING TUNING PARA SA BayanGong_Rythmn ---
-var song_bpm = 120.0 
-var song_start_offset = 0.0 # Naka-align na sa exact JSON timestamps
+var song_bpm = 120.0
+var song_start_offset = 0.0
 
 var chart = []
 
-# Drum SFX Preload (Kapag pinipindot ang D, F, J, K)
+# Drum SFX
 var drum_sfx = {
 	"D": preload("res://assets/audio/sfx/mini_games/D_drum.wav"),
 	"F": preload("res://assets/audio/sfx/mini_games/F_drum.wav"),
@@ -42,24 +40,32 @@ var drum_sfx = {
 @onready var label_countdown = $UI/LabelCountdown
 @onready var notes_node = $Notes
 @onready var audio_player = $AudioPlayer
-@onready var buttons = [$HitZone/ButtonD, $HitZone/ButtonF, $HitZone/ButtonJ, $HitZone/ButtonK]
+@onready var buttons = [
+	$HitZone/ButtonD,
+	$HitZone/ButtonF,
+	$HitZone/ButtonJ,
+	$HitZone/ButtonK
+]
+
 
 func _ready():
-	MusicManager.stop_music()
+	# DO NOT stop MusicManager here
 	load_drum_chart()
-	
+
 	note_textures = [
 		load("res://assets/images/mini_games/note_black.png"),
 		load("res://assets/images/mini_games/note_gold.png"),
 		load("res://assets/images/mini_games/note_red.png"),
 		load("res://assets/images/mini_games/note_white.png"),
 	]
+
 	btn_idle = [
 		load("res://assets/images/mini_games/btn_d_idle.png"),
 		load("res://assets/images/mini_games/btn_f_idle.png"),
 		load("res://assets/images/mini_games/btn_j_idle.png"),
 		load("res://assets/images/mini_games/btn_k_idle.png"),
 	]
+
 	btn_pressed = [
 		load("res://assets/images/mini_games/btn_d_pressed.png"),
 		load("res://assets/images/mini_games/btn_f_pressed.png"),
@@ -68,6 +74,7 @@ func _ready():
 	]
 
 	var font = load("res://assets/fonts/GrapeSoda.ttf")
+
 	label_countdown.add_theme_font_override("font", font)
 	label_countdown.add_theme_font_size_override("font_size", 80)
 	label_countdown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -76,7 +83,6 @@ func _ready():
 
 	show_instructions_popup()
 
-# Kinakarga ang eksaktong timing mula sa ating Drum Track JSON Data (Lane 1-4 mapped to 0-3 index)
 func load_drum_chart():
 	var raw_chart = [
 		[0.417, 0], [4.833, 0], [14.406, 3], [19.005, 3], [22.526, 3],
@@ -92,52 +98,65 @@ func load_drum_chart():
 		[190.689, 0], [191.351, 0], [191.931, 0], [193.535, 0], [193.617, 2],
 		[194.000, 2]
 	]
-	
+
 	chart.clear()
-	
-	# Punuin ang malalaking gaps (2+ seconds) ng constant quarter-beat notes sa BPM 120
-	var sec_per_beat = 60.0 / song_bpm # 0.5s bawat beat
+
+	var sec_per_beat = 60.0 / song_bpm
 	var current_lane = 0
-	
+
 	for i in range(raw_chart.size()):
 		var current_note = raw_chart[i]
-		
-		# Kung may naunang note at higit sa 2.0s ang gap, punuan ito
+
 		if i > 0:
 			var prev_time = raw_chart[i - 1][0]
 			var gap = current_note[0] - prev_time
-			
+
 			if gap > 2.0:
 				var fill_time = prev_time + sec_per_beat
+
 				while fill_time < (current_note[0] - 0.5):
 					current_lane = (current_lane + 1) % 4
 					chart.append([fill_time, current_lane])
 					fill_time += sec_per_beat
-		
+
 		chart.append(current_note)
-		
-	# I-sort ang chart ayon sa timestamp
+
 	chart.sort_custom(func(a, b): return a[0] < b[0])
 
 func show_instructions_popup() -> void:
 	var popup := InstructionsPopup.new()
+
 	popup.popup_title = "INSTRUCTIONS"
 	popup.popup_subtitle = "T'NALAK RHYTHM: The Rhythm of the Weave"
 	popup.start_hint = "Press SPACE to start"
+
 	popup.steps = [
-		{"icon": "rhythm_keys", "caption": "Press D, F, J, and K when the note reaches the line."},
-		{"icon": "target", "caption": "Achieve a target score of 100,000 and a 50-hit combo."}
+		{
+			"icon": "rhythm_keys",
+			"caption": "Press D, F, J, and K when the note reaches the line."
+		},
+		{
+			"icon": "target",
+			"caption": "Achieve a target score of 100,000 and a 50-hit combo."
+		}
 	]
+
 	popup.dismissed.connect(start_countdown)
+
 	add_child(popup)
 
 func start_countdown():
 	var countdown_values = ["3", "2", "1", "START!"]
+
 	for val in countdown_values:
 		label_countdown.text = val
 		await get_tree().create_timer(1.0).timeout
+
 	label_countdown.visible = false
+
+	# Start the rhythm game's own music
 	audio_player.play()
+
 	game_started = true
 
 func _process(delta):

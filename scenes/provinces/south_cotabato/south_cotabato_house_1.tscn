@@ -29,7 +29,7 @@ polygon = PackedVector2Array(-96.666664, 6.6666675, -96.666664, 43.333332, -86.6
 [node name="Entrance" type="Area2D" parent="." unique_id=563520920]
 script = ExtResource("2_he08e")
 target_scene = "res://scenes/provinces/south_cotabato/south_cotabato_inside_house.tscn"
-spawn_pos = Vector2(-520, 140)
+spawn_pos = Vector2(-265.00003, 145)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entrance" unique_id=1359393955]
 position = Vector2(1.6666675, 26.666666)

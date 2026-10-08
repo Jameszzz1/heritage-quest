@@ -201,24 +201,24 @@ position = Vector2(53.000015, -69)
 
 [node name="Camera2D" type="Camera2D" parent="Y-Sort/James" unique_id=1106883265]
 
-[node name="ToSouthCotabatoLongway" type="Area2D" parent="." unique_id=1303935645]
+[node name="ToSouthCotabatoLongRoute" type="Area2D" parent="." unique_id=1303935645]
 script = ExtResource("6_k7k33")
 target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
 spawn_pos = Vector2(888, 84)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabatoLongway" unique_id=1110396606]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabatoLongRoute" unique_id=1110396606]
 position = Vector2(-214, -424)
 rotation = -0.0034906585
 scale = Vector2(0.9999997, 0.9999998)
 skew = -0.20071286
 shape = SubResource("RectangleShape2D_jfdqy")
 
-[node name="ToSouthCotabatoShortway" type="Area2D" parent="." unique_id=684001768]
+[node name="ToSouthCotabatoShortRoute" type="Area2D" parent="." unique_id=684001768]
 script = ExtResource("6_k7k33")
-target_scene = "res://scenes/short_provinces/south_cotabato_shortway.tscn"
-spawn_pos = Vector2(760, 255)
+target_scene = "C:/Projects/HeritageQuest/scenes/short_provinces/south_cotabato_shortway.tscn"
+spawn_pos = Vector2(513, 364)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabatoShortway" unique_id=77514609]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabatoShortRoute" unique_id=77514609]
 position = Vector2(-601, -198)
 rotation = -0.45553094
 scale = Vector2(0.9999997, 0.9999998)
@@ -228,12 +228,12 @@ shape = SubResource("RectangleShape2D_jfdqy")
 [node name="Barrier" type="StaticBody2D" parent="." unique_id=499625518]
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Barrier" unique_id=6604825]
-polygon = PackedVector2Array(-206, -124, -266, -152, -285, -137, -619, -157, -668, -173, -544, -226, -453, -221, -277, -295, -287, -419, -146, -417, -159, -217, -119, -195, 97, -209, 194, -177, 263, -189, 384, -122, 423, -82, 428, -43, 454, -3, 431, 25, 442, 34, 424, 46, 416, 40, 361, 69, 349, 62, 317, 81, 321, 89, 277, 109, 239, 131, 231, 125, 225, 129, 214, 127, 207, 130, 200, 125, 185, 133, 172, 130, 152, 141, 141, 137, 121, 150, 112, 146, 82, 161, 71, 157, 66, 160, 55, 157, 42, 166, 32, 161, -20, 163, -35, 161, -42, 157, -48, 161, -58, 157, -55, 152, -69, 142, -80, 145, -134, 118, -143, 121, -145, 112, -155, 108, -149, 103, -172, 92, -167, 83, -170, 83, -168, 55, -185, 43, -185, -5, -173, -13, -187, -18, -183, -65, -195, -71, -192, -78, -191, -101, -203, -107, -200, -122, -202, -107, -190, -102, -191, -77, -194, -71, -182, -66, -186, -19, -171, -13, -184, -5, -184, 43, -167, 54, -169, 82, -165, 82, -170, 91, -147, 103, -153, 108, -143, 111, -142, 119, -134, 117, -80, 143, -68, 140, -53, 151, -56, 156, -48, 159, -42, 155, -34, 159, -20, 161, 32, 159, 41, 164, 54, 156, 65, 158, 71, 155, 81, 159, 112, 144, 121, 148, 139, 135, 152, 139, 172, 128, 183, 131, 200, 123, 207, 128, 214, 125, 224, 127, 231, 123, 239, 129, 276, 107, 319, 88, 314, 80, 348, 59, 361, 67, 415, 38, 423, 44, 438, 33, 428, 25, 451, -4, 424, -43, 420, -82, 382, -121, 260, -186, 193, -173, 95, -205, -120, -191, -162, -214, -147, -416, -285, -418, -275, -293, -453, -216, -540, -223, -664, -173, -619, -159, -287, -139, -266, -155, -200, -123, -203, -123)
+polygon = PackedVector2Array(-206, -124, -266, -152, -285, -137, -619, -157, -668, -173, -544, -226, -453, -221, -277, -295, -287, -419, -146, -417, -146, -220, -117, -203, 97, -209, 194, -177, 263, -189, 384, -122, 423, -82, 428, -43, 454, -3, 431, 25, 442, 34, 424, 46, 416, 40, 361, 69, 349, 62, 317, 81, 321, 89, 277, 109, 239, 131, 231, 125, 225, 129, 214, 127, 207, 130, 200, 125, 185, 133, 172, 130, 152, 141, 141, 137, 121, 150, 112, 146, 82, 161, 71, 157, 66, 160, 55, 157, 42, 166, 32, 161, -20, 163, -35, 161, -42, 157, -48, 161, -58, 157, -55, 152, -69, 142, -80, 145, -134, 118, -143, 121, -145, 112, -155, 108, -149, 103, -172, 92, -167, 83, -170, 83, -168, 55, -185, 43, -185, -5, -173, -13, -187, -18, -183, -65, -195, -71, -192, -78, -191, -101, -203, -107, -200, -122, -202, -107, -190, -102, -191, -77, -194, -71, -182, -66, -186, -19, -171, -13, -184, -5, -184, 43, -167, 54, -169, 82, -165, 82, -170, 91, -147, 103, -153, 108, -143, 111, -142, 119, -134, 117, -80, 143, -68, 140, -53, 151, -56, 156, -48, 159, -42, 155, -34, 159, -20, 161, 32, 159, 41, 164, 54, 156, 65, 158, 71, 155, 81, 159, 112, 144, 121, 148, 139, 135, 152, 139, 172, 128, 183, 131, 200, 123, 207, 128, 214, 125, 224, 127, 231, 123, 239, 129, 276, 107, 319, 88, 314, 80, 348, 59, 361, 67, 415, 38, 423, 44, 438, 33, 428, 25, 451, -4, 424, -43, 420, -82, 382, -121, 260, -186, 193, -173, 95, -205, -119, -201, -149, -218, -147, -416, -285, -418, -275, -293, -453, -216, -540, -223, -664, -173, -619, -159, -287, -139, -266, -155, -200, -123, -203, -123)
 
 [node name="SouthCotabatoSign" type="Sprite2D" parent="." unique_id=8388826]
 position = Vector2(-278, -234)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("20_184ba")
 
-[connection signal="body_entered" from="ToSouthCotabatoLongway" to="ToSouthCotabatoLongway" method="_on_body_entered"]
-[connection signal="body_entered" from="ToSouthCotabatoShortway" to="ToSouthCotabatoShortway" method="_on_body_entered"]
+[connection signal="body_entered" from="ToSouthCotabatoLongRoute" to="ToSouthCotabatoLongRoute" method="_on_body_entered"]
+[connection signal="body_entered" from="ToSouthCotabatoShortRoute" to="ToSouthCotabatoShortRoute" method="_on_body_entered"]

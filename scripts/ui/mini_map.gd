@@ -1,12 +1,15 @@
 extends Control
 
+
 @export var player: Node2D
+
 
 @onready var minimap_cam = $SubViewportContainer/SubViewport/Camera2D
 @onready var minimap_viewport = $SubViewportContainer/SubViewport
 @onready var player_marker = $PlayerMarker
 @onready var frame = $Frame
 @onready var location_label = $LocationLabel
+
 
 # ============================================================
 # MARKER STORAGE
@@ -15,10 +18,11 @@ extends Control
 var npc_marker_nodes: Dictionary = {}
 
 var enemy_dot_pool: Array[TextureRect] = []
+var location_dot_pool: Array[TextureRect] = []
 
 
 # ============================================================
-# ENEMY MARKER TEXTURES
+# MARKER TEXTURES
 # ============================================================
 
 var dog_marker_texture = preload(
@@ -29,29 +33,31 @@ var snake_marker_texture = preload(
 	"res://assets/sprites/characters/snake-marker.png"
 )
 
+var yellow_location_texture = preload(
+	"res://assets/sprites/things/dot.png"
+)
+
 
 # ============================================================
 # READY
 # ============================================================
 
 func _ready():
-	
+
 	minimap_viewport.world_2d = get_viewport().world_2d
+
 	minimap_cam.enabled = true
 	minimap_cam.zoom = Vector2(0.2, 0.2)
 
 	_setup_npc_marker_nodes()
 
-	# Put player marker in the center immediately
 	_center_player_marker()
-	location_label.text
+
 
 # ============================================================
 # PLAYER MARKER
 # ============================================================
 
-
-	
 func _center_player_marker() -> void:
 
 	var center = frame.position + (
@@ -59,7 +65,7 @@ func _center_player_marker() -> void:
 	)
 
 	player_marker.position = (
-		center - (player_marker.size / 2.0)
+		center - player_marker.size / 2.0
 	)
 
 
@@ -101,17 +107,14 @@ func _world_to_minimap(world_pos: Vector2) -> Vector2:
 			frame.size / 2.0
 		)
 
-	# Distance between object and player
 	var relative = (
 		world_pos - player.global_position
 	)
 
-	# Center of circular minimap
 	var center = frame.position + (
 		frame.size / 2.0
 	)
 
-	# Convert world distance to minimap distance
 	var result = center + (
 		relative * minimap_cam.zoom.x
 	)
@@ -143,8 +146,6 @@ func _is_inside_minimap(world_pos: Vector2) -> bool:
 
 	var marker_pos = center + minimap_offset
 
-	# Circle radius
-	# Smaller value keeps markers away from border
 	var radius = (
 		min(frame.size.x, frame.size.y) / 2.0
 	) - 8.0
@@ -161,7 +162,14 @@ func _process(_delta):
 	if not is_instance_valid(player):
 
 		return
+
+
+	# ========================================================
+	# PLAYER / LOCATION LABEL
+	# ========================================================
+
 	_center_player_marker()
+
 	location_label.text = Global.current_location
 
 
@@ -169,7 +177,6 @@ func _process(_delta):
 	# MINIMAP CAMERA
 	# ========================================================
 
-	# Camera follows player
 	minimap_cam.global_position = (
 		player.global_position
 	)
@@ -179,7 +186,6 @@ func _process(_delta):
 	# PLAYER
 	# ========================================================
 
-	# Player always stays in the center
 	_center_player_marker()
 
 
@@ -187,7 +193,6 @@ func _process(_delta):
 	# NPC MARKERS
 	# ========================================================
 
-	# Hide all NPC markers first
 	for marker in npc_marker_nodes.values():
 
 		marker.visible = false
@@ -234,7 +239,6 @@ func _process(_delta):
 		)
 
 
-		# Only show NPC inside circle
 		marker.visible = _is_inside_minimap(
 			npc.global_position
 		)
@@ -254,58 +258,46 @@ func _process(_delta):
 	)
 
 
-	for i in range(
-		enemy_dot_pool.size()
-	):
+	for i in range(enemy_dot_pool.size()):
 
-		var dot := enemy_dot_pool[i]
+		var enemy_dot := enemy_dot_pool[i]
 
-
-		# ====================================================
-		# CHECK ENEMY
-		# ====================================================
 
 		if (
 			i < enemies.size()
-			and is_instance_valid(
-				enemies[i]
-			)
+			and is_instance_valid(enemies[i])
 		):
 
 			var enemy = enemies[i]
 
 
 			# =================================================
-			# CHOOSE MARKER
+			# CHOOSE ENEMY MARKER
 			# =================================================
 
 			if "enemy_id" in enemy:
 
 				if enemy.enemy_id == "maragtas":
 
-					# 🐍 Snake
-					dot.texture = (
+					enemy_dot.texture = (
 						snake_marker_texture
 					)
 
 				elif enemy.enemy_id == "gahum":
 
-					# 🐕 Dog
-					dot.texture = (
+					enemy_dot.texture = (
 						dog_marker_texture
 					)
 
 				else:
 
-					# Default to dog
-					dot.texture = (
+					enemy_dot.texture = (
 						dog_marker_texture
 					)
 
 			else:
 
-				# Default marker
-				dot.texture = (
+				enemy_dot.texture = (
 					dog_marker_texture
 				)
 
@@ -319,8 +311,8 @@ func _process(_delta):
 			)
 
 
-			dot.position = (
-				enemy_pos - dot.size / 2.0
+			enemy_dot.position = (
+				enemy_pos - enemy_dot.size / 2.0
 			)
 
 
@@ -328,10 +320,101 @@ func _process(_delta):
 			# ONLY SHOW INSIDE CIRCLE
 			# =================================================
 
-			dot.visible = _is_inside_minimap(
+			enemy_dot.visible = _is_inside_minimap(
 				enemy.global_position
 			)
 
+		else:
+
+			enemy_dot.visible = false
+
+
+	# ========================================================
+	# YELLOW LOCATION MARKERS
+	# ========================================================
+
+	var locations = get_tree().get_nodes_in_group(
+		"minimap_location"
+	)
+
+
+	_ensure_location_dot_pool(
+		locations.size()
+	)
+
+
+	var center = frame.position + (
+		frame.size / 2.0
+	)
+
+
+	# Keep the yellow dot slightly inside the circle border
+	var max_radius = (
+		min(frame.size.x, frame.size.y) / 2.0
+	)
+
+
+	for i in range(location_dot_pool.size()):
+
+		var dot = location_dot_pool[i]
+
+
+		if i < locations.size():
+
+			var location = locations[i]
+
+
+			if not is_instance_valid(location):
+
+				dot.visible = false
+
+				continue
+
+
+			# =================================================
+			# DIRECTION FROM PLAYER TO LOCATION
+			# =================================================
+
+			var relative = (
+				location.global_position
+				- player.global_position
+			)
+
+
+			# Convert world distance to minimap distance
+			var offset = (
+				relative * minimap_cam.zoom.x
+			)
+
+
+			# =================================================
+			# CLAMP TO CIRCLE BORDER
+			# =================================================
+
+			if offset.length() > max_radius:
+
+				offset = (
+					offset.normalized()
+					* max_radius
+				)
+
+
+			# =================================================
+			# FINAL MARKER POSITION
+			# =================================================
+
+			var marker_position = (
+				center + offset
+			)
+
+
+			dot.position = (
+				marker_position
+				- dot.size / 2.0
+			)
+
+
+			dot.visible = true
 
 		else:
 
@@ -351,14 +434,11 @@ func _ensure_dot_pool(
 		var dot := TextureRect.new()
 
 
-		# ====================================================
-		# MARKER SIZE
-		# ====================================================
-
 		dot.custom_minimum_size = Vector2(
 			8,
 			8
 		)
+
 
 		dot.size = Vector2(
 			8,
@@ -366,29 +446,70 @@ func _ensure_dot_pool(
 		)
 
 
-		# ====================================================
-		# PIXEL ART SETTINGS
-		# ====================================================
-
 		dot.expand_mode = (
 			TextureRect.EXPAND_IGNORE_SIZE
 		)
+
 
 		dot.stretch_mode = (
 			TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		)
 
 
-		# ====================================================
-		# DEFAULT TEXTURE
-		# ====================================================
-
 		dot.texture = dog_marker_texture
 
 		dot.visible = false
 
+		dot.z_index = 100
 
-		# Add to minimap
+
 		add_child(dot)
 
 		enemy_dot_pool.append(dot)
+
+
+# ============================================================
+# YELLOW LOCATION MARKER POOL
+# ============================================================
+
+func _ensure_location_dot_pool(
+	needed_count: int
+) -> void:
+
+	while location_dot_pool.size() < needed_count:
+
+		var dot := TextureRect.new()
+
+
+		dot.custom_minimum_size = Vector2(
+			8,
+			8
+		)
+
+
+		dot.size = Vector2(
+			8,
+			8
+		)
+
+
+		dot.expand_mode = (
+			TextureRect.EXPAND_IGNORE_SIZE
+		)
+
+
+		dot.stretch_mode = (
+			TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		)
+
+
+		dot.texture = yellow_location_texture
+
+		dot.visible = false
+
+		dot.z_index = 100
+
+
+		add_child(dot)
+
+		location_dot_pool.append(dot)

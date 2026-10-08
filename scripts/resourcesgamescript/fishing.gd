@@ -133,6 +133,7 @@ func win_game():
 	is_active = false
 	fish_count += 1
 	update_counter_text()
+	Global.add_fish(1)
 	save_fish_to_supabase("Fish")
 
 	if fishing_reel:

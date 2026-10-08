@@ -343,7 +343,7 @@ func show_toast(msg: String):
 	if hud and hud.has_method("_show_toast"):
 		hud._show_toast(msg)
 
-# Resets the NPC state and hides the dialogue box
+	# Resets the NPC state and hides the dialogue box
 func close_dialogue():
 	state = "IDLE"
 	dialogue_index = 0

@@ -16,6 +16,7 @@ var current_location: String = ""
 
 # Inventory
 var battery_items: int = 0
+var fish_items: int = 0
 
 # Journal & NPC Progress System
 var province_journals: Dictionary = {}
@@ -55,6 +56,16 @@ func load_player_stats(player):
 		player.battery = current_battery
 	player.flashlight_on = flashlight_on
 
+# Tawagin ito sa New Game o pag bumalik sa Main Menu,
+# para hindi madala ang stats ng nakaraang laro sa bago
+func reset_player_stats():
+	current_health = -1
+	current_stamina = -1
+	current_energy = -1
+	current_battery = -1
+	flashlight_on = false
+	spawn_position = Vector2.ZERO
+
 # ---------------- INVENTORY ----------------
 
 func add_battery(amount: int = 1):
@@ -65,6 +76,17 @@ func consume_battery() -> bool:
 	if battery_items <= 0:
 		return false
 	battery_items -= 1
+	inventory_changed.emit()
+	return true
+
+func add_fish(amount: int = 1):
+	fish_items += amount
+	inventory_changed.emit()
+
+func consume_fish() -> bool:
+	if fish_items <= 0:
+		return false
+	fish_items -= 1
 	inventory_changed.emit()
 	return true
 

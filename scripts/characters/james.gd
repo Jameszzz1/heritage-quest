@@ -9,10 +9,21 @@ extends CharacterBody2D
 @export var max_battery: float = 100
 
 # Flashlight tuning
-@export var battery_drain_rate: float = 1.5      # per second (100 / 1.5 = ~66 sec na ilaw)
-@export var flashlight_range_scale: float = 0.7  # laki/layo ng ilaw
-@export var flashlight_half_angle: float = 28.0  # luwang ng cone (degrees)
-@export var low_battery_threshold: float = 0.2   # 20% pababa = flicker
+@export var battery_drain_rate: float = 1.5      # per second
+@export var flashlight_range_scale: float = 0.9  # laki/layo ng ilaw
+@export var flashlight_half_angle: float = 35.0   # luwang ng cone (degrees)
+@export var low_battery_threshold: float = 0.2    # 20% pababa = flicker
+
+@export var ambient_sight_scale: float = 0.35
+@export var ambient_sight_energy: float = 0.8
+
+# Starvation: kapag 0 ang energy, bababa ang health ng 1 kada ilang segundo
+@export var starvation_interval: float = 30.0
+@export var starvation_damage: float = 1.0
+
+# Mahina mode: kapag 20% pababa ang health, babagal ang lakad (makakasprint pa rin)
+@export var weak_health_ratio: float = 0.2
+@export var weak_speed_multiplier: float = 0.5
 
 const HELD_ANIM_SUFFIX: String = "_flashlight"
 const FLASHLIGHT_ENERGY: float = 1.0
@@ -26,7 +37,7 @@ const FLASHLIGHT_OFFSETS: Array[Vector2] = [
 	Vector2(-5, 4),   # down_left
 	Vector2(-6, 4),   # left
 	Vector2(-5, 3),   # up_left
-	Vector2(5, 4),    # up (nasa kamay/balakang na)
+	Vector2(5, 4),    # up
 	Vector2(5, 3),    # up_right
 ]
 
@@ -40,6 +51,7 @@ var exhausted: bool = false
 var in_night_scene: bool = false
 var facing_dir: Vector2 = Vector2(0, 1)
 var flicker_timer: float = 0.0
+var starvation_timer: float = 0.0
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var flashlight: PointLight2D = $FlashLight
@@ -88,8 +100,6 @@ func _ready():
 
 	if is_instance_valid(battery_bar):
 		battery_bar.max_value = max_battery
-	elif in_night_scene:
-		print("BATTERY BAR HINDI NAHANAP! I-check ang group na 'battery_bar' o ang node name na 'BatteryBar' sa HUD.")
 
 	setup_flashlight()
 	setup_ambient_sight()
@@ -102,11 +112,17 @@ func _ready():
 		Global.spawn_position = Vector2.ZERO
 
 func _exit_tree():
-	# Burahin ang death layer pag umalis si James sa scene (para hindi mag-pile up sa root)
+	# I-save ang stats sa Global bago umalis sa scene (fishing, homebase, ibang province, atbp.)
+	# Hindi kapag namatay, kasi ang die() na ang nagse-set ng respawn stats
+	if not is_dead:
+		Global.current_health = health
+		Global.current_stamina = stamina
+		Global.current_energy = energy
+		Global.current_battery = battery
+
 	if is_instance_valid(death_layer):
 		death_layer.queue_free()
 
-# Hanapin muna sa group, kung wala, hanapin sa pangalan ng node
 func _find_ui_node(group_name: String, node_name: String):
 	var n = get_tree().get_first_node_in_group(group_name)
 	if n == null:
@@ -160,7 +176,7 @@ func create_cone_texture(size: int = 256, half_angle_deg: float = 28.0) -> Image
 			var dist: float = d.length() / radius
 			if dist > 1.0:
 				continue
-			var ang: float = absf(d.angle())  # 0 = nakaturo sa kanan (+X)
+			var ang: float = absf(d.angle())
 			if ang > half_angle:
 				continue
 			var edge: float = 1.0 - smoothstep(half_angle * 0.5, half_angle, ang)
@@ -169,7 +185,6 @@ func create_cone_texture(size: int = 256, half_angle_deg: float = 28.0) -> Image
 
 	return ImageTexture.create_from_image(img)
 
-# Kunin ang pwesto ng lens base sa direction na tinitingnan ni James (8 direction)
 func _get_flashlight_offset() -> Vector2:
 	var idx: int = posmod(roundi(facing_dir.angle() / (PI / 4.0)), 8)
 	return FLASHLIGHT_OFFSETS[idx]
@@ -199,11 +214,10 @@ func setup_ambient_sight():
 	gradient_texture.height = 256
 
 	ambient_sight.texture = gradient_texture
-	ambient_sight.texture_scale = 0.15
-	ambient_sight.energy = 0.7
+	ambient_sight.texture_scale = ambient_sight_scale
+	ambient_sight.energy = ambient_sight_energy
 	ambient_sight.enabled = in_night_scene
 
-# Gagamitin ang "toggle_flashlight" kung meron na sa Input Map, kung wala pa, ang luma
 func _get_toggle_action() -> String:
 	if InputMap.has_action("toggle_flashlight"):
 		return "toggle_flashlight"
@@ -220,7 +234,6 @@ func handle_flashlight(delta):
 			flashlight_on = false
 		elif battery > 0:
 			flashlight_on = true
-			# Diretso agad sa tamang pwesto pag binuksan
 			flashlight.position = _get_flashlight_offset()
 			flashlight.rotation = facing_dir.angle()
 
@@ -234,11 +247,9 @@ func handle_flashlight(delta):
 	flashlight.enabled = flashlight_on
 
 	if flashlight_on:
-		# Sundan ang lens at direction ng lakad
 		flashlight.position = flashlight.position.lerp(_get_flashlight_offset(), 15.0 * delta)
 		flashlight.rotation = lerp_angle(flashlight.rotation, facing_dir.angle(), 12.0 * delta)
 
-		# Flicker pag mahina na ang battery
 		if battery <= max_battery * low_battery_threshold:
 			flicker_timer -= delta
 			if flicker_timer <= 0.0:
@@ -272,42 +283,48 @@ func reconnect_ui():
 		if is_instance_valid(battery_bar):
 			battery_bar.max_value = max_battery
 
-func handle_movement(delta):
-	var input_direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	
-	var iso_direction = Vector2(
-	input_direction.x - input_direction.y,
-	(input_direction.x + input_direction.y) / 2.0
-	).normalized()
+func is_weak() -> bool:
+	return health <= max_health * weak_health_ratio
 
-	
+func handle_movement(delta):
+	var input_dir = Vector2.ZERO
+
+	if Input.is_action_pressed("move_up"):
+		input_dir.y -= 1
+	if Input.is_action_pressed("move_down"):
+		input_dir.y += 1
+	if Input.is_action_pressed("move_left"):
+		input_dir.x -= 1
+	if Input.is_action_pressed("move_right"):
+		input_dir.x += 1
+
+	input_dir = input_dir.normalized()
+
+	if input_dir != Vector2.ZERO:
+		facing_dir = input_dir
+
 	var current_speed = walk_speed
 	var is_sprinting = Input.is_action_pressed("sprint")
 
 	if exhausted:
 		is_sprinting = false
 
-	if is_sprinting and iso_direction != Vector2.ZERO and stamina > 0:
+	if is_sprinting and input_dir != Vector2.ZERO and stamina > 0:
 		current_speed = walk_speed * sprint_multiplier
 		stamina -= 20 * delta
 		energy -= 3 * delta
 	else:
 		current_speed = walk_speed
+		if is_weak():
+			current_speed = walk_speed * weak_speed_multiplier
 
-	velocity = iso_direction * current_speed
+	velocity = input_dir * current_speed
 	move_and_slide()
+	update_animations(input_dir)
 
-	update_animations(iso_direction)
-
-	var is_moving = iso_direction != Vector2.ZERO
+	var is_moving = input_dir != Vector2.ZERO
 	var surface = get_surface_type()
-
-	FootstepManager.play_footstep(
-		surface,
-		delta,
-		is_moving,
-		is_sprinting
-	)
+	FootstepManager.play_footstep(surface, delta, is_moving, is_sprinting)
 
 func get_surface_type() -> String:
 	var tilemap = get_tree().get_first_node_in_group("land_tilemap")
@@ -320,6 +337,11 @@ func get_surface_type() -> String:
 	return tile_data.get_custom_data("surface_type")
 
 func handle_stamina_regen(delta):
+	# Pag 0 ang energy, walang stamina: hindi bumabalik ang yellow bar
+	if energy <= 0:
+		stamina = 0
+		return
+
 	if velocity == Vector2.ZERO:
 		var regen_rate = 15.0
 		if energy <= 25:
@@ -331,7 +353,20 @@ func handle_energy(delta):
 	energy -= 0.2 * delta
 	energy = clamp(energy, 0, max_energy)
 
+	# Starvation: pag 0 ang energy, -1 health kada 30 seconds
+	if energy <= 0:
+		starvation_timer += delta
+		if starvation_timer >= starvation_interval:
+			starvation_timer = 0.0
+			health -= starvation_damage
+			health = clamp(health, 0, max_health)
+			if health <= 0:
+				die()
+	else:
+		starvation_timer = 0.0
+
 func check_exhaustion():
+	# Hindi makakasprint kapag walang energy lang. Kahit mahina (low HP), makakasprint pa rin.
 	exhausted = energy <= 0
 
 func update_ui():
@@ -342,13 +377,11 @@ func update_ui():
 	if is_instance_valid(energy_bar):
 		energy_bar.value = energy
 
-	# Battery UI: shortway lang makikita
 	if is_instance_valid(battery_box):
 		battery_box.visible = in_night_scene
 	if is_instance_valid(battery_bar):
 		battery_bar.visible = in_night_scene
 		battery_bar.value = battery
-		# Sync ang DamageBar (pula) para walang natitirang pula sa bar
 		var dmg = battery_bar.get_node_or_null("DamageBar")
 		if dmg:
 			dmg.max_value = max_battery

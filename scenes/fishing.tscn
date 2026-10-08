@@ -129,6 +129,7 @@ explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_vc7xe")
 
 [node name="FishCounter" type="Label" parent="." unique_id=1674514452]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.037

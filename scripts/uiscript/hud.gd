@@ -43,7 +43,7 @@ var journal_vbox: VBoxContainer
 
 func _ready():
 	backpack_popup.visible = false
-	minimap.visible = false
+	minimap.visible = true
 	pause_label.visible = false
 	add_to_group("hud")
 	call_deferred("_find_player")

@@ -305,7 +305,6 @@ func handle_movement(delta):
 
 	var current_speed = walk_speed
 	var is_sprinting = Input.is_action_pressed("sprint")
-
 	if exhausted:
 		is_sprinting = false
 
@@ -320,19 +319,15 @@ func handle_movement(delta):
 
 	velocity = input_dir * current_speed
 	move_and_slide()
+
 	update_animations(input_dir)
 
-<<<<<<< HEAD
 	var is_moving = input_dir != Vector2.ZERO
-=======
-	update_animations(iso_direction)
-
-	var is_moving = iso_direction != Vector2.ZERO
 
 	if is_moving:
-		facing_dir = iso_direction
+		facing_dir = input_dir
 
->>>>>>> f259d2f (Redesign South Cotabato Shortway, add yellow marker for destination)
+
 	var surface = get_surface_type()
 	FootstepManager.play_footstep(surface, delta, is_moving, is_sprinting)
 

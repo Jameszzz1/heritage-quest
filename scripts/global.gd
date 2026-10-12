@@ -20,7 +20,10 @@ var fish_items: int = 0
 
 # Journal & NPC Progress System
 var province_journals: Dictionary = {}
-var completed_npcs: Dictionary = {} 
+var completed_npcs: Dictionary = {}
+
+# NPC quiz cooldown (kailan muling pwede mag-attempt, Unix time)
+var npc_quiz_cooldowns: Dictionary = {}
 
 func _ready():
 	_ensure_audio_buses()
@@ -56,16 +59,6 @@ func load_player_stats(player):
 		player.battery = current_battery
 	player.flashlight_on = flashlight_on
 
-# Tawagin ito sa New Game o pag bumalik sa Main Menu,
-# para hindi madala ang stats ng nakaraang laro sa bago
-func reset_player_stats():
-	current_health = -1
-	current_stamina = -1
-	current_energy = -1
-	current_battery = -1
-	flashlight_on = false
-	spawn_position = Vector2.ZERO
-
 # ---------------- INVENTORY ----------------
 
 func add_battery(amount: int = 1):
@@ -95,7 +88,7 @@ func consume_fish() -> bool:
 func add_journal_entry(province: String, entry_title: String, entry_content: String) -> void:
 	if not province_journals.has(province):
 		province_journals[province] = []
-	
+
 	var data = { "title": entry_title, "content": entry_content }
 	if not data in province_journals[province]:
 		province_journals[province].append(data)
@@ -111,3 +104,14 @@ func mark_npc_completed(npc_name: String) -> void:
 
 func is_npc_completed(npc_name: String) -> bool:
 	return completed_npcs.get(npc_name, false)
+
+# ---------------- NPC QUIZ COOLDOWN ----------------
+
+func set_quiz_cooldown(npc_name: String, seconds: float = 120.0) -> void:
+	npc_quiz_cooldowns[npc_name] = Time.get_unix_time_from_system() + seconds
+
+func get_quiz_cooldown_remaining(npc_name: String) -> float:
+	if not npc_quiz_cooldowns.has(npc_name):
+		return 0.0
+	var remaining = npc_quiz_cooldowns[npc_name] - Time.get_unix_time_from_system()
+	return max(0.0, remaining)

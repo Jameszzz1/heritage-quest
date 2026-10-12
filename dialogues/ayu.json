@@ -1,18 +1,62 @@
 [
   {
 	"name": "Ayu",
-	"text": "In Ayub Cave, Sarangani, archaeologists discovered the Maitum Anthropomorphic Burial Jars."
+	"text": "Archivist James, halika rito. Ako si Ayu, taga-Maitum. Matagal ko nang pinapanood ang mga banga ng aming bayan — bawat isa ay may mukha, bawat isa ay may kwento."
+  },
+  {
+	"name": "James",
+	"text": "Salamat po, Ayu. Ako po si James, ang Archivist. Nangangalap po ako ng mga kwento para sa Heritage Quest."
   },
   {
 	"name": "Ayu",
-	"text": "These jars date from 500 BC to 500 AD and show human-like faces carved into pottery."
+	"text": "Mabuti. Dahil ang Sarangani ay hindi lang probinsya — ito ay lugar ng mga sinaunang banga, mga mangingisda, at mga taong proud sa kanilang bayan."
+  },
+  {
+	"name": "James",
+	"text": "Sige po, Ayu. Ano po ang una nating pag-uusapan?"
   },
   {
 	"name": "Ayu",
-	"text": "According to Dizon (1996), they reflect advanced burial traditions and spiritual beliefs of early Mindanao communities."
+	"text": "Ang Maitum jars. Noong 1991, nahukay ang mga anthropomorphic burial jars sa Ayub Cave, Maitum, Sarangani."
+  },
+  {
+	"name": "James",
+	"text": "Ano po ang ibig sabihin ng anthropomorphic?"
   },
   {
 	"name": "Ayu",
-	"text": "They are considered national treasures of the Philippines."
+	"text": "May hugis at mukha ng tao. Bawat banga ay may natatanging mukha."
+  },
+  {
+	"name": "James",
+	"text": "Ano po ang gamit ng mga banga?"
+  },
+  {
+	"name": "Ayu",
+	"text": "Sekondaryang libingan ng mga yumao. Inilipat ang mga buto sa banga matapos ang unang paglilibing."
+  },
+  {
+	"name": "James",
+	"text": "Paano po ang 'I Love Sarangani' landmark?"
+  },
+  {
+	"name": "Ayu",
+	"text": "Ito ay modernong landmark na kumakatawan sa local pride at turismo. Hindi ito sinaunang artifact tulad ng Maitum jars."
+  },
+  {
+	"name": "James",
+	"text": "At ang mga bangkang pangisda po?"
+  },
+  {
+	"name": "Ayu",
+	"text": "Mahalaga ang mga bangkang pangisda sa hanapbuhay ng mga coastal community sa Sarangani, lalo na sa pangingisda."
+  },
+  {
+	"name": "James",
+	"text": "Salamat po, Ayu. Dadalhin ko ang kwento ng Maitum at ng Sarangani."
+  },
+  {
+	"name": "Ayu",
+	"text": "Dalin mo, Archivist. At tandaan: ang mga banga ay hindi lang pottery — sila ay mga mukha ng nakaraan."
   }
 ]

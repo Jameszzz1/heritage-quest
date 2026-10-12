@@ -275,7 +275,7 @@ func refresh_journal_display():
 
 	for prov in provinces:
 		var prov_title = Label.new()
-		prov_title.text = "=== " + prov["name"] + " ==="
+		prov_title.text = "" + prov["name"] + ""
 		prov_title.add_theme_font_size_override("font_size", 7)
 		prov_title.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
 		if custom_font:
@@ -286,7 +286,7 @@ func refresh_journal_display():
 
 		if entries.is_empty():
 			var empty_lbl = Label.new()
-			empty_lbl.text = "[ Empty / Naka-lock — Kailangan ng 5/5 Assessment sa NPC ]"
+			empty_lbl.text = ""
 			empty_lbl.add_theme_font_size_override("font_size", 6)
 			empty_lbl.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
 			if custom_font:

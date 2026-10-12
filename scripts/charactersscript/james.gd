@@ -327,6 +327,11 @@ func handle_movement(delta):
 	FootstepManager.play_footstep(surface, delta, is_moving, is_sprinting)
 
 func get_surface_type() -> String:
+	# Sa loob ng bahay, wood ang sahig
+	var scene_path = get_tree().current_scene.scene_file_path
+	if scene_path.find("inside_house") != -1:
+		return "wood"
+
 	var tilemap = get_tree().get_first_node_in_group("land_tilemap")
 	if tilemap == null:
 		return ""

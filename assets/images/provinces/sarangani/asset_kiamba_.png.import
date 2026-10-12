@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d1yemqc6pxiuv"
-path="res://.godot/imported/MntApo.png-8037094d06f69d61071e06c88cd27d29.ctex"
+uid="uid://bbl1kes2xx2kb"
+path="res://.godot/imported/asset_kiamba_.png-0a9f0b06372f761e279b1b12e2f9d218.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/provinces/cotabato/MntApo.png"
-dest_files=["res://.godot/imported/MntApo.png-8037094d06f69d61071e06c88cd27d29.ctex"]
+source_file="res://assets/images/provinces/sarangani/asset_kiamba_.png"
+dest_files=["res://.godot/imported/asset_kiamba_.png-0a9f0b06372f761e279b1b12e2f9d218.ctex"]
 
 [params]
 

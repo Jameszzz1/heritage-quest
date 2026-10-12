@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c6ebuwyr0shm0"]
 
-[ext_resource type="Script" uid="uid://dhmn33kysjino" path="res://scripts/enemiesscript/balbal.gd" id="1_d6sqk"]
+[ext_resource type="Script" uid="uid://dhmn33kysjino" path="res://scripts/characters/enemies/balbal.gd" id="1_f15j0"]
 [ext_resource type="Texture2D" uid="uid://conmyc0yphrxn" path="res://assets/sprites/characters/bat.png" id="2_1k26v"]
 [ext_resource type="Shader" uid="uid://be03wp0sfmxal" path="res://materials/balbal.gdshader" id="2_f15j0"]
 
@@ -74,7 +74,7 @@ _data = {
 [node name="Balbal" type="CharacterBody2D" unique_id=809701892]
 collision_layer = 0
 collision_mask = 0
-script = ExtResource("1_d6sqk")
+script = ExtResource("1_f15j0")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=716141451]
 material = SubResource("ShaderMaterial_cnnyv")

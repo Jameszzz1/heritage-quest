@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://c3n77pba1hkip" path="res://assets/images/provinces/sarangani/2_SCave.png" id="9_0bqa8"]
 [ext_resource type="Shader" uid="uid://dh8b5tp3gyuqv" path="res://materials/trees.gdshader" id="9_ce7i2"]
 [ext_resource type="Texture2D" uid="uid://cickprqx43ws" path="res://assets/sprites/things/48x48cocotree.png" id="10_g2b2m"]
-[ext_resource type="Script" uid="uid://cq703nytv1m4y" path="res://scenes/provinces/sarangani/area_2d.gd" id="13_ce7i2"]
+[ext_resource type="Script" uid="uid://cq703nytv1m4y" path="res://scripts/area_2d.gd" id="13_ce7i2"]
 [ext_resource type="Texture2D" uid="uid://db0bqkdmw5hvd" path="res://assets/images/provinces/sarangani/WSarangani.png" id="14_wsxmw"]
 [ext_resource type="PackedScene" uid="uid://bi3kll5wochib" path="res://scenes/provinces/sarangani/ayu.tscn" id="15_2nl4l"]
 [ext_resource type="Texture2D" uid="uid://dt0jewh86mvv5" path="res://assets/images/provinces/sultan_kudarat/WSultanKudarat.png" id="15_hq11y"]

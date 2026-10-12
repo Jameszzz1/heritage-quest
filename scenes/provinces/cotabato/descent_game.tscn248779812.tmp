@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://xavywihtvd70"]
+
+[ext_resource type="Script" uid="uid://cfld61j4x2qqs" path="res://scripts/mini_games/descent_game.gd" id="1_gwd4n"]
+[ext_resource type="PackedScene" uid="uid://dcxo0g5sfhmm2" path="res://scenes/provinces/cotabato/descent_james.tscn" id="3_ttsth"]
+
+[node name="DescentGame" type="Node2D" unique_id=1819073296]
+script = ExtResource("1_gwd4n")
+screen_width = null
+screen_height = null
+bottom_offset_from_end = null
+obstacle_gap_min = null
+obstacle_gap_max = null
+edge_margin = null
+obstacle_scale_width = null
+camera_follow_threshold = null
+return_scene_path = "res://scenes/provinces/south_cotabato/homebase.tscn"
+return_spawn_pos = null
+win_delay_seconds = null
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1842403537]
+
+[node name="DescentJames" parent="." unique_id=2090927404 instance=ExtResource("3_ttsth")]

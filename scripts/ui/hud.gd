@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var minimap = $MiniMap
 @onready var settings = $Settings
 @onready var pause_label = $PauseLabel
+
 var is_paused: bool = false
 
 # Ilan ang naibabalik ng 1 battery item sa bar
@@ -50,6 +51,7 @@ func _ready():
 	backpack_button.pressed.connect(_on_backpack_pressed)
 	close_button.pressed.connect(_on_close_pressed)
 	setup_death_overlay()
+	
 
 	_last_battery_count = Global.battery_items
 	_last_fish_count = Global.fish_items

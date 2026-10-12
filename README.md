@@ -1,3 +1,3 @@
 # Heritage Quest
 
-Capstone projectd
+Capstone project

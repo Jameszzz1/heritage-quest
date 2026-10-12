@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://dcxo0g5sfhmm2"]
 
-[ext_resource type="Script" uid="uid://02cpv3n00rrc" path="res://scripts/characters/descent_james.gd" id="1_cgt7l"]
-[ext_resource type="Texture2D" uid="uid://cbv1w78blsgft" path="res://assets/sprites/characters/descent/descent_left_sprite_A.png" id="1_dplik"]
-[ext_resource type="Texture2D" uid="uid://dtai0mi7wvs6r" path="res://assets/sprites/characters/descent/descent_falling_sprite.png" id="2_bkf2s"]
-[ext_resource type="Texture2D" uid="uid://1817r3t8apw" path="res://assets/sprites/characters/descent/descent_right_sprite_D.png" id="2_cgt7l"]
+[ext_resource type="Script" uid="uid://02cpv3n00rrc" path="res://scripts/characters/descent_james.gd" id="1_bkf2s"]
+[ext_resource type="Texture2D" uid="uid://cbv1w78blsgft" path="res://assets/mini_games/descent/descent_left_sprite_A.png" id="1_dplik"]
+[ext_resource type="Texture2D" uid="uid://dtai0mi7wvs6r" path="res://assets/mini_games/descent/descent_falling_sprite.png" id="2_bkf2s"]
+[ext_resource type="Texture2D" uid="uid://1817r3t8apw" path="res://assets/mini_games/descent/descent_right_sprite_D.png" id="2_cgt7l"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xoylg"]
 atlas = ExtResource("2_bkf2s")
@@ -97,7 +97,7 @@ height = 180.0
 
 [node name="DescentJames" type="CharacterBody2D" unique_id=2090927404]
 scale = Vector2(0.2, 0.2)
-script = ExtResource("1_cgt7l")
+script = ExtResource("1_bkf2s")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=148462936]
 sprite_frames = SubResource("SpriteFrames_xoylg")

@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cs432qch01gol" path="res://assets/images/provinces/sarangani/SlidePuzzle.png" id="2_sg58u"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_t5ev3"]
 [ext_resource type="AudioStream" uid="uid://dj4uvtluu7tm" path="res://assets/audio/sfx/SaraganiSoundEffect.mp3" id="4_1eqx4"]
-[ext_resource type="Script" uid="uid://7qmt8i81mc73" path="res://scenes/provinces/sarangani/exit_button.gd" id="6_48nh2"]
+[ext_resource type="Script" uid="uid://7qmt8i81mc73" path="res://scripts/exit_button.gd" id="6_48nh2"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_48nh2"]
 texture = ExtResource("2_4vhcl")

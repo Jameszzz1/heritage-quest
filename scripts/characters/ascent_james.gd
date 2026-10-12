@@ -95,3 +95,7 @@ func update_animation(direction: float) -> void:
 			sprite.play("ascent_right")
 		else:
 			sprite.play("ascent_idle")
+
+
+func _on_jumped_from_platform(platform_node: Variant) -> void:
+	pass # Replace with function body.

@@ -1,6 +1,7 @@
 extends Node
 var grass_sound = preload("res://assets/audio/sfx/grass_footsteps.wav")
 var dirt_sound = preload("res://assets/audio/sfx/dirt_footsteps.wav")
+var wood_sound = preload("res://assets/audio/sfx/wood_footsteps.wav")
 var audio_player = AudioStreamPlayer.new()
 var footstep_timer = 0.0
 var footstep_interval = 0.4
@@ -25,4 +26,7 @@ func play_footstep(surface: String, delta: float, is_moving: bool, is_sprinting:
 			audio_player.play()
 		elif surface == "dirt":
 			audio_player.stream = dirt_sound
+			audio_player.play()
+		elif surface == "wood":
+			audio_player.stream = wood_sound
 			audio_player.play()

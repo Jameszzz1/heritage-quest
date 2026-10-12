@@ -1,13 +1,54 @@
 [
-	{"name": "Bai Linay", "text": "Stay a while and listen, James. Our people, the T'boli, have lived in harmony with these lands for generations."},
-	{"name": "Bai Linay", "text": "You see the T'nalak cloth I am holding? This is more than just fabric. It is the soul of South Cotabato."},
-	{"name": "Bai Linay", "text": "We weave it from the finest abaca fibers, using dyes we find in the forest."},
-	{"name": "Bai Linay", "text": "People ask where we get our designs. We do not use patterns or sketches."},
-	{"name": "Bai Linay", "text": "We receive them as visions in our dreams, a gift from Fu Dalu, the Spirit of the Abaca."},
-	{"name": "Bai Linay", "text": "This is why the world knows us as the Dreamweavers."},
-	{"name": "Bai Linay", "text": "This sacred bond is strongest here at Lake Sebu."},
-	{"name": "Bai Linay", "text": "But respect the water, Archivist. Our geography makes us vulnerable to Flash Floods."},
-	{"name": "Bai Linay", "text": "Our elders taught us that when the floods come, you do not stand and watch."},
-	{"name": "Bai Linay", "text": "You must run to the higher ground. Only those who respect the earth can survive its power."},
-	{"name": "James", "text": "Thank you, Bai Linay. I will remember your words."}
+  {
+	"name": "Bai Linay",
+	"text": "Uy, Archivist James. Halika, maupo ka muna. Matanda na ako, pero may mga kwento pa akong dala mula sa mga hibla ng abaka at sa mga daan ng GenSan."
+  },
+  {
+	"name": "James",
+	"text": "Salamat po, Bai Linay. Ako po si James, ang Archivist. Nangangalap po ako ng mga kwento para sa Heritage Quest."
+  },
+  {
+	"name": "Bai Linay",
+	"text": "Maganda ang tungkulin mo, anak. Ang kasaysayan ay hindi lang nasa mga aklat — nasa mga kamay din ng mga manghahabi, mangingisda, at mga taong nagtayo ng lungsod."
+  },
+  {
+	"name": "James",
+	"text": "Sige po, Bai Linay. Ano po ang una nating pag-uusapan?"
+  },
+  {
+	"name": "Bai Linay",
+	"text": "Ang T'nalak. Hinahabi ito ng mga T'boli mula sa abaka. Ang mga disenyo ay pinaniniwalaang ibinubunyag sa pamamagitan ng panaginip ni Fu Dalu, ang espiritu ng abaka."
+  },
+  {
+	"name": "James",
+	"text": "Kaya po pala Dreamweaver ang tawag sa mga manghahabi."
+  },
+  {
+	"name": "Bai Linay",
+	"text": "Tama. At si Lang Dulay ng Lake Sebu ang isa sa pinakakilalang Dreamweaver. Ginawaran siya ng Gawad sa Manlilikha ng Bayan noong 1998."
+  },
+  {
+	"name": "James",
+	"text": "Paano po ang Tuna Statue sa GenSan?"
+  },
+  {
+	"name": "Bai Linay",
+	"text": "Ito ay simbolo ng pagkakakilanlan ng General Santos City bilang 'Tuna Capital of the Philippines.' Malaki ang papel ng tuna sa hanapbuhay, kalakalan, at kultura ng lungsod."
+  },
+  {
+	"name": "James",
+	"text": "At sino po ang nasa estatwa sa Plaza?"
+  },
+  {
+	"name": "Bai Linay",
+	"text": "Si General Paulino Santos, ang pinanggalanan ng lungsod. Siya ang nanguna sa unang malaking pangkat ng mga settler na dumating sa pampang ng Sarangani Bay noong 1939."
+  },
+  {
+	"name": "James",
+	"text": "Salamat po, Bai Linay. Dadalhin ko ang mga kwentong ito sa aking archive."
+  },
+  {
+	"name": "Bai Linay",
+	"text": "Dalin mo, anak. At kapag nakita mo ang T'nalak, ang tuna, o ang estatwa ni General Santos, alalahanin mo: bawat isa ay may kwento."
+  }
 ]

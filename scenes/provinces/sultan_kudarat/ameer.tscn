@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://coso8lmtntg2e"]
 
-[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/ui/npc_dialogue.gd" id="1_se3sk"]
+[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/uiscript/npc_dialogue.gd" id="1_se3sk"]
 [ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="3_8kbqy"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ug8oi"]
@@ -37,6 +37,7 @@ border_color = Color(0, 0, 0, 1)
 scale = Vector2(0.2, 0.2)
 script = ExtResource("1_se3sk")
 npc_name = "Ameer"
+dialogue_file = "res://dialogues/ameer.json"
 minigame_scene = "res://scenes/provinces/sultan_kudarat/sultan_tile_match_game.tscn"
 has_minigame = true
 marker_id = "ameer"

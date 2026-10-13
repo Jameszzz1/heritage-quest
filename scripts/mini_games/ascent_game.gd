@@ -28,8 +28,17 @@ extends Node2D
 @export var cloud_surface_y_ratio: float = 0.45
 @export var cloud_collision_height: float = 12.0
 
+# Pixels na mas mababa sa alpha na ito ay hindi bibilangin sa HABA ng collision.
+# Kung mahaba pa rin ang collision kaysa sa nakikitang platform, TAASAN (hal. 0.6).
+# Kung kulang ang haba, BAWASAN.
+@export_range(0.0, 1.0) var collision_alpha_threshold: float = 0.35
+
 @export var cloud_move_speed: float = 30.0
 @export var cloud_move_range: float = 40.0
+
+# Ulap: gaano katagal tatagal pagkalapag ni James bago mag-fade
+@export var cloud_stay_time: float = 0.3
+@export var cloud_fade_time: float = 0.4
 
 @export var camera_follow_threshold: float = 30.0
 @export var camera_start_margin: float = 50.0
@@ -83,6 +92,9 @@ var game_started: bool = false
 
 var platforms: Array[Node] = []
 var cloud_platforms: Array[Node] = []
+
+# Cache ng nakikitang haba (kaliwa-kanan) ng bawat texture
+var _visible_x_cache: Dictionary = {}
 
 var ui_layer: CanvasLayer
 var game_over_label: Label
@@ -216,14 +228,36 @@ func create_flat_start_platform(pos: Vector2) -> void:
 	platforms.append(body)
 
 func _on_player_jumped_from(platform_node: Node) -> void:
+	# Backup lang: kung hindi pa nagsisimula ang countdown, simulan na rito
 	if is_instance_valid(platform_node) and platform_node.is_in_group("cloud_platform"):
-		fade_and_remove_platform(platform_node)
+		start_cloud_countdown(platform_node)
+
+# Tinitingnan kung nakatayo si James sa ulap; kapag oo, simulan ang countdown
+func check_cloud_landing() -> void:
+	if not player.is_on_floor():
+		return
+	for i in range(player.get_slide_collision_count()):
+		var col := player.get_slide_collision(i)
+		var c: Object = col.get_collider()
+		if c != null and c is Node and c.is_in_group("cloud_platform"):
+			start_cloud_countdown(c)
+
+func start_cloud_countdown(cloud: Node) -> void:
+	if not is_instance_valid(cloud) or cloud.has_meta("fade_started"):
+		return
+	cloud.set_meta("fade_started", true)
+
+	await get_tree().create_timer(cloud_stay_time).timeout
+
+	if is_instance_valid(cloud):
+		fade_and_remove_platform(cloud)
 
 func _process(delta: float) -> void:
 	if not game_started:
 		return
 
 	update_cloud_movement(delta)
+	check_cloud_landing()
 
 	if is_game_over:
 		if Input.is_key_pressed(KEY_R):
@@ -293,6 +327,30 @@ func max_reachable_x(gap: float) -> float:
 	var t: float = (v0 + sqrt(discriminant)) / g
 	return move_speed_ref * t * reach_safety_factor
 
+# Kinukuha ang kaliwa at kanang dulo (sa pixels ng texture) ng NAKIKITANG bahagi
+# ng sprite, para ang haba ng collision ay tugma sa itsura ng platform.
+func get_visible_x_range(texture: Texture2D) -> Vector2:
+	if _visible_x_cache.has(texture):
+		return _visible_x_cache[texture]
+
+	var result := Vector2(0.0, texture.get_size().x - 1.0)
+	var img: Image = texture.get_image()
+	if img != null and not img.is_empty():
+		if img.is_compressed():
+			img.decompress()
+		var min_x: int = img.get_width()
+		var max_x: int = -1
+		for py in range(img.get_height()):
+			for px in range(img.get_width()):
+				if img.get_pixel(px, py).a > collision_alpha_threshold:
+					min_x = mini(min_x, px)
+					max_x = maxi(max_x, px)
+		if max_x >= min_x:
+			result = Vector2(min_x, max_x)
+
+	_visible_x_cache[texture] = result
+	return result
+
 func create_platform(pos: Vector2, texture: Texture2D, is_cloud: bool = false, custom_width: float = -1.0, collision_height_override: float = -1.0, collision_y_offset: float = 0.0) -> StaticBody2D:
 	var body := StaticBody2D.new()
 	body.position = pos
@@ -319,9 +377,18 @@ func create_platform(pos: Vector2, texture: Texture2D, is_cloud: bool = false, c
 	var shape := RectangleShape2D.new()
 
 	var col_height: float = collision_height_override if collision_height_override > 0.0 else tex_size.y * scale_factor
-	shape.size = Vector2(tex_size.x * scale_factor, col_height)
+
+	# HABA ng collision = haba ng nakikitang bahagi ng sprite (walang transparent na gilid)
+	var x_range: Vector2 = get_visible_x_range(texture)
+	var col_width: float = (x_range.y - x_range.x + 1.0) * scale_factor
+	shape.size = Vector2(col_width, col_height)
 	collision.shape = shape
+
+	# Ilagay sa gitna ng nakikitang bahagi (hindi sa gitna ng buong image)
+	collision.position.x = ((x_range.x + x_range.y + 1.0) / 2.0 - tex_size.x / 2.0) * scale_factor
+	# Taas/baba ng tinatayuan: HINDI binago, sakto sa dati
 	collision.position.y = collision_y_offset
+
 	collision.one_way_collision = true
 	collision.one_way_collision_margin = 5.0
 	body.add_child(collision)
@@ -416,7 +483,7 @@ func fade_and_remove_platform(body: Node) -> void:
 	var visual := body.get_node_or_null("Visual")
 	if visual:
 		var tween := create_tween()
-		tween.tween_property(visual, "modulate:a", 0.0, 0.15)
+		tween.tween_property(visual, "modulate:a", 0.0, cloud_fade_time)
 		await tween.finished
 
 	platforms.erase(body)

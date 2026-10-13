@@ -28,10 +28,10 @@ var chart = []
 
 # Drum SFX
 var drum_sfx = {
-	"D": preload("res://assets/audio/sfx/mini_games/D_drum.wav"),
-	"F": preload("res://assets/audio/sfx/mini_games/F_drum.wav"),
-	"J": preload("res://assets/audio/sfx/mini_games/J_drum.wav"),
-	"K": preload("res://assets/audio/sfx/mini_games/K_drum.wav")
+	"D": preload("res://assets/audio/mini_game_audio/D_drum.wav"),
+	"F": preload("res://assets/audio/mini_game_audio/F_drum.wav"),
+	"J": preload("res://assets/audio/mini_game_audio/J_drum.wav"),
+	"K": preload("res://assets/audio/mini_game_audio/K_drum.wav")
 }
 
 @onready var label_score = $UI/LabelScore

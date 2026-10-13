@@ -14,7 +14,7 @@ const TARGET_SCORE = 50000   # 50,000
 const END_GAME_FONT = preload("res://assets/fonts/GrapeSoda.ttf")
 
 var score = 0
-var time_left = 120
+var time_left = 420.0   # 420 seconds = 7 minutes
 var game_over = false
 var game_started = false
 
@@ -45,12 +45,19 @@ func _ready():
 	grid_container.add_theme_constant_override("h_separation", TILE_GAP)
 	grid_container.add_theme_constant_override("v_separation", TILE_GAP)
 	score_label.text = "SCORE: 0 / 50,000"
-	timer_label.text = "TIME: " + str(time_left) + "s"
+	timer_label.text = "TIME: " + format_time(time_left)
 	setup_grid()
 	game_timer.wait_time = 1.0
 	game_timer.one_shot = false
 	game_timer.timeout.connect(_on_timer_timeout)
 	show_instructions_popup()
+
+# Ginagawang minuto:segundo ang oras (hal. 420 -> 7:00, 59 -> 0:59)
+func format_time(total_seconds: float) -> String:
+	var s: int = int(total_seconds)
+	var minutes: int = int(s / 60.0)
+	var seconds: int = s % 60
+	return "%d:%02d" % [minutes, seconds]
 
 # Tinatanggal ang transparent padding para lumaki ang nakikitang icon sa loob ng tile
 func build_cropped_textures():
@@ -419,7 +426,7 @@ func _on_timer_timeout():
 	if game_over: return
 	if time_left > 0:
 		time_left -= 1
-		timer_label.text = "TIME: " + str(time_left) + "s"
+		timer_label.text = "TIME: " + format_time(time_left)
 		if time_left <= 10:
 			var flash = create_tween()
 			flash.tween_property(timer_label, "modulate", Color(1, 0.3, 0.3), 0.3)

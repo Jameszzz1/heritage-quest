@@ -19,7 +19,7 @@ var display_tile_size_y = 0.0
 var selected_tile = null
 var glow_tween = null
 
-var time_left = 300.0
+var time_left = 420.0
 var timer_running = false
 var score = 0
 var max_combo = 0

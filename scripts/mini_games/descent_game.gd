@@ -17,12 +17,25 @@ extends Node2D
 @export var return_spawn_pos: Vector2 = Vector2.ZERO
 @export var win_delay_seconds: float = 3.0
 
+# ---------- SFX ----------
+@export var falling_sfx_volume_db: float = 0.0
+var falling_sfx_stream: AudioStream = preload("res://assets/audio/mini_game_audio/Cotabato_descent_falling.wav")
+var falling_sfx_player: AudioStreamPlayer
+
+# Tunog kapag tumama si James
+@export var hit_sfx_volume_db: float = 0.0
+var damage_sfx_stream: AudioStream = preload("res://assets/audio/mini_game_audio/Cotabato_descent_damage_james.wav")
+var branch_hit_sfx_stream: AudioStream = preload("res://assets/audio/mini_game_audio/Cotabato_descent_brach_hit.wav")
+var thunder_hit_sfx_stream: AudioStream = preload("res://assets/audio/mini_game_audio/Cotabato_descent_thunderhit.wav")
+var damage_sfx_player: AudioStreamPlayer
+var obstacle_sfx_player: AudioStreamPlayer
+
 # ---------- ASSETS ----------
 var bg_texture: Texture2D = preload("res://assets/sprites/characters/ascent/ascentbackground.png")
 
 var left_branch_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_left_branch_asset.png")
 var left_rockcliff_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_left_edgerockcliff_asset.png")
-var right_branch_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_left_branch_asset.png")
+var right_branch_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_right_branch_asset.png")
 var right_rockcliff_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_right_edgerockcliff_asset.png")
 var middle_thundercloud_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_middle_thunderclouds_asset.png")
 
@@ -60,6 +73,8 @@ func _ready() -> void:
 		background.texture = bg_texture
 
 	create_ui()
+	setup_falling_sfx()
+	setup_hit_sfx()
 	setup_background()
 
 	camera_target_y = player.global_position.y - screen_height / 2.0
@@ -83,6 +98,55 @@ func _ready() -> void:
 
 	show_instructions_popup()
 
+# =========================================================================
+#  SOUND
+# =========================================================================
+func setup_falling_sfx() -> void:
+	falling_sfx_player = AudioStreamPlayer.new()
+	falling_sfx_player.stream = falling_sfx_stream
+	falling_sfx_player.volume_db = falling_sfx_volume_db
+	if AudioServer.get_bus_index("SFX") != -1:
+		falling_sfx_player.bus = "SFX"
+	falling_sfx_player.finished.connect(_on_falling_sfx_finished)
+	add_child(falling_sfx_player)
+
+func _on_falling_sfx_finished() -> void:
+	# I-loop habang nahuhulog pa
+	if game_started and not is_game_over and not has_won:
+		falling_sfx_player.play()
+
+func stop_falling_sfx() -> void:
+	if falling_sfx_player != null:
+		falling_sfx_player.stop()
+
+func _make_hit_player() -> AudioStreamPlayer:
+	var p := AudioStreamPlayer.new()
+	p.volume_db = hit_sfx_volume_db
+	if AudioServer.get_bus_index("SFX") != -1:
+		p.bus = "SFX"
+	add_child(p)
+	return p
+
+func setup_hit_sfx() -> void:
+	# Magkahiwalay ang player para sabay silang tutunog (damage + obstacle hit)
+	damage_sfx_player = _make_hit_player()
+	obstacle_sfx_player = _make_hit_player()
+
+func play_hit_sfx(obstacle_type: String) -> void:
+	# Tunog ng damage ni James (para sa lahat ng obstacles)
+	damage_sfx_player.stream = damage_sfx_stream
+	damage_sfx_player.play()
+
+	# Tunog depende sa tinamaan
+	if obstacle_type == "thunder":
+		obstacle_sfx_player.stream = thunder_hit_sfx_stream
+	else:
+		obstacle_sfx_player.stream = branch_hit_sfx_stream
+	obstacle_sfx_player.play()
+
+# =========================================================================
+#  INSTRUCTIONS / SETUP
+# =========================================================================
 func show_instructions_popup() -> void:
 	var popup := InstructionsPopup.new()
 	popup.popup_title = "INSTRUCTIONS"
@@ -149,6 +213,7 @@ func start_game() -> void:
 	if player.has_method("set_control_enabled"):
 		player.set_control_enabled(true)
 	player.set_physics_process(true)
+	falling_sfx_player.play()
 
 func update_camera(delta: float) -> void:
 	var player_screen_y: float = player.global_position.y - camera.global_position.y
@@ -171,28 +236,33 @@ func spawn_next_obstacle() -> void:
 	var lane_roll: float = randf()
 	var texture: Texture2D
 	var pos_x: float
+	var obstacle_type: String
 
 	if lane_roll < 0.35:
 		# LEFT CORNER
 		texture = left_branch_texture if randf() > 0.5 else left_rockcliff_texture
 		pos_x = -screen_width / 2.0 + edge_margin
+		obstacle_type = "branch"
 	elif lane_roll < 0.7:
 		# RIGHT CORNER
 		texture = right_branch_texture if randf() > 0.5 else right_rockcliff_texture
 		pos_x = screen_width / 2.0 - edge_margin
+		obstacle_type = "branch"
 	else:
 		# MIDDLE
 		texture = middle_thundercloud_texture
 		pos_x = randf_range(-20.0, 20.0)
+		obstacle_type = "thunder"
 
-	create_obstacle(Vector2(pos_x, new_y), texture)
+	create_obstacle(Vector2(pos_x, new_y), texture, obstacle_type)
 
 	lowest_obstacle_y = new_y
 
-func create_obstacle(pos: Vector2, texture: Texture2D) -> void:
+func create_obstacle(pos: Vector2, texture: Texture2D, obstacle_type: String = "branch") -> void:
 	var area := Area2D.new()
 	area.position = pos
 	area.add_to_group("obstacles")
+	area.set_meta("obstacle_type", obstacle_type)
 
 	var visual := Sprite2D.new()
 	visual.texture = texture
@@ -209,13 +279,14 @@ func create_obstacle(pos: Vector2, texture: Texture2D) -> void:
 	collision.shape = shape
 	area.add_child(collision)
 
-	area.body_entered.connect(_on_obstacle_body_entered)
+	area.body_entered.connect(_on_obstacle_body_entered.bind(area))
 
 	add_child(area)
 	obstacles.append(area)
 
-func _on_obstacle_body_entered(body: Node2D) -> void:
+func _on_obstacle_body_entered(body: Node2D, area: Area2D) -> void:
 	if body == player and game_started and not is_game_over and not has_won:
+		play_hit_sfx(area.get_meta("obstacle_type", "branch"))
 		if player.has_method("play_hit_animation"):
 			player.play_hit_animation()
 		trigger_game_over()
@@ -265,6 +336,7 @@ func create_ui() -> void:
 
 func trigger_game_over() -> void:
 	is_game_over = true
+	stop_falling_sfx()
 	if player.has_method("set_control_enabled"):
 		player.set_control_enabled(false)
 	else:
@@ -273,6 +345,7 @@ func trigger_game_over() -> void:
 
 func trigger_win() -> void:
 	has_won = true
+	stop_falling_sfx()
 	if player.has_method("set_control_enabled"):
 		player.set_control_enabled(false)
 	else:

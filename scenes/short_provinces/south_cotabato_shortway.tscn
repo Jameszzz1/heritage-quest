@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://djm8731nra1um" path="res://assets/sprites/tiles/cobblestone.png" id="5_8beri"]
 [ext_resource type="Texture2D" uid="uid://cskec8domi0jc" path="res://assets/sprites/tiles/light grass.png" id="5_8s8to"]
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="8_8s8to"]
-[ext_resource type="PackedScene" uid="uid://b1lo4mxcwvqlk" path="res://assets/sprites/things/battery_pickup.tscn" id="8_j010d"]
+[ext_resource type="PackedScene" uid="uid://b1lo4mxcwvqlk" path="res://scenes/battery_pickup.tscn" id="8_j010d"]
 [ext_resource type="Texture2D" uid="uid://cickprqx43ws" path="res://assets/sprites/things/48x48cocotree.png" id="9_th5rv"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="10_m0hrg"]
 [ext_resource type="PackedScene" uid="uid://lakc8wyw5ac4" path="res://scenes/provinces/cotabato/sandawa.tscn" id="11_tjr3i"]

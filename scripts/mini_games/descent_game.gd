@@ -31,13 +31,13 @@ var damage_sfx_player: AudioStreamPlayer
 var obstacle_sfx_player: AudioStreamPlayer
 
 # ---------- ASSETS ----------
-var bg_texture: Texture2D = preload("res://assets/sprites/characters/ascent/ascentbackground.png")
+var bg_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentbackground.png")
 
-var left_branch_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_left_branch_asset.png")
-var left_rockcliff_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_left_edgerockcliff_asset.png")
-var right_branch_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_right_branch_asset.png")
-var right_rockcliff_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_right_edgerockcliff_asset.png")
-var middle_thundercloud_texture: Texture2D = preload("res://assets/sprites/characters/descent/descent_middle_thunderclouds_asset.png")
+var left_branch_texture: Texture2D = preload("res://assets/mini_games/descent/descent_left_branch_asset.png")
+var left_rockcliff_texture: Texture2D = preload("res://assets/mini_games/descent/descent_left_edgerockcliff_asset.png")
+var right_branch_texture: Texture2D = preload("res://assets/mini_games/descent/descent_right_branch_asset.png")
+var right_rockcliff_texture: Texture2D = preload("res://assets/mini_games/descent/descent_right_edgerockcliff_asset.png")
+var middle_thundercloud_texture: Texture2D = preload("res://assets/mini_games/descent/descent_middle_thunderclouds_asset.png")
 
 @onready var player: CharacterBody2D = $DescentJames
 @onready var background: Sprite2D = $Background

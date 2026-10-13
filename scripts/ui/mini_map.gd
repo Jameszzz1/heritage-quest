@@ -6,6 +6,7 @@ extends Control
 @onready var minimap_viewport: SubViewport = $SubViewportContainer/SubViewport
 @onready var player_marker: TextureRect = $PlayerMarker
 @onready var frame: Control = $Frame
+@onready var current_location = $CurrentLocationLabel
 
 var npc_marker_nodes: Dictionary = {}
 
@@ -22,10 +23,11 @@ func _ready() -> void:
 
 	_setup_npc_marker_nodes()
 
-
 # =========================================================
 # NPC MARKERS
 # =========================================================
+
+
 
 func _setup_npc_marker_nodes() -> void:
 
@@ -51,7 +53,8 @@ func _setup_npc_marker_nodes() -> void:
 # =========================================================
 
 func _process(_delta: float) -> void:
-
+	current_location.text = Global.current_location
+	
 	if player == null:
 		return
 

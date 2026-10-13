@@ -52,12 +52,12 @@ extends Node2D
 # --- NEXT SCENE (Descent minigame) ---
 @export var descent_scene_path: String = "res://scenes/provinces/cotabato/descent_game.tscn"
 
-var level1_texture: Texture2D = preload("res://assets/sprites/characters/ascent/ascentlevel1.png")
-var level2_texture: Texture2D = preload("res://assets/sprites/characters/ascent/ascentlevel2.png")
-var level3_texture: Texture2D = preload("res://assets/sprites/characters/ascent/ascentlevel3.png")
-var clouds_texture: Texture2D = preload("res://assets/sprites/characters/ascent/ascentclouds.png")
-var final_texture: Texture2D = preload("res://assets/sprites/characters/ascent/ascentfinal.png")
-var bg_texture: Texture2D = preload("res://assets/sprites/characters/ascent/ascentbackground.png")
+var level1_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentlevel1.png")
+var level2_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentlevel2.png")
+var level3_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentlevel3.png")
+var clouds_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentclouds.png")
+var final_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentfinal.png")
+var bg_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentbackground.png")
 var sandawa_texture: Texture2D = preload("res://assets/images/provinces/cotabato/descent_sandawa_sprite.png")
 var ui_font: Font = preload("res://assets/fonts/GrapeSoda.ttf")
 

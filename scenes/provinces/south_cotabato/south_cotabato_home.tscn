@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://j7m6b28tsnvn"]
+[gd_scene format=4 uid="uid://dgrlbmqlp4jns"]
 
 [ext_resource type="Texture2D" uid="uid://c4jwruwaeko0h" path="res://assets/sprites/tiles/grass.png" id="1_gae80"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="2_2o3bd"]
@@ -36,6 +36,5 @@ tile_map_data = PackedByteArray("AAD//wAAAgAAAAAAAAD/////AgAAAAAAAAAAAP7/AgAAAAA
 tile_set = SubResource("TileSet_fh4mq")
 
 [node name="James" parent="." unique_id=636874803 instance=ExtResource("4_2o3bd")]
-speed = null
 
 [node name="Camera2D" type="Camera2D" parent="James" unique_id=1106883265]

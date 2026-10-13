@@ -105,3 +105,13 @@ theme_override_fonts/font = ExtResource("9_et8qq")
 theme_override_font_sizes/font_size = 6
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="CurrentLocationLabel" type="Label" parent="." unique_id=191401953]
+layout_mode = 0
+offset_left = 9.0
+offset_top = -8.0
+offset_right = 59.0
+theme_override_fonts/font = ExtResource("9_et8qq")
+theme_override_font_sizes/font_size = 8
+text = "Location"
+horizontal_alignment = 1

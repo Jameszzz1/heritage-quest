@@ -28,10 +28,10 @@ var chart = []
 
 # Drum SFX
 var drum_sfx = {
-	"D": preload("res://assets/audio/mini_game_audio/D_drum.wav"),
-	"F": preload("res://assets/audio/mini_game_audio/F_drum.wav"),
-	"J": preload("res://assets/audio/mini_game_audio/J_drum.wav"),
-	"K": preload("res://assets/audio/mini_game_audio/K_drum.wav")
+	"D": preload("res://assets/audio/sfx/mini_games/D_drum.wav"),
+	"F": preload("res://assets/audio/sfx/mini_games/F_drum.wav"),
+	"J": preload("res://assets/audio/sfx/mini_games/J_drum.wav"),
+	"K": preload("res://assets/audio/sfx/mini_games/K_drum.wav")
 }
 
 @onready var label_score = $UI/LabelScore
@@ -53,24 +53,24 @@ func _ready():
 	load_drum_chart()
 
 	note_textures = [
-		load("res://assets/images/mini_games/note_black.png"),
-		load("res://assets/images/mini_games/note_gold.png"),
-		load("res://assets/images/mini_games/note_red.png"),
-		load("res://assets/images/mini_games/note_white.png"),
+		load("res://assets/mini_games/note_black.png"),
+		load("res://assets/mini_games/note_gold.png"),
+		load("res://assets/mini_games/note_red.png"),
+		load("res://assets/mini_games/note_white.png"),
 	]
 
 	btn_idle = [
-		load("res://assets/images/mini_games/btn_d_idle.png"),
-		load("res://assets/images/mini_games/btn_f_idle.png"),
-		load("res://assets/images/mini_games/btn_j_idle.png"),
-		load("res://assets/images/mini_games/btn_k_idle.png"),
+		load("res://assets/mini_games/btn_d_idle.png"),
+		load("res://assets/mini_games/btn_f_idle.png"),
+		load("res://assets/mini_games/btn_j_idle.png"),
+		load("res://assets/mini_games/btn_k_idle.png"),
 	]
 
 	btn_pressed = [
-		load("res://assets/images/mini_games/btn_d_pressed.png"),
-		load("res://assets/images/mini_games/btn_f_pressed.png"),
-		load("res://assets/images/mini_games/btn_j_pressed.png"),
-		load("res://assets/images/mini_games/btn_k_pressed.png"),
+		load("res://assets/mini_games/btn_d_pressed.png"),
+		load("res://assets/mini_games/btn_f_pressed.png"),
+		load("res://assets/mini_games/btn_j_pressed.png"),
+		load("res://assets/mini_games/btn_k_pressed.png"),
 	]
 
 	var font = load("res://assets/fonts/GrapeSoda.ttf")

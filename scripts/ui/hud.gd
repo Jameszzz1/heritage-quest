@@ -51,7 +51,6 @@ func _ready():
 	backpack_button.pressed.connect(_on_backpack_pressed)
 	close_button.pressed.connect(_on_close_pressed)
 	setup_death_overlay()
-	
 
 	_last_battery_count = Global.battery_items
 	_last_fish_count = Global.fish_items
@@ -277,9 +276,11 @@ func refresh_journal_display():
 
 	for prov in provinces:
 		var prov_title = Label.new()
-		prov_title.text = "=== " + prov["name"] + " ==="
+		prov_title.text = "" + prov["name"] + ""
 		prov_title.add_theme_font_size_override("font_size", 7)
 		prov_title.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
+		prov_title.autowrap_mode = TextServer.AUTOWRAP_WORD
+		prov_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if custom_font:
 			prov_title.add_theme_font_override("font", custom_font)
 		journal_container.add_child(prov_title)
@@ -288,12 +289,13 @@ func refresh_journal_display():
 
 		if entries.is_empty():
 			var empty_lbl = Label.new()
-			empty_lbl.text = "[ Empty / Naka-lock — Kailangan ng 5/5 Assessment sa NPC ]"
+			empty_lbl.text = ""
 			empty_lbl.add_theme_font_size_override("font_size", 6)
 			empty_lbl.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+			empty_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+			empty_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			if custom_font:
 				empty_lbl.add_theme_font_override("font", custom_font)
-			empty_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
 			journal_container.add_child(empty_lbl)
 		else:
 			for entry in entries:
@@ -301,6 +303,8 @@ func refresh_journal_display():
 				title_lbl.text = "• " + entry["title"]
 				title_lbl.add_theme_font_size_override("font_size", 6)
 				title_lbl.add_theme_color_override("font_color", Color(1.0, 0.9, 0.3))
+				title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+				title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				if custom_font:
 					title_lbl.add_theme_font_override("font", custom_font)
 				journal_container.add_child(title_lbl)
@@ -309,9 +313,10 @@ func refresh_journal_display():
 				desc_lbl.text = entry["content"]
 				desc_lbl.add_theme_font_size_override("font_size", 6)
 				desc_lbl.add_theme_color_override("font_color", Color.WHITE)
+				desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+				desc_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				if custom_font:
 					desc_lbl.add_theme_font_override("font", custom_font)
-				desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
 				journal_container.add_child(desc_lbl)
 
 		var spacer = Label.new()

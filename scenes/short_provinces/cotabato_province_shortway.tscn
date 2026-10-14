@@ -198,6 +198,7 @@ position = Vector2(-223, -219)
 
 [node name="Sandawa" parent="Y-sort" unique_id=2100318797 instance=ExtResource("12_jeph7")]
 position = Vector2(139.99997, 28.999985)
+script = null
 
 [node name="NightOverlay" type="CanvasModulate" parent="Y-sort" unique_id=875234630]
 script = ExtResource("13_av2gg")

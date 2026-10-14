@@ -1,54 +1,15 @@
 [
-  {
-	"name": "Bai Linay",
-	"text": "Uy, Archivist James. Halika, maupo ka muna. Matanda na ako, pero may mga kwento pa akong dala mula sa mga hibla ng abaka at sa mga daan ng GenSan."
-  },
-  {
-	"name": "James",
-	"text": "Salamat po, Bai Linay. Ako po si James, ang Archivist. Nangangalap po ako ng mga kwento para sa Heritage Quest."
-  },
-  {
-	"name": "Bai Linay",
-	"text": "Maganda ang tungkulin mo, anak. Ang kasaysayan ay hindi lang nasa mga aklat — nasa mga kamay din ng mga manghahabi, mangingisda, at mga taong nagtayo ng lungsod."
-  },
-  {
-	"name": "James",
-	"text": "Sige po, Bai Linay. Ano po ang una nating pag-uusapan?"
-  },
-  {
-	"name": "Bai Linay",
-	"text": "Ang T'nalak. Hinahabi ito ng mga T'boli mula sa abaka. Ang mga disenyo ay pinaniniwalaang ibinubunyag sa pamamagitan ng panaginip ni Fu Dalu, ang espiritu ng abaka."
-  },
-  {
-	"name": "James",
-	"text": "Kaya po pala Dreamweaver ang tawag sa mga manghahabi."
-  },
-  {
-	"name": "Bai Linay",
-	"text": "Tama. At si Lang Dulay ng Lake Sebu ang isa sa pinakakilalang Dreamweaver. Ginawaran siya ng Gawad sa Manlilikha ng Bayan noong 1998."
-  },
-  {
-	"name": "James",
-	"text": "Paano po ang Tuna Statue sa GenSan?"
-  },
-  {
-	"name": "Bai Linay",
-	"text": "Ito ay simbolo ng pagkakakilanlan ng General Santos City bilang 'Tuna Capital of the Philippines.' Malaki ang papel ng tuna sa hanapbuhay, kalakalan, at kultura ng lungsod."
-  },
-  {
-	"name": "James",
-	"text": "At sino po ang nasa estatwa sa Plaza?"
-  },
-  {
-	"name": "Bai Linay",
-	"text": "Si General Paulino Santos, ang pinanggalanan ng lungsod. Siya ang nanguna sa unang malaking pangkat ng mga settler na dumating sa pampang ng Sarangani Bay noong 1939."
-  },
-  {
-	"name": "James",
-	"text": "Salamat po, Bai Linay. Dadalhin ko ang mga kwentong ito sa aking archive."
-  },
-  {
-	"name": "Bai Linay",
-	"text": "Dalin mo, anak. At kapag nakita mo ang T'nalak, ang tuna, o ang estatwa ni General Santos, alalahanin mo: bawat isa ay may kwento."
-  }
+	{"name": "Bai Linay", "text": "Uy, Archivist James. Halika, maupo ka muna. Matanda na ako, pero may mga kwento pa akong dala mula sa mga hibla ng abaka at sa mga daan ng GenSan."},
+	{"name": "James", "text": "Salamat po, Bai Linay. Ako po si James, ang Archivist. Nangangalap po ako ng mga kwento para sa Heritage Quest."},
+	{"name": "Bai Linay", "text": "Maganda ang tungkulin mo, anak. Ang kasaysayan ay hindi lang nasa mga aklat — nasa mga kamay din ng mga manghahabi, mangingisda, at mga taong nagtayo ng lungsod."},
+	{"name": "James", "text": "Sige po, Bai Linay. Ano po ang una nating pag-uusapan?"},
+	{"name": "Bai Linay", "text": "Ang T'nalak. Hinahabi ito ng mga T'boli mula sa abaka. Ang mga disenyo ay pinaniniwalaang ibinubunyag sa pamamagitan ng panaginip ni Fu Dalu, ang espiritu ng abaka."},
+	{"name": "James", "text": "Kaya po pala Dreamweaver ang tawag sa mga manghahabi."},
+	{"name": "Bai Linay", "text": "Tama. At si Lang Dulay ng Lake Sebu ang isa sa pinakakilalang Dreamweaver. Ginawaran siya ng Gawad sa Manlilikha ng Bayan noong 1998."},
+	{"name": "James", "text": "Paano po ang Tuna Statue sa GenSan?"},
+	{"name": "Bai Linay", "text": "Ito ay simbolo ng pagkakakilanlan ng General Santos City bilang 'Tuna Capital of the Philippines.' Malaki ang papel ng tuna sa hanapbuhay, kalakalan, at kultura ng lungsod."},
+	{"name": "James", "text": "At sino po ang nasa estatwa sa Plaza?"},
+	{"name": "Bai Linay", "text": "Si General Paulino Santos, ang pinanggalanan ng lungsod. Siya ang nanguna sa unang malaking pangkat ng mga settler na dumating sa pampang ng Sarangani Bay noong 1939."},
+	{"name": "James", "text": "Salamat po, Bai Linay. Dadalhin ko ang mga kwentong ito sa aking archive."},
+	{"name": "Bai Linay", "text": "Dalin mo, anak. At kapag nakita mo ang T'nalak, ang tuna, o ang estatwa ni General Santos, alalahanin mo: bawat isa ay may kwento."}
 ]

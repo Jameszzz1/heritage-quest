@@ -22,6 +22,9 @@ var fish_items: int = 0
 var province_journals: Dictionary = {}
 var completed_npcs: Dictionary = {}
 
+# NPC na natapos nang basahin ang "Pag-aralan ang Kultura"
+var culture_read_npcs: Dictionary = {}
+
 # NPC quiz cooldown (kailan muling pwede mag-attempt, Unix time)
 var npc_quiz_cooldowns: Dictionary = {}
 
@@ -104,6 +107,14 @@ func mark_npc_completed(npc_name: String) -> void:
 
 func is_npc_completed(npc_name: String) -> bool:
 	return completed_npcs.get(npc_name, false)
+
+# ---------------- CULTURE READ (Pag-aralan ang Kultura) ----------------
+
+func mark_culture_read(npc_name: String) -> void:
+	culture_read_npcs[npc_name] = true
+
+func is_culture_read(npc_name: String) -> bool:
+	return culture_read_npcs.get(npc_name, false)
 
 # ---------------- NPC QUIZ COOLDOWN ----------------
 

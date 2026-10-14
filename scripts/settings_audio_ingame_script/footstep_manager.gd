@@ -27,6 +27,7 @@ func play_footstep(surface: String, delta: float, is_moving: bool, is_sprinting:
 		elif surface == "dirt":
 			audio_player.stream = dirt_sound
 			audio_player.play()
-		elif surface == "wood":
+		elif surface == "wood":   
+			print("surface detected: ", surface)
 			audio_player.stream = wood_sound
 			audio_player.play()

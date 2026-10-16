@@ -1127,17 +1127,16 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8i33a"]
-radius = 5.0
-height = 18.0
+radius = 23.333332
+height = 93.33333
 
 [node name="James" type="CharacterBody2D" unique_id=636874803]
+scale = Vector2(0.2, 0.2)
 script = ExtResource("1_lhmol")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1112542246]
-scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_lrhn5")
 animation = &"up_left_flashlight"
-frame_progress = 0.085137405
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1400261142]
 shape = SubResource("CapsuleShape2D_8i33a")

@@ -206,6 +206,7 @@ position = Vector2(246, 229)
 
 [node name="Sandawa" parent="Y-sort" unique_id=2100318797 instance=ExtResource("12_fu60l")]
 position = Vector2(286, -263)
+script = null
 
 [node name="NightOverlay" type="CanvasModulate" parent="Y-sort" unique_id=875234630]
 script = ExtResource("13_5bodw")
@@ -231,17 +232,18 @@ scale = Vector2(0.9999997, 0.9999998)
 skew = -0.17453289
 shape = SubResource("RectangleShape2D_hrqf7")
 
-[node name="ToSultanKudaratShortway" type="Area2D" parent="." unique_id=707739490]
-script = ExtResource("14_kyy8q")
-target_scene = "res://scenes/short_provinces/sultan_kudarat_shortway.tscn"
-spawn_pos = Vector2(741, 259)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ToSultanKudaratShortway" unique_id=945581202]
+[node name="ToSarangani" type="Area2D" parent="." unique_id=707739490]
 position = Vector2(-255.56664, -367.59158)
+script = ExtResource("14_kyy8q")
+target_scene = "res://scenes/provinces/sarangani/sarangani.tscn"
+spawn_pos = Vector2(850.9999, 128.99998)
+show_on_minimap = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ToSarangani" unique_id=945581202]
 rotation = -1.5742869
 scale = Vector2(0.9999997, 0.9999998)
 skew = -0.17453289
 shape = SubResource("RectangleShape2D_hrqf7")
 
 [connection signal="body_entered" from="ToSouthCotabatoShortway" to="ToSouthCotabatoShortway" method="_on_body_entered"]
-[connection signal="body_entered" from="ToSultanKudaratShortway" to="ToSultanKudaratShortway" method="_on_body_entered"]
+[connection signal="body_entered" from="ToSarangani" to="ToSarangani" method="_on_body_entered"]

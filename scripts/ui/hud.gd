@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var minimap = $MiniMap
 @onready var settings = $Settings
 @onready var pause_label = $PauseLabel
+@onready var toast_label: Label = $ToastLabel
 
 var is_paused: bool = false
 
@@ -32,7 +33,6 @@ var battery_slot: Button
 var battery_count_label: Label
 var fish_slot: Button
 var fish_count_label: Label
-var toast_label: Label
 var toast_token: int = 0
 var _last_battery_count: int = 0
 var _last_fish_count: int = 0
@@ -330,34 +330,28 @@ func _on_journal_updated(_province: String):
 
 # ---------------- TOAST ----------------
 
-func setup_toast():
-	toast_label = Label.new()
+func setup_toast() -> void:
 	toast_label.add_theme_font_size_override("font_size", TOAST_FONT_SIZE)
 	toast_label.add_theme_color_override("font_color", Color.WHITE)
 	toast_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	toast_label.add_theme_constant_override("outline_size", 1)
+
 	var font = load(UI_FONT_PATH)
 	if font:
 		toast_label.add_theme_font_override("font", font)
+
 	toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	toast_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	toast_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	toast_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	toast_label.visible = false
 	toast_label.z_index = 200
-	add_child(toast_label)
+	toast_label.hide()
 
-func _show_toast(text: String) -> void:
-	toast_label.text = text
-	toast_label.visible = true
-	toast_label.reset_size()
-	var vs = get_viewport().get_visible_rect().size
-	toast_label.position = Vector2((vs.x - toast_label.size.x) / 2.0, vs.y * 0.8)
 
-	toast_token += 1
-	var my_token = toast_token
-	await get_tree().create_timer(1.8).timeout
-	if my_token == toast_token and is_instance_valid(toast_label):
-		toast_label.visible = false
-
+func _show_toast(msg: String) -> void:
+	toast_label.text = msg
+	toast_label.show()
+	toast_label.z_index = 200
 # ---------------- PLAYER / INPUT ----------------
 
 func _find_player():

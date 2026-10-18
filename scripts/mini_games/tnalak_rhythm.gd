@@ -7,7 +7,7 @@ var good_range = 40.0
 var score = 0
 var combo = 0
 var max_combo = 0
-var target_score = 100000
+var target_score = 150000
 var target_combo = 50
 var lane_keys = [KEY_D, KEY_F, KEY_J, KEY_K]
 var lane_x = [105.0, 132.0, 161.0, 187.0]
@@ -137,7 +137,7 @@ func show_instructions_popup() -> void:
 		},
 		{
 			"icon": "target",
-			"caption": "Achieve a target score of 100,000 and a 50-hit combo."
+			"caption": "Achieve a target score of 150,000 and a 50-hit combo."
 		}
 	]
 
@@ -281,6 +281,10 @@ func end_game():
 func show_result(success: bool):
 	var font = load("res://assets/fonts/GrapeSoda.ttf")
 
+	# Markahan agad na natapos ang mini game (hindi na mawawala kahit i-close ang game)
+	if success:
+		Global.mark_minigame_passed(Global.current_minigame_npc)
+
 	var overlay = ColorRect.new()
 	overlay.color = Color(0, 0, 0, 0.75)
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -329,8 +333,8 @@ func show_result(success: bool):
 
 	if success:
 		title.text = "CONGRATULATIONS!"
-		msg.text = "You earned the Scholar Token!\nScore: " + str(score) + "\nMax Combo: " + str(max_combo)
-		btn.text = "Claim Token"
+		msg.text = "Natapos mo ang Mini Game!\nScore: " + str(score) + "\nMax Combo: " + str(max_combo) + "\n\nKausapin si Bai Linay para makuha ang Token."
+		btn.text = "Bumalik"
 	else:
 		title.text = "TRY AGAIN!"
 		msg.text = "Score: " + str(score) + "/" + str(target_score) + "\nMax Combo: " + str(max_combo) + "/" + str(target_combo)
@@ -370,3 +374,4 @@ func show_result(success: bool):
 		)
 	else:
 		btn.pressed.connect(func(): get_tree().reload_current_scene())
+		

@@ -160,34 +160,6 @@ sources/2 = SubResource("TileSetAtlasSource_f60je")
 pattern_0 = SubResource("TileMapPattern_b0dwv")
 pattern_1 = SubResource("TileMapPattern_yka0h")
 
-[sub_resource type="GDScript" id="GDScript_l6g0r"]
-script/source = "extends \"res://scripts/uiscript/npc_dialogue.gd\"
-
-
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-
-
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-
-	# Handle jump.
-	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis(\"ui_left\", \"ui_right\")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-	move_and_slide()
-"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tyfkp"]
 shader = ExtResource("14_5mwbx")
 shader_parameter/region_rect = Vector4(76, 21.5, 421, 378)
@@ -291,7 +263,7 @@ tile_set = SubResource("TileSet_jwlbc")
 [node name="Y-sort" type="Node2D" parent="." unique_id=251625512]
 
 [node name="James" parent="Y-sort" unique_id=636874803 instance=ExtResource("10_vywch")]
-position = Vector2(852, 101)
+position = Vector2(849, 107)
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
 
@@ -304,7 +276,6 @@ tile_set = SubResource("TileSet_i5btb")
 
 [node name="Sandawa" parent="Y-sort" unique_id=2100318797 instance=ExtResource("11_5wi1g")]
 position = Vector2(-864, -26.000002)
-script = SubResource("GDScript_l6g0r")
 
 [node name="Welcome" type="Sprite2D" parent="Y-sort" unique_id=1719227653]
 position = Vector2(894, 68)

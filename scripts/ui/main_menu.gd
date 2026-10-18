@@ -71,7 +71,16 @@ func show_achievements() -> void:
 
 func _on_start_pressed() -> void:
 	MusicManager.play_button_sfx()
-	LoadingScreen.change_scene("res://scenes/ui/introduction.tscn")
+	print("Has saved game: ", Global.has_saved_game())
+	print("Saved scene: ", Global.saved_scene)
+	print("Saved position: ", Global.saved_position)
+	if Global.has_saved_game() and ResourceLoader.exists(Global.saved_scene):
+		# Continue: balik sa huling save
+		Global.spawn_position = Global.saved_position
+		LoadingScreen.change_scene(Global.saved_scene)
+	else:
+		# Bagong laro
+		LoadingScreen.change_scene("res://scenes/ui/introduction.tscn")
 
 func _on_settings_pressed() -> void:
 	MusicManager.play_button_sfx()

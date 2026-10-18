@@ -1,35 +1,8 @@
 [gd_scene format=3 uid="uid://lakc8wyw5ac4"]
 
+[ext_resource type="Script" uid="uid://b3r17f8ne8ikj" path="res://scripts/ui/npc_dialogue.gd" id="1_jeial"]
 [ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="2_jeial"]
 [ext_resource type="Texture2D" uid="uid://co2uiasrq31by" path="res://assets/images/provinces/cotabato/aposandawa.png" id="2_s2gc0"]
-
-[sub_resource type="GDScript" id="GDScript_7rr4k"]
-script/source = "extends \"res://scripts/ui/npc_dialogue.gd\"
-
-
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-
-
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-
-	# Handle jump.
-	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis(\"ui_left\", \"ui_right\")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-	move_and_slide()
-"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hv80j"]
 radius = 9.999998
@@ -60,7 +33,13 @@ border_color = Color(0, 0, 0, 1)
 
 [node name="Sandawa" type="CharacterBody2D" unique_id=2100318797]
 scale = Vector2(0.2, 0.2)
-script = SubResource("GDScript_7rr4k")
+script = ExtResource("1_jeial")
+npc_name = "Apo Sandawa"
+dialogue_file = "res://dialogues/sandawa.json"
+minigame_scene = "res://scenes/provinces/cotabato/ascent_game.tscn"
+has_minigame = true
+marker_id = "sandawa"
+province_id = "cotabato_province"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=239521770]
 position = Vector2(0.25000143, 5.0000005)

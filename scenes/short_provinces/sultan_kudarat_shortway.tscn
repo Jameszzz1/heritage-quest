@@ -213,8 +213,8 @@ polygon = PackedVector2Array(593.6558, -394.76596, 617.6558, 337.23404, -478.344
 [node name="ToSaranganiShortway" type="Area2D" parent="." unique_id=913820780]
 position = Vector2(800, 277)
 script = ExtResource("14_gwxv4")
-target_scene = "res://scenes/short_provinces/sarangani_shortway.tscn"
-spawn_pos = Vector2(-197, -365)
+target_scene = "res://scenes/provinces/sarangani/sarangani.tscn"
+spawn_pos = Vector2(-720, -272)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSaranganiShortway" unique_id=238790663]
 position = Vector2(-1.9073486e-06, -3.1471252e-05)
@@ -226,8 +226,8 @@ shape = SubResource("RectangleShape2D_hrqf7")
 [node name="ToCotabatoShortway" type="Area2D" parent="." unique_id=753206471]
 position = Vector2(785, -159)
 script = ExtResource("14_gwxv4")
-target_scene = "res://scenes/short_provinces/cotabato_province_shortway.tscn"
-spawn_pos = Vector2(-223, -219)
+target_scene = "res://scenes/provinces/sultan_kudarat/sultankudarat.tscn"
+spawn_pos = Vector2(803, 139)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToCotabatoShortway" unique_id=1329186937]
 position = Vector2(0, 1.0430813e-07)

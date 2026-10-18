@@ -244,8 +244,8 @@ position = Vector2(-47, -214)
 [node name="ToSultanKudaratShortway" type="Area2D" parent="." unique_id=913820780]
 position = Vector2(-270, -210)
 script = ExtResource("14_oas4c")
-target_scene = "res://scenes/short_provinces/sultan_kudarat_shortway.tscn"
-spawn_pos = Vector2(725, -147)
+target_scene = "res://scenes/provinces/sultan_kudarat/sultankudarat.tscn"
+spawn_pos = Vector2(-73, -682)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSultanKudaratShortway" unique_id=238790663]
 position = Vector2(-0.007965088, -4.557953)
@@ -254,12 +254,12 @@ scale = Vector2(0.9999996, 0.9999997)
 skew = -0.17453289
 shape = SubResource("RectangleShape2D_hrqf7")
 
-[node name="ToBacktoHomebase" type="Area2D" parent="." unique_id=753206471]
+[node name="ToBacktoCotabatoProvince" type="Area2D" parent="." unique_id=753206471]
 script = ExtResource("14_oas4c")
-target_scene = "res://scenes/provinces/south_cotabato/homebase.tscn"
-spawn_pos = Vector2(-499, -195)
+target_scene = "res://scenes/provinces/cotabato/cotabato.tscn"
+spawn_pos = Vector2(849, 107)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ToBacktoHomebase" unique_id=1329186937]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ToBacktoCotabatoProvince" unique_id=1329186937]
 position = Vector2(618, -32)
 rotation = 1.553343
 scale = Vector2(0.9999997, 0.9999998)
@@ -267,4 +267,4 @@ skew = -0.017453292
 shape = SubResource("RectangleShape2D_ttc3q")
 
 [connection signal="body_entered" from="ToSultanKudaratShortway" to="ToSultanKudaratShortway" method="_on_body_entered"]
-[connection signal="body_entered" from="ToBacktoHomebase" to="ToBacktoHomebase" method="_on_body_entered"]
+[connection signal="body_entered" from="ToBacktoCotabatoProvince" to="ToBacktoCotabatoProvince" method="_on_body_entered"]

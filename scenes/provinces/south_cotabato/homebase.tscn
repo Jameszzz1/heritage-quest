@@ -202,6 +202,7 @@ tile_set = SubResource("TileSet_b8ivk")
 position = Vector2(53.000015, -69)
 
 [node name="James" parent="Y-Sort" unique_id=636874803 instance=ExtResource("4_uqy7y")]
+position = Vector2(88, -19)
 
 [node name="Camera2D" type="Camera2D" parent="Y-Sort/James" unique_id=1106883265]
 
@@ -209,7 +210,7 @@ position = Vector2(53.000015, -69)
 position = Vector2(-602, -195)
 rotation = 0.05235988
 script = ExtResource("6_k7k33")
-target_scene = "C:/Projects/HeritageQuest/scenes/short_provinces/south_cotabato_shortway.tscn"
+target_scene = "res://scenes/short_provinces/south_cotabato_shortway.tscn"
 spawn_pos = Vector2(513, 364)
 show_on_minimap = true
 

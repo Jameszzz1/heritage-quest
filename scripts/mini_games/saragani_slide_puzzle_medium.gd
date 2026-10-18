@@ -57,7 +57,7 @@ func _ready():
 	setup_puzzle_grid()
 	shuffle_board()
 
-	timer_label.text = "Time: 5:00"
+	timer_label.text = "Time: 7:00"
 	show_instructions_popup()
 
 func show_instructions_popup() -> void:
@@ -114,7 +114,7 @@ func trigger_game_over():
 	show_result(false)
 
 func _on_try_again_pressed():
-	time_left = 300.0
+	time_left = 420.0
 	timer_running = true
 	timer_label.modulate = Color(1, 1, 1)
 	if game_over_label: game_over_label.visible = false
@@ -348,6 +348,10 @@ func check_victory() -> bool:
 func show_result(success: bool):
 	var font = load("res://assets/fonts/GrapeSoda.ttf")
 
+	# Markahan agad na natapos ang mini game
+	if success:
+		Global.mark_minigame_passed(Global.current_minigame_npc)
+
 	var overlay = ColorRect.new()
 	overlay.color = Color(0, 0, 0, 0.75)
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -396,11 +400,11 @@ func show_result(success: bool):
 
 	if success:
 		title.text = "CONGRATULATIONS!"
-		msg.text = "You solved the Slide Puzzle!\nTime Left: " + str(int(time_left)) + "s"
-		btn.text = "Claim Token"
+		msg.text = "Natapos mo ang Slide Puzzle!\nTime Left: " + str(int(time_left)) + "s\n\nKausapin si Ayu para makuha ang Token."
+		btn.text = "Bumalik"
 	else:
 		title.text = "TRY AGAIN!"
-		msg.text = "Time's up! Puzzle not finished."
+		msg.text = "Time's up! Hindi natapos ang puzzle."
 		btn.text = "Try Again"
 
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -433,14 +437,11 @@ func show_result(success: bool):
 		btn.pressed.connect(func():
 			overlay.queue_free()
 			Global.spawn_position = Global.return_spawn_pos
-			get_tree().change_scene_to_file(Global.return_scene)
+			LoadingScreen.change_scene(Global.return_scene)
 		)
 	else:
-		btn.pressed.connect(func(): 
+		btn.pressed.connect(func():
 			overlay.queue_free()
 			_on_try_again_pressed()
 		)
-
-func _on_exit_button_pressed() -> void:
-	Global.spawn_position = Global.return_spawn_pos
-	LoadingScreen.change_scene(Global.return_scene)
+		

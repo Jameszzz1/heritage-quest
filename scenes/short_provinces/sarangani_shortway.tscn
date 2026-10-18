@@ -200,7 +200,7 @@ tile_map_data = PackedByteArray("AADv/7T/AQAAAAAAAADw/7f/AQAAAAAAAADz/7P/AQAAAAA
 tile_set = SubResource("TileSet_i5btb")
 
 [node name="James" parent="Y-sort" unique_id=636874803 instance=ExtResource("11_rt1hl")]
-position = Vector2(246, 229)
+position = Vector2(-194, -368)
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
 
@@ -221,8 +221,8 @@ polygon = PackedVector2Array(593.6558, -394.76596, 617.6558, 337.23404, -478.344
 
 [node name="ToSouthCotabatoShortway" type="Area2D" parent="." unique_id=913820780]
 script = ExtResource("14_kyy8q")
-target_scene = "res://scenes/short_provinces/south_cotabato_shortway.tscn"
-spawn_pos = Vector2(274, -391)
+target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
+spawn_pos = Vector2(-45, -707)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabatoShortway" unique_id=238790663]
 position = Vector2(250.00002, 292.00003)
@@ -233,8 +233,8 @@ shape = SubResource("RectangleShape2D_hrqf7")
 
 [node name="ToSultanKudaratShortway" type="Area2D" parent="." unique_id=707739490]
 script = ExtResource("14_kyy8q")
-target_scene = "res://scenes/short_provinces/sultan_kudarat_shortway.tscn"
-spawn_pos = Vector2(741, 259)
+target_scene = "res://scenes/provinces/sarangani/sarangani.tscn"
+spawn_pos = Vector2(846, 119)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSultanKudaratShortway" unique_id=945581202]
 position = Vector2(-255.56664, -367.59158)

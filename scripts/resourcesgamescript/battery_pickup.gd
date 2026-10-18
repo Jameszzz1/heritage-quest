@@ -8,7 +8,20 @@ extends Area2D
 
 var collected: bool = false
 
+# Unique na ID ng battery na ito: scene path + pangalan ng node
+func _item_id() -> String:
+	var scene = get_tree().current_scene
+	var scene_path = ""
+	if scene != null:
+		scene_path = scene.scene_file_path
+	return scene_path + ":" + str(name)
+
 func _ready():
+	# Kung nakuha na dati, huwag nang ilabas
+	if Global.is_item_collected(_item_id()):
+		queue_free()
+		return
+
 	body_entered.connect(_on_body_entered)
 
 	if glow_enabled:
@@ -47,6 +60,7 @@ func _on_body_entered(body):
 		return
 
 	collected = true
+	Global.mark_item_collected(_item_id())
 	Global.add_battery(amount)
 
 	if pickup_sfx:

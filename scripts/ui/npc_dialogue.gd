@@ -1,12 +1,13 @@
 extends CharacterBody2D
 # NPC script: interact prompt, Quick Study dialogue, 5-item quiz (Cultural Assessment),
-# Journal unlock, at Mini Game na naka-lock hanggang 5/5. 2-minute cooldown kapag nag-fail.
+# Journal unlock, Mini Game, at Token.
 # State flow: IDLE -> MENU -> DIALOGUE or QUIZ -> balik IDLE
 #
 # QUEST FLOW:
 # [1] Pag-aralan ang Kultura   -> laging green, basahin lahat ng lines
 # [2] Sagutin ang limang tanong -> red hanggang mabasa ang [1], tapos green
 # [3] Mini Game                -> red hanggang 5/5, tapos green
+# [4] Kunin ang Token          -> red hanggang mapanalunan ang mini game, tapos green
 
 # ---------- SETTINGS (editable sa Inspector) ----------
 
@@ -16,10 +17,10 @@ extends CharacterBody2D
 @export var has_minigame: bool = false
 @export var marker_id: String = ""
 
-# HINDI NA GINAGAMIT ang province_id sa Inspector (para hindi masira ng merge).
-# Awtomatiko na itong kinukuha sa get_province() base sa npc_name.
+# Awtomatiko na ang province sa get_province() base sa npc_name.
 @export_enum("south_cotabato", "sarangani", "sultan_kudarat", "cotabato_province") var province_id: String = "south_cotabato"
 
+# Fallback lang ito. Normal na kinukuha ang scene at pwesto ni James habang naglalaro.
 @export var return_scene_path: String = ""
 @export var return_spawn_pos: Vector2 = Vector2.ZERO
 
@@ -64,15 +65,26 @@ func load_dialogue():
 		return
 	dialogue = JSON.parse_string(file.get_as_text())
 
-# Province id para sa Journal — base sa pangalan ng NPC, hindi sa Inspector
+# Province id para sa Journal at Token — base sa pangalan ng NPC
 func get_province() -> String:
 	if npc_name == "Ayu":
 		return "sarangani"
 	elif npc_name == "Ustadz Ameer" or npc_name == "Ameer":
 		return "sultan_kudarat"
-	elif npc_name == "Apo Sandawa" or npc_name == "Sandawa":
+	elif npc_name == "Sandawa" or npc_name == "Sandawa":
 		return "cotabato_province"
 	return "south_cotabato"
+
+func get_province_display() -> String:
+	match get_province():
+		"sarangani":
+			return "Sarangani"
+		"sultan_kudarat":
+			return "Sultan Kudarat"
+		"cotabato_province":
+			return "Cotabato"
+		_:
+			return "South Cotabato"
 
 
 # ---------- CULTURE-READ TRACKING ----------
@@ -158,10 +170,42 @@ func _input(event):
 				get_viewport().set_input_as_handled()
 				return
 
-			Global.return_scene = return_scene_path
-			Global.return_spawn_pos = return_spawn_pos
+			# I-save ang eksaktong scene at pwesto ni James ngayon,
+			# para dito siya babalik pagkatapos ng mini game.
+			var james = get_tree().get_first_node_in_group("player")
+			var scene_path = ""
+			if get_tree().current_scene:
+				scene_path = get_tree().current_scene.scene_file_path
+			if scene_path == "":
+				scene_path = return_scene_path
+			Global.return_scene = scene_path
+			if james:
+				Global.return_spawn_pos = james.global_position
+			else:
+				Global.return_spawn_pos = return_spawn_pos
+			Global.current_minigame_npc = npc_name
+
 			close_dialogue()
 			LoadingScreen.change_scene(minigame_scene)
+			get_viewport().set_input_as_handled()
+
+		elif event.keycode == KEY_4 and has_minigame:
+			var province = get_province()
+
+			if Global.has_token(province):
+				show_toast("Nakuha mo na ang Token ng " + get_province_display() + "!")
+				close_dialogue()
+				get_viewport().set_input_as_handled()
+				return
+
+			if not Global.is_minigame_passed(npc_name):
+				show_toast("Tapusin muna ang Mini Game para makuha ang Token!")
+				get_viewport().set_input_as_handled()
+				return
+
+			Global.claim_token(province)
+			show_toast("Nakuha mo ang Token ng " + get_province_display() + "! Pwede ka nang magpatuloy.")
+			close_dialogue()
 			get_viewport().set_input_as_handled()
 
 	elif state == "DIALOGUE" and event.is_action_pressed("interact"):
@@ -198,16 +242,13 @@ func start_menu():
 	var text = "Mabuting araw, Archivist James. Maligayang pagdating sa ating lupain.\n\n"
 
 	# [1] — laging green
-	var line1 = "[1] Pag-aralan ang Kultura"
-	if culture_read:
-		line1 += ""
-	text += colored(line1, COLOR_GREEN) + "\n"
+	text += colored("[1] Pag-aralan ang Kultura", COLOR_GREEN) + "\n"
 
 	# [2] — red hanggang mabasa ang [1]
 	if completed:
-		text += colored("[2] Sagutin ang limang tanong ", COLOR_GREEN)
+		text += colored("[2] Sagutin ang limang tanong", COLOR_GREEN)
 	elif not culture_read:
-		text += colored("[2] Sagutin ang limang tanong ", COLOR_RED)
+		text += colored("[2] Sagutin ang limang tanong", COLOR_RED)
 	else:
 		var remaining = Global.get_quiz_cooldown_remaining(npc_name)
 		if remaining > 0.0:
@@ -215,12 +256,20 @@ func start_menu():
 		else:
 			text += colored("[2] Sagutin ang limang tanong", COLOR_GREEN)
 
-	# [3] — red hanggang 5/5
 	if has_minigame:
+		# [3] — red hanggang 5/5
 		if completed:
 			text += "\n" + colored("[3] Maglaro ng Mini Game", COLOR_GREEN)
 		else:
 			text += "\n" + colored("[3] Mini Game", COLOR_RED)
+
+		# [4] — red hanggang mapanalunan ang mini game
+		if Global.has_token(get_province()):
+			text += "\n" + colored("[4] Token (Nakuha na)", COLOR_GREEN)
+		elif Global.is_minigame_passed(npc_name):
+			text += "\n" + colored("[4] Kunin ang Token", COLOR_GREEN)
+		else:
+			text += "\n" + colored("[4] Kunin ang Token", COLOR_RED)
 
 	box.show_text(text)
 

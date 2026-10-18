@@ -308,12 +308,11 @@ shape = SubResource("RectangleShape2D_hrqf7")
 [node name="ToSouthCot" type="Area2D" parent="." unique_id=299249047]
 position = Vector2(338, -398)
 script = ExtResource("12_xjq4p")
-target_scene = "C:/Projects/HeritageQuest/scenes/provinces/south_cotabato/south_cotabato.tscn"
-spawn_pos = Vector2(246, 229)
+target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
+spawn_pos = Vector2(869, 96)
 show_on_minimap = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCot" unique_id=229734238]
-position = Vector2(-6.109476e-05, 0)
 rotation = -0.036651913
 scale = Vector2(0.9999996, 0.99999964)
 skew = -0.06981317

@@ -17,9 +17,9 @@
 [ext_resource type="PackedScene" uid="uid://bi3kll5wochib" path="res://scenes/provinces/sarangani/ayu.tscn" id="15_2nl4l"]
 [ext_resource type="Texture2D" uid="uid://dt0jewh86mvv5" path="res://assets/images/provinces/sultan_kudarat/WSultanKudarat.png" id="15_hq11y"]
 [ext_resource type="Texture2D" uid="uid://cgb6xfjsnewq3" path="res://assets/images/provinces/sarangani/asset_sarangani_boat1.png" id="17_6ocsf"]
-[ext_resource type="Script" uid="uid://b776vpwau4mcb" path="res://scripts/uiscript/npc_dialogue.gd" id="18_2p1a3"]
 [ext_resource type="Texture2D" uid="uid://dsslobq2vooak" path="res://assets/images/provinces/sarangani/asset_sarangani_boat2.png" id="18_44wf4"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="18_qtuk6"]
+[ext_resource type="Script" uid="uid://b3r17f8ne8ikj" path="res://scripts/ui/npc_dialogue.gd" id="18_ss18s"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="18_t76up"]
 [ext_resource type="PackedScene" uid="uid://b28itkt7gvj13" path="res://scenes/characters/gahum.tscn" id="19_6ocsf"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="19_87wo0"]
@@ -169,7 +169,7 @@ size = Vector2(117.70787, 20)
 size = Vector2(24.302967, 56.01252)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_em1xq"]
-b = Vector2(1.152832, 59.1391)
+b = Vector2(4.576233, 61.122284)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2nl4l"]
 size = Vector2(16.625, 9.125)
@@ -243,13 +243,15 @@ region_enabled = true
 region_rect = Rect2(326.65112, 32.90252, 261.03674, 349.40506)
 
 [node name="James" parent="Y-Sort" unique_id=636874803 instance=ExtResource("18_qtuk6")]
-position = Vector2(-1016, -43)
+position = Vector2(846, 119)
 
 [node name="Camera2D" type="Camera2D" parent="Y-Sort/James" unique_id=1863879979]
 
 [node name="Ayu" parent="Y-Sort" unique_id=2100318797 instance=ExtResource("15_2nl4l")]
 position = Vector2(54.99997, -636.9999)
-script = ExtResource("18_2p1a3")
+script = ExtResource("18_ss18s")
+npc_name = "Ayu"
+marker_id = "ayu"
 
 [node name="Y-Sort Gahum" type="Node2D" parent="Y-Sort" unique_id=1123770854]
 y_sort_enabled = true
@@ -378,8 +380,8 @@ text = "TSUNAMI WARNING! "
 [node name="ToSouthCotabato" type="Area2D" parent="." unique_id=1739753565]
 position = Vector2(-21, -729)
 script = ExtResource("19_87wo0")
-target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
-spawn_pos = Vector2(-21, -729)
+target_scene = "res://scenes/short_provinces/sarangani_shortway.tscn"
+spawn_pos = Vector2(-194, -368)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSouthCotabato" unique_id=2036236236]
 position = Vector2(909, 878)
@@ -390,10 +392,11 @@ shape = SubResource("RectangleShape2D_81sr2")
 [node name="ToSultanKudarat" type="Area2D" parent="." unique_id=728115850]
 position = Vector2(-713, -310)
 script = ExtResource("19_87wo0")
-target_scene = "res://scenes/provinces/sultan_kudarat/sultankudarat.tscn"
+target_scene = "res://scenes/short_provinces/sultan_kudarat_shortway.tscn"
+spawn_pos = Vector2(741, 259)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSultanKudarat" unique_id=1578417798]
-position = Vector2(21, -20)
+position = Vector2(22, -20)
 rotation = 0.6422812
 skew = 0.42935097
 shape = SubResource("SegmentShape2D_em1xq")

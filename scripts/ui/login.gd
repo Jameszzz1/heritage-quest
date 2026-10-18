@@ -60,6 +60,12 @@ func _on_verify_pressed() -> void:
 	print("OTP Error: ", result.error)
 	if result.error == null and result.data != null and result.data.has("access_token"):
 		print("✅ OTP Verified!")
+		otp_status.text = "Loading your progress..."
+		Global.reset_progress()
+		Global.set_cloud_user_from_auth(result.data)
+		print("Cloud user id: ", Global.cloud_user_id)
+		var found = await Global.download_cloud_save()
+		print("Cloud save found: ", found)
 		LoadingScreen.change_scene("res://scenes/ui/main_menu.tscn")
 	else:
 		otp_status.text = "❌ Wrong or expired OTP. Try again."

@@ -86,6 +86,7 @@ theme_override_fonts/font = ExtResource("2_h175o")
 text = "MainMenu"
 
 [node name="VolumePopup" type="Panel" parent="Background" unique_id=986209632]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.143

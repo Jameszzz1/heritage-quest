@@ -220,7 +220,7 @@ position = Vector2(-459, 172)
 position = Vector2(-986, -45.000004)
 
 [node name="James" parent="Y-Sort" unique_id=636874803 groups=["player"] instance=ExtResource("10_v5m28")]
-position = Vector2(869, 96)
+position = Vector2(857, 94)
 
 [node name="Camera2D" type="Camera2D" parent="Y-Sort/James" unique_id=1531890778]
 
@@ -391,8 +391,8 @@ shape = SubResource("RectangleShape2D_aupoh")
 
 [node name="ToSarangani" type="Area2D" parent="." unique_id=330446023]
 script = ExtResource("17_aupoh")
-target_scene = "res://scenes/provinces/sarangani/sarangani.tscn"
-spawn_pos = Vector2(846, 116)
+target_scene = "res://scenes/short_provinces/sarangani_shortway.tscn"
+spawn_pos = Vector2(246, 229)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSarangani" unique_id=381837129]
 position = Vector2(-3.33786e-06, -738)
@@ -405,6 +405,7 @@ script = ExtResource("17_aupoh")
 target_scene = "res://scenes/provinces/south_cotabato/homebase.tscn"
 spawn_pos = Vector2(-217, -373)
 return_scene = "res://scenes/provinces/south_cotabato/homebase.tscn"
+required_token = "south_cotabato"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToHomebase" unique_id=1847511687]
 position = Vector2(885.00006, 108.99999)

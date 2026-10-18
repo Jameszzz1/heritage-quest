@@ -10,6 +10,8 @@ extends Control
 @onready var sfx_slider = $Background/VolumePopup/VBoxContainer/SFXSlider
 @onready var back_button = $Background/VolumePopup/VBoxContainer/BackButton
 
+var _saving := false
+
 func _ready():
 	visible = false
 	volume_popup.visible = false
@@ -74,15 +76,37 @@ func _on_music_slider_value_changed(value):
 func _on_sfx_slider_value_changed(value):
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(value))
 
+# ---------------- SAVE ----------------
+
+func _show_toast(msg: String) -> void:
+	var hud = get_tree().get_first_node_in_group("hud")
+	if hud and hud.has_method("_show_toast"):
+		hud._show_toast(msg)
+
 func _on_save_button_pressed():
 	MusicManager.play_button_sfx()
-	var player = get_tree().get_first_node_in_group("player")
-	if player:
-		Global.spawn_position = player.global_position
-	print("Game Saved!")
+	if _saving:
+		return
+	_saving = true
+	save_btn.disabled = true
+
+	var ok = await Global.upload_cloud_save()
+	_show_toast("Game Saved!" if ok else "Hindi na-save. Subukan ulit.")
+	print("Game Saved!" if ok else "Cloud save failed")
+
+	save_btn.disabled = false
+	_saving = false
 
 func _on_main_menu_button_pressed():
 	MusicManager.play_button_sfx()
+	if _saving:
+		return
+	_saving = true
+	main_menu_btn.disabled = true
+
+	# I-save muna habang nasa game scene pa si James (para tama ang pwesto)
 	get_tree().paused = false
+	await Global.upload_cloud_save()
+
 	MusicManager.stop_music()
 	LoadingScreen.change_scene("res://scenes/ui/main_menu.tscn")

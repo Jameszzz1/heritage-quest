@@ -80,34 +80,6 @@ sources/0 = SubResource("TileSetAtlasSource_tpqfu")
 sources/1 = SubResource("TileSetAtlasSource_mp7ln")
 sources/2 = SubResource("TileSetAtlasSource_4etat")
 
-[sub_resource type="GDScript" id="GDScript_imcyd"]
-script/source = "extends \"res://scripts/ui/npc_dialogue.gd\"
-
-
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-
-
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-
-	# Handle jump.
-	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis(\"ui_left\", \"ui_right\")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-	move_and_slide()
-"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mp7ln"]
 shader = ExtResource("9_tpqfu")
 shader_parameter/bilis_ng_hangin = 1.5
@@ -262,12 +234,8 @@ y_sort_enabled = true
 
 [node name="Ameer" parent="Y-sort" unique_id=2100318797 instance=ExtResource("8_mla1v")]
 position = Vector2(-628, 27)
-script = SubResource("GDScript_imcyd")
-npc_name = ""
-dialogue_file = ""
-minigame_scene = ""
-has_minigame = false
-marker_id = ""
+npc_name = "Ameer"
+marker_id = "ameer"
 
 [node name="Trees" type="TileMapLayer" parent="Y-sort" unique_id=1949078514]
 y_sort_enabled = true
@@ -301,7 +269,7 @@ scale = Vector2(0.2792, 0.3240915)
 texture = ExtResource("17_q4u34")
 
 [node name="James" parent="Y-sort" unique_id=636874803 instance=ExtResource("14_icpex")]
-position = Vector2(779, 122)
+position = Vector2(808, 145)
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=838922382]
 
@@ -503,8 +471,8 @@ polygon = PackedVector2Array(15, -763, 1214, -15, 4, 581, -1212, -16, 6, -753, -
 [node name="ToCotabato" type="Area2D" parent="." unique_id=66837264]
 position = Vector2(233, -357)
 script = ExtResource("20_4etat")
-target_scene = "res://scenes/provinces/cotabato/cotabato.tscn"
-spawn_pos = Vector2(852, 101)
+target_scene = "res://scenes/short_provinces/cotabato_province_shortway.tscn"
+spawn_pos = Vector2(-223, -219)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToCotabato" unique_id=1045717058]
 position = Vector2(-210.5237, -377.77576)
@@ -513,12 +481,12 @@ scale = Vector2(0.9999997, 0.9999998)
 skew = -0.44505906
 shape = SubResource("RectangleShape2D_mp7ln")
 
-[node name="ToSarangani" type="Area2D" parent="ToCotabato" unique_id=1824554817]
+[node name="ToShortwaySultanKudarat" type="Area2D" parent="ToCotabato" unique_id=1824554817]
 script = ExtResource("20_4etat")
-target_scene = "res://scenes/provinces/sarangani/sarangani.tscn"
-spawn_pos = Vector2(-714, -303)
+target_scene = "res://scenes/short_provinces/sultan_kudarat_shortway.tscn"
+spawn_pos = Vector2(730, -150)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ToCotabato/ToSarangani" unique_id=1550170826]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ToCotabato/ToShortwaySultanKudarat" unique_id=1550170826]
 position = Vector2(604.99994, 517)
 rotation = -0.39793506
 scale = Vector2(0.9999997, 0.9999998)
@@ -554,4 +522,4 @@ polygon = PackedVector2Array(-642.8777, 629.2628, -642.27515, 642.88525, -623.65
 polygon = PackedVector2Array(-218.5213, 437.32996, -229.31946, 430.4024, -231.27853, 422.88678, -239.43939, 420.42148, -238.08289, 414.31473, -247.17816, 412.789, -247.01224, 405.50803, -255.76837, 402.45563, -257.72745, 394.94, -268.35242, 393.76675, -269.11365, 400.46063, -278.88718, 401.9883, -276.589, 407.97723, -286.36252, 409.5049, -282.53464, 415.1414, -292.30817, 416.66907, -290.9444, 423.5976, -299.18823, 424.7728, -297.48532, 430.17462, -303.60413, 431.5845, -307.5907, 446.26428, -312.77512, 446.73456, -312.94104, 454.01556, -319.39902, 456.9521, -322.54138, 461.2975, -330.0997, 472.45462, -320.40912, 474.5674, -316.66418, 483.84442, -309.6939, 485.13544, -309.26456, 493.00357, -299.23486, 493.5897, -300.07904, 503.92407, -292.17438, 504.2755, -287.23883, 514.72675, -281.7153, 512.72974, -278.3095, 523.53345, -260.03598, 522.94434, -260.20917, 517.19006, -251.37006, 516.602, -252.98999, 507.55963, -236.58533, 508.84973, -238.20526, 499.8074, -230.63965, 501.68558, -230.47375, 494.40457, -222.56903, 494.75604, -222.49335, 478.08032, -193.33868, 480.77826, -187.46875, 490.28986, -194.61221, 483.2445, -220.70746, 479.84164, -220.78317, 496.5174, -229.28314, 495.5788, -228.85382, 503.4469, -236.41937, 501.56873, -235.73386, 511.55063, -251.79941, 508.73386, -249.58417, 518.3633, -259.0186, 518.36426, -259.52365, 527.17194, -278.98776, 526.5868, -282.05444, 514.2565, -290.0421, 517.5455, -292.5135, 505.80225, -301.94788, 505.80322, -300.16928, 494.52927, -311.1334, 494.88272, -310.62836, 486.075, -317.93774, 486.31067, -322.27795, 476.4466, -332.56384, 473.74667, -324.0711, 461.64996, -321.52402, 456.71744, -314.13165, 452.8413, -314.90012, 446.49988, -308.7813, 445.09003, -304.19943, 430.99738, -298.6759, 429.0004, -301.3132, 424.53815, -292.73026, 421.83624, -293.49875, 415.49487, -284.65964, 414.90677, -288.48752, 409.27026, -277.77957, 406.80304, -280.07776, 400.8141, -270.30423, 399.28644, -270.1383, 392.00543, -257.3883, 393.41333, -253.30426, 401.1636, -245.1434, 403.62888, -245.30933, 410.90985, -235.61877, 413.0227, -237.57056, 418.54233, -227.88, 420.65515, -228.38507, 429.46283, -220.81949, 431.341, -215.3789, 432.98453)
 
 [connection signal="body_entered" from="ToCotabato" to="ToCotabato" method="_on_body_entered"]
-[connection signal="body_entered" from="ToCotabato/ToSarangani" to="ToCotabato/ToSarangani" method="_on_body_entered"]
+[connection signal="body_entered" from="ToCotabato/ToShortwaySultanKudarat" to="ToCotabato/ToShortwaySultanKudarat" method="_on_body_entered"]

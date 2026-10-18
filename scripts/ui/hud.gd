@@ -18,6 +18,14 @@ const BATTERY_ICON_PATH: String = "res://assets/sprites/things/battery.png"
 const FISH_ICON_PATH: String = "res://assets/sprites/things/item_fish.png"
 const UI_FONT_PATH: String = "res://assets/fonts/GrapeSoda.ttf"
 
+# ---- Provincial Tokens ----
+const TOKENS: Array = [
+	{"id": "south_cotabato", "label": "S. Cotabato", "title": "", "path": "res://assets/images/tokens/token_southcotabato.png"},
+	{"id": "sarangani", "label": "Sarangani", "title": "Sarangani Token", "path": "res://assets/images/tokens/token_sarangani.png"},
+	{"id": "sultan_kudarat", "label": "S. Kudarat", "title": "Sultan Kudarat Token", "path": "res://assets/images/tokens/token_sultankudarat.png"},
+	{"id": "cotabato_province", "label": "Cotabato", "title": "Cotabato Province Token", "path": "res://assets/images/tokens/token_cotabatoprovince.png"}
+]
+
 # ---- Laki ng UI ----
 const SLOT_SIZE: Vector2 = Vector2(28, 30)
 const ICON_SIZE: int = 16
@@ -32,6 +40,7 @@ var battery_slot: Button
 var battery_count_label: Label
 var fish_slot: Button
 var fish_count_label: Label
+var token_slots: Dictionary = {}   # province_id -> Button
 var toast_label: Label
 var toast_token: int = 0
 var _last_battery_count: int = 0
@@ -55,10 +64,12 @@ func _ready():
 	_last_battery_count = Global.battery_items
 	_last_fish_count = Global.fish_items
 	setup_inventory()
+	setup_tokens()
 	setup_toast()
 
 	Global.inventory_changed.connect(_on_inventory_changed)
 	Global.journal_updated.connect(_on_journal_updated)
+	Global.token_claimed.connect(_on_token_claimed)
 	setup_journal_tab()
 
 func setup_death_overlay():
@@ -195,6 +206,50 @@ func _on_inventory_changed():
 	_last_battery_count = Global.battery_items
 	_last_fish_count = Global.fish_items
 	_refresh_inventory()
+
+# ---------------- TOKENS ----------------
+
+func setup_tokens():
+	for t in TOKENS:
+		var slot = Button.new()
+		slot.custom_minimum_size = SLOT_SIZE
+		slot.focus_mode = Control.FOCUS_NONE
+		slot.tooltip_text = t["title"]
+
+		var box = VBoxContainer.new()
+		box.set_anchors_preset(Control.PRESET_FULL_RECT)
+		box.alignment = BoxContainer.ALIGNMENT_CENTER
+		box.add_theme_constant_override("separation", 1)
+		box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		slot.add_child(box)
+
+		var icon = TextureRect.new()
+		if ResourceLoader.exists(t["path"]):
+			icon.texture = load(t["path"])
+		icon.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		box.add_child(icon)
+
+		box.add_child(_make_slot_label(t["label"]))
+
+		grid.add_child(slot)
+		token_slots[t["id"]] = slot
+
+	_refresh_tokens()
+
+func _refresh_tokens():
+	for id in token_slots.keys():
+		var slot = token_slots[id]
+		if is_instance_valid(slot):
+			slot.visible = Global.has_token(id)
+
+func _on_token_claimed(_province: String):
+	_refresh_tokens()
+
+# ---------------- ITEM USE ----------------
 
 func use_battery_item():
 	var james = get_tree().get_first_node_in_group("player")
@@ -394,6 +449,7 @@ func _on_backpack_pressed():
 	backpack_popup.visible = !backpack_popup.visible
 	if backpack_popup.visible:
 		refresh_journal_display()
+		_refresh_tokens()
 
 func _on_close_pressed():
 	backpack_popup.visible = false

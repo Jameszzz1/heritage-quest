@@ -439,13 +439,15 @@ func trigger_end_state(is_victory: bool):
 	game_over = true
 	game_timer.stop()
 	is_animating = true
+
 	if is_victory:
+		Global.mark_minigame_passed(Global.current_minigame_npc)
 		timer_label.text = "TASK SUCCESS!"
 		score_label.modulate = Color(0.3, 1, 0.3)
 	else:
 		timer_label.text = "TIME'S UP!"
 		score_label.modulate = Color(1, 0.3, 0.3)
-	
+
 	show_end_game_popup(is_victory)
 
 
@@ -465,7 +467,6 @@ func build_end_game_panel() -> Control:
 	container.set_anchors_preset(Control.PRESET_FULL_RECT)
 
 	var box = PanelContainer.new()
-	# Proportional sizing base sa screen, hindi na fixed
 	var screen_size = get_viewport_rect().size
 	var panel_width = clamp(screen_size.x * 0.7, 140, 260)
 	var panel_height = clamp(screen_size.y * 0.7, 110, 190)
@@ -497,35 +498,46 @@ func build_end_game_panel() -> Control:
 	margin.add_child(vbox)
 	box.add_child(margin)
 
+	var success = score >= TARGET_SCORE
+
 	var result_label = Label.new()
-	result_label.text = "U WIN!" if score >= TARGET_SCORE else "U LOSE"
+	result_label.text = "CONGRATULATIONS!" if success else "TRY AGAIN!"
 	result_label.add_theme_font_override("font", END_GAME_FONT)
 	result_label.add_theme_font_size_override("font_size", 12)
 	result_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	result_label.modulate = Color(0.3, 1, 0.4) if score >= TARGET_SCORE else Color(1, 0.35, 0.35)
+	result_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	result_label.modulate = Color(0.3, 1, 0.4) if success else Color(1, 0.35, 0.35)
 	vbox.add_child(result_label)
 
 	var score_result_label = Label.new()
-	score_result_label.text = "SCORE: " + str(score) + " / " + str(TARGET_SCORE)
+	if success:
+		score_result_label.text = "Natapos mo ang Tile Match!\nSCORE: " + str(score) + "\n\nKausapin si Ustadz Ameer para makuha ang Token."
+	else:
+		score_result_label.text = "SCORE: " + str(score) + " / " + str(TARGET_SCORE)
 	score_result_label.add_theme_font_override("font", END_GAME_FONT)
 	score_result_label.add_theme_font_size_override("font_size", 7)
 	score_result_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	score_result_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-	score_result_label.modulate = Color(1, 1, 1)
 	vbox.add_child(score_result_label)
 
 	var spacer = Control.new()
 	spacer.custom_minimum_size = Vector2(0, 4)
 	vbox.add_child(spacer)
 
-	var retry_button = Button.new()
-	retry_button.text = "TRY AGAIN"
-	retry_button.add_theme_font_override("font", END_GAME_FONT)
-	retry_button.custom_minimum_size = Vector2(80, 20)
-	retry_button.add_theme_font_size_override("font_size", 7)
-	retry_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	retry_button.pressed.connect(_on_try_again_pressed)
-	vbox.add_child(retry_button)
+	var btn = Button.new()
+	btn.text = "Bumalik" if success else "TRY AGAIN"
+	btn.add_theme_font_override("font", END_GAME_FONT)
+	btn.custom_minimum_size = Vector2(80, 20)
+	btn.add_theme_font_size_override("font_size", 7)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	if success:
+		btn.pressed.connect(func():
+			Global.spawn_position = Global.return_spawn_pos
+			LoadingScreen.change_scene(Global.return_scene)
+		)
+	else:
+		btn.pressed.connect(_on_try_again_pressed)
+	vbox.add_child(btn)
 
 	container.add_child(box)
 	return container

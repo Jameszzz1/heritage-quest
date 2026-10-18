@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="3_ucy3d"]
 
 [sub_resource type="GDScript" id="GDScript_s1sh3"]
-script/source = "extends \"res://scripts/uiscript/npc_dialogue.gd\"
+script/source = "extends \"res://scripts/ui/npc_dialogue.gd\"
 
 
 const SPEED = 300.0
@@ -61,11 +61,10 @@ border_color = Color(0, 0, 0, 1)
 [node name="Ayu" type="CharacterBody2D" unique_id=2100318797]
 scale = Vector2(0.2, 0.2)
 script = SubResource("GDScript_s1sh3")
-npc_name = "Ayu"
+npc_name = "ayu"
 dialogue_file = "res://dialogues/ayu.json"
 minigame_scene = "res://scenes/provinces/sarangani/saragani_slide_puzzle_medium.tscn"
 has_minigame = true
-marker_id = "ayu"
 province_id = "sarangani"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=239521770]

@@ -91,7 +91,7 @@ position = Vector2(-100, -85)
 scale = Vector2(0.99999994, 0.99999994)
 
 [node name="James" parent="Node2D" unique_id=636874803 instance=ExtResource("2_hncgv")]
-position = Vector2(-265.00003, 145)
-scale = Vector2(4.9999995, 4.9999995)
+position = Vector2(-265, 155)
+scale = Vector2(0.99999994, 0.99999994)
 
 [connection signal="body_entered" from="Exit" to="Exit" method="_on_body_entered"]

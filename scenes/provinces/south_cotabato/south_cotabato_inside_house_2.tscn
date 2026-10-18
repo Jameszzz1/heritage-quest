@@ -21,7 +21,7 @@ size = Vector2(16.064947, 2.3500729)
 [node name="SouthCotabatoInsideHouse2" type="Node2D" unique_id=1179299597]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1417650594]
-zoom = Vector2(2, 2)
+zoom = Vector2(1.5, 1.5)
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=105696388]
 anchors_preset = 8
@@ -48,7 +48,7 @@ tile_set = SubResource("TileSet_0e5wb")
 [node name="RightExit" type="Area2D" parent="." unique_id=132110949]
 script = ExtResource("3_0mi8e")
 target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
-spawn_pos = Vector2(145, -82)
+spawn_pos = Vector2(-442, 188)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightExit" unique_id=1487517302]
 position = Vector2(25.999998, 13)
@@ -60,7 +60,7 @@ shape = SubResource("RectangleShape2D_0e5wb")
 [node name="LeftExit" type="Area2D" parent="." unique_id=725556584]
 script = ExtResource("3_0mi8e")
 target_scene = "res://scenes/provinces/south_cotabato/south_cotabato.tscn"
-spawn_pos = Vector2(115, -82)
+spawn_pos = Vector2(-475, 189)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftExit" unique_id=1077387887]
 position = Vector2(-31, 13)

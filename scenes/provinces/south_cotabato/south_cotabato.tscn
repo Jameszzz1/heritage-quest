@@ -398,6 +398,7 @@ shape = SubResource("RectangleShape2D_aupoh")
 script = ExtResource("17_aupoh")
 target_scene = "res://scenes/short_provinces/sarangani_shortway.tscn"
 spawn_pos = Vector2(246, 229)
+required_token = "south_cotabato"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSarangani" unique_id=381837129]
 position = Vector2(-3.33786e-06, -738)

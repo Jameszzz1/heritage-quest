@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bgdpdtfj1fx41" path="res://scenes/characters/ascent_james.tscn" id="1_rfeuv"]
 [ext_resource type="Script" uid="uid://dmnwn1yqp4keh" path="res://scripts/mini_games/ascent_game.gd" id="1_wghk5"]
 [ext_resource type="VideoStream" uid="uid://bc0uqso8kquvb" path="res://assets/cutscenes/mini_game_cutscenes/ascent_cutscenes.ogv" id="4_wghk5"]
+[ext_resource type="Script" uid="uid://hb7byenci0ne" path="res://scripts/mini_games/minigame_settings.gd" id="5_1hsis"]
 
 [node name="AscentGame" type="Node2D" unique_id=1517604280]
 script = ExtResource("1_wghk5")
@@ -28,3 +29,6 @@ grow_horizontal = 2
 grow_vertical = 2
 stream = ExtResource("4_wghk5")
 expand = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1235167479]
+script = ExtResource("5_1hsis")

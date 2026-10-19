@@ -83,6 +83,7 @@ func _show_toast(msg: String) -> void:
 	if hud and hud.has_method("_show_toast"):
 		hud._show_toast(msg)
 
+# Ito lang ang nagse-save ng scene, pwesto at stats ni James
 func _on_save_button_pressed():
 	MusicManager.play_button_sfx()
 	if _saving:
@@ -97,16 +98,11 @@ func _on_save_button_pressed():
 	save_btn.disabled = false
 	_saving = false
 
+# Aalis lang, WALANG save
 func _on_main_menu_button_pressed():
 	MusicManager.play_button_sfx()
 	if _saving:
 		return
-	_saving = true
-	main_menu_btn.disabled = true
-
-	# I-save muna habang nasa game scene pa si James (para tama ang pwesto)
 	get_tree().paused = false
-	await Global.upload_cloud_save()
-
 	MusicManager.stop_music()
 	LoadingScreen.change_scene("res://scenes/ui/main_menu.tscn")

@@ -4,6 +4,7 @@
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="2_3nh2d"]
 [ext_resource type="Texture2D" uid="uid://c2g1ibgt3cril" path="res://assets/images/provinces/sultan_kudarat/bgtilesmatch.png" id="2_l1bqs"]
 [ext_resource type="AudioStream" uid="uid://cnu2jv3kq8uwo" path="res://assets/audio/sfx/sultantilesoundeffect.mp3" id="3_3nh2d"]
+[ext_resource type="Script" uid="uid://hb7byenci0ne" path="res://scripts/mini_games/minigame_settings.gd" id="5_xh432"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xh432"]
 texture = ExtResource("2_l1bqs")
@@ -87,3 +88,6 @@ text = "TIME :"
 
 [node name="MatchSound" type="AudioStreamPlayer" parent="." unique_id=129547975]
 stream = ExtResource("3_3nh2d")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=947363451]
+script = ExtResource("5_xh432")

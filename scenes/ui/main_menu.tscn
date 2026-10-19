@@ -113,12 +113,30 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
 theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
 text = "START JOURNEY"
 
+[node name="LoadGame" type="Button" parent="." unique_id=224593639]
+layout_mode = 0
+offset_left = 119.0
+offset_top = 81.0
+offset_right = 192.0
+offset_bottom = 92.0
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_1mexh")
+theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
+text = "Load Game"
+
 [node name="Achievements2" type="Button" parent="." unique_id=2082298048]
 layout_mode = 0
-offset_left = 117.0
-offset_top = 80.0
-offset_right = 190.0
-offset_bottom = 91.0
+offset_left = 118.0
+offset_top = 97.0
+offset_right = 191.0
+offset_bottom = 108.0
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
@@ -133,10 +151,10 @@ text = "DISCOVERYJOURNAL"
 
 [node name="Options2" type="Button" parent="." unique_id=91885977]
 layout_mode = 0
-offset_left = 117.0
-offset_top = 96.0
-offset_right = 190.0
-offset_bottom = 107.0
+offset_left = 118.0
+offset_top = 113.0
+offset_right = 191.0
+offset_bottom = 124.0
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
@@ -151,10 +169,10 @@ text = "OPTIONS"
 
 [node name="Exit" type="Button" parent="." unique_id=334917098]
 layout_mode = 0
-offset_left = 123.0
-offset_top = 113.0
-offset_right = 183.0
-offset_bottom = 124.0
+offset_left = 124.0
+offset_top = 130.0
+offset_right = 184.0
+offset_bottom = 141.0
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
@@ -191,6 +209,7 @@ text = "LOGOUT
 "
 
 [node name="Options" type="Panel" parent="." unique_id=1693388400]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -329,17 +348,17 @@ text = "ACHIEVEMENTS"
 
 [node name="Back" type="Button" parent="Achievements" unique_id=217725135]
 layout_mode = 0
-offset_left = 1032.0
-offset_top = 594.0
-offset_right = 1140.0
-offset_bottom = 634.0
+offset_left = 277.0
+offset_top = 161.0
+offset_right = 314.0
+offset_bottom = 172.0
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_1mexh")
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
 theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")

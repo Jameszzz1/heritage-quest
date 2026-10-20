@@ -129,7 +129,7 @@ theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxFlat_glbon")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_7vrkn")
 theme_override_styles/hover = SubResource("StyleBoxFlat_fu7sn")
-text = "Load Game"
+text = "LOAD GAME"
 
 [node name="Achievements2" type="Button" parent="." unique_id=2082298048]
 layout_mode = 0

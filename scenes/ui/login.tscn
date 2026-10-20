@@ -94,6 +94,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_bvvwm")
 
 [node name="LoginUI" type="Panel" parent="." unique_id=1800049734]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -203,7 +204,6 @@ text = "Remember me"
 icon_alignment = 2
 
 [node name="CreateAccountUI" type="Panel" parent="." unique_id=860104780]
-visible = false
 layout_mode = 0
 offset_left = 40.0
 offset_top = 2.0
@@ -213,9 +213,8 @@ offset_bottom = 178.0
 [node name="Createlabel" type="Label" parent="CreateAccountUI" unique_id=941627796]
 layout_mode = 0
 offset_left = 50.0
-offset_top = 4.0
 offset_right = 193.0
-offset_bottom = 25.0
+offset_bottom = 21.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 0
 theme_override_constants/shadow_offset_x = 0
@@ -225,69 +224,88 @@ theme_override_fonts/font = ExtResource("1_cau7c")
 theme_override_font_sizes/font_size = 20
 text = "CREATE ACCOUNT"
 
+[node name="PlayerNameLE" type="LineEdit" parent="CreateAccountUI" unique_id=733807916]
+layout_mode = 0
+offset_left = 69.0
+offset_top = 31.0
+offset_right = 205.0
+offset_bottom = 55.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 8
+
 [node name="NameLE" type="LineEdit" parent="CreateAccountUI" unique_id=1871830257]
 layout_mode = 0
 offset_left = 69.0
-offset_top = 36.0
+offset_top = 57.0
 offset_right = 205.0
-offset_bottom = 60.0
+offset_bottom = 81.0
 theme_override_fonts/font = ExtResource("1_cau7c")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 8
 
 [node name="EmailLE" type="LineEdit" parent="CreateAccountUI" unique_id=515285931]
 layout_mode = 0
 offset_left = 68.0
-offset_top = 67.0
+offset_top = 88.0
 offset_right = 204.0
-offset_bottom = 91.0
+offset_bottom = 112.0
 theme_override_fonts/font = ExtResource("1_cau7c")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 8
 
 [node name="PassLE" type="LineEdit" parent="CreateAccountUI" unique_id=1205186898]
 layout_mode = 0
 offset_left = 68.0
-offset_top = 97.0
+offset_top = 118.0
 offset_right = 204.0
-offset_bottom = 122.0
-theme_override_font_sizes/font_size = 12
+offset_bottom = 143.0
+theme_override_font_sizes/font_size = 8
 secret = true
+
+[node name="PlayerNameLabel" type="Label" parent="CreateAccountUI" unique_id=2111785955]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 37.0
+offset_right = 80.0
+offset_bottom = 49.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 9
+text = "Player Name :"
+
+[node name="NameLabel" type="Label" parent="CreateAccountUI" unique_id=1233821170]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 61.0
+offset_right = 74.0
+offset_bottom = 77.0
+theme_override_fonts/font = ExtResource("1_cau7c")
+theme_override_font_sizes/font_size = 9
+text = "Name :"
 
 [node name="EmailLabel" type="Label" parent="CreateAccountUI" unique_id=1388836763]
 layout_mode = 0
 offset_left = 31.0
-offset_top = 72.0
+offset_top = 93.0
 offset_right = 63.0
-offset_bottom = 84.0
+offset_bottom = 105.0
 theme_override_fonts/font = ExtResource("1_cau7c")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 9
 text = "Email :"
 
 [node name="PassLabel" type="Label" parent="CreateAccountUI" unique_id=2073711794]
 layout_mode = 0
 offset_left = 12.0
-offset_top = 101.0
+offset_top = 122.0
 offset_right = 64.0
-offset_bottom = 113.0
+offset_bottom = 134.0
 theme_override_fonts/font = ExtResource("1_cau7c")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 9
 text = "Password :"
-
-[node name="NameLabel" type="Label" parent="CreateAccountUI" unique_id=1233821170]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 40.0
-offset_right = 74.0
-offset_bottom = 56.0
-theme_override_fonts/font = ExtResource("1_cau7c")
-theme_override_font_sizes/font_size = 12
-text = "Name :"
 
 [node name="Register" type="Button" parent="CreateAccountUI" unique_id=1267688293]
 layout_mode = 0
-offset_left = 98.0
-offset_top = 137.0
-offset_right = 174.0
-offset_bottom = 157.0
+offset_left = 90.0
+offset_top = 149.0
+offset_right = 166.0
+offset_bottom = 169.0
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)

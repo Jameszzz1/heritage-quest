@@ -5,6 +5,14 @@ signal journal_updated(province: String)
 signal token_claimed(province: String)
 
 const SAVE_PATH = "user://heritage_progress.save"
+const DEFAULT_PLAYER_NAME := "James"
+
+# Pangalan ng player (galing sa Create Account)
+var player_name: String = DEFAULT_PLAYER_NAME:
+	set(value):
+		print("DEBUG PLAYER NAME: ", player_name, " -> ", value)
+		print_stack()
+		player_name = value
 
 var current_health: float = -1
 var current_stamina: float = -1
@@ -64,6 +72,16 @@ func _ensure_audio_buses():
 		AudioServer.set_bus_name(idx2, "MUSIC")
 		AudioServer.set_bus_send(idx2, "Master")
 
+# ---------------- PLAYER NAME ----------------
+
+func get_player_name() -> String:
+	var n = player_name.strip_edges()
+	return n if n != "" else DEFAULT_PLAYER_NAME
+
+# Pinapalitan ang "James" sa text ng pangalan ng player
+func apply_player_name(text: String) -> String:
+	return text.replace("James", get_player_name())
+
 func save_player_stats(player):
 	current_health = player.health
 	current_stamina = player.stamina
@@ -112,6 +130,7 @@ func has_saved_game() -> bool:
 # Data na isi-save (local file at Supabase)
 func get_save_data() -> Dictionary:
 	return {
+		"player_name": player_name,
 		"province_journals": province_journals,
 		"completed_npcs": completed_npcs,
 		"culture_read_npcs": culture_read_npcs,
@@ -133,6 +152,7 @@ func get_save_data() -> Dictionary:
 
 # Ipinapasok ang data (galing local file o Supabase) sa Global
 func _set_data(d: Dictionary) -> void:
+	player_name = str(d.get("player_name", DEFAULT_PLAYER_NAME))
 	province_journals = d.get("province_journals", {})
 	completed_npcs = d.get("completed_npcs", {})
 	culture_read_npcs = d.get("culture_read_npcs", {})

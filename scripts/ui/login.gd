@@ -13,6 +13,7 @@ const POPUP_DIM := 0.4         # dilim sa likod ng popup
 @onready var otp_ui: Panel = $otpUI
 @onready var email_field = $CreateAccountUI/EmailLE
 @onready var password_field = $CreateAccountUI/PassLE
+@onready var player_name_field = $CreateAccountUI/PlayerNameLE
 @onready var login_email_field = $LoginUI/Username
 @onready var login_password_field = $LoginUI/Password
 @onready var remember_me: CheckBox = $LoginUI/RememberMe
@@ -25,6 +26,7 @@ var current_email = ""
 var current_password = ""
 var trusted_email = ""   # email na naka-remember (skip OTP)
 var is_login_otp = false
+var pending_player_name = ""   # pangalang tinype sa Register, ise-save pagka-verify ng OTP
 
 var popup_root: Control
 var popup_title: Label
@@ -204,12 +206,22 @@ func _is_email_taken(result) -> bool:
 	return ids is Array and ids.is_empty()
 
 # Pumapasok na sa game: load ng cloud save, tapos main menu
-func _finish_login(auth_data) -> void:
+func _finish_login(auth_data, is_new_account: bool = false) -> void:
 	Global.reset_progress()
+	Global.player_name = Global.DEFAULT_PLAYER_NAME   # linisin muna bago mag-load ng account
 	Global.set_cloud_user_from_auth(auth_data)
 	print("Cloud user id: ", Global.cloud_user_id)
 	var found = await Global.download_cloud_save()
 	print("Cloud save found: ", found)
+
+	# Bagong account: laging gamitin ang Player Name na tinype sa Register
+	if is_new_account and pending_player_name != "":
+		Global.player_name = pending_player_name
+		Global.save_progress()
+		await Global.upload_cloud_save()
+	pending_player_name = ""
+
+	print("Player name: ", Global.player_name)
 	LoadingScreen.change_scene("res://scenes/ui/main_menu.tscn")
 
 # ---------------- NAVIGATION ----------------
@@ -307,7 +319,7 @@ func _on_verify_pressed() -> void:
 		if is_login_otp:
 			_save_remembered(current_email, current_password)
 		otp_status.text = "Loading your progress..."
-		await _finish_login(result.data)
+		await _finish_login(result.data, not is_login_otp)
 	else:
 		otp_status.text = "❌ Wrong or expired OTP. Try again."
 		print("OTP Failed: ", result.error)
@@ -318,9 +330,14 @@ func _on_register_pressed() -> void:
 	MusicManager.play_button_sfx()
 	var email = email_field.text.strip_edges()
 	var password = password_field.text
+	# Tinatanggal ang [ ] para hindi masira ang BBCode sa dialogue box
+	var player_name = player_name_field.text.strip_edges().replace("[", "").replace("]", "")
 
-	if email == "" or password == "":
-		show_popup("Register", "Please fill in your email and password.")
+	if email == "" or password == "" or player_name == "":
+		show_popup("Register", "Please fill in your player name, email and password.")
+		return
+	if player_name.length() < 2:
+		show_popup("Register", "Player name must be at least 2 characters.")
 		return
 	if not _is_valid_email(email):
 		show_popup("Register", "Please enter a valid email address.")
@@ -346,6 +363,7 @@ func _on_register_pressed() -> void:
 
 	print("✅ REGISTER SUCCESS! OTP sent automatically by Supabase!")
 	current_email = email
+	pending_player_name = player_name
 	is_login_otp = false
 	create_account_ui.hide()
 	otp_ui.show()

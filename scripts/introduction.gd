@@ -27,6 +27,10 @@ var auto_delay = 1
 var skip_tween: Tween = null
 
 func _ready():
+	# Pinapalitan ang "James" ng pangalan ng player
+	for i in narration_parts.size():
+		narration_parts[i] = Global.apply_player_name(narration_parts[i])
+
 	title_label.modulate.a = 0.0
 	narration_label.text = ""
 	skip_prompt_label.modulate.a = 0.0

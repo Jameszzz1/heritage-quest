@@ -229,6 +229,7 @@ func _input(event):
 # ---------- MENU AND DIALOGUE ----------
 
 func start_menu():
+	print("DEBUG NPC SCRIPT: player_name = ", Global.player_name)
 	state = "MENU"
 	var box = get_dialogue_box()
 	if box == null:
@@ -239,7 +240,7 @@ func start_menu():
 	var completed = Global.is_npc_completed(npc_name)
 	var culture_read = is_culture_read()
 
-	var text = "Mabuting araw, Archivist James. Maligayang pagdating sa ating lupain.\n\n"
+	var text = "Mabuting araw, Archivist " + Global.get_player_name() + ". Maligayang pagdating sa ating lupain.\n\n"
 
 	# [1] — laging green
 	text += colored("[1] Pag-aralan ang Kultura", COLOR_GREEN) + "\n"
@@ -280,8 +281,9 @@ func show_next_dialogue_line():
 
 	if dialogue_index < dialogue.size():
 		var line = dialogue[dialogue_index]
-		box.show_name(line["name"])
-		box.show_text(line["text"])
+		# Pinapalitan ang "James" sa JSON ng pangalan ng player
+		box.show_name(Global.apply_player_name(str(line["name"])))
+		box.show_text(Global.apply_player_name(str(line["text"])))
 		dialogue_index += 1
 	else:
 		# Natapos basahin lahat — ma-unlock na ang [2]

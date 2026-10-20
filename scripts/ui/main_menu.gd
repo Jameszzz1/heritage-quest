@@ -159,9 +159,9 @@ func _has_save() -> bool:
 # Start Journey (walang save) o Start New Journey (may save). Laging kita ang Load Game.
 func _refresh_menu_buttons() -> void:
 	if _has_save():
-		start_game.text = "Start New Journey"
+		start_game.text = "START NEW JOURNEY"
 	else:
-		start_game.text = "Start Journey"
+		start_game.text = "START JOURNEY"
 	load_game.show()
 
 func show_main() -> void:

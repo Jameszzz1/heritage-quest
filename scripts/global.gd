@@ -18,6 +18,15 @@ const BADGE_HEADER_FONT_SIZE := 6
 const BADGE_TITLE_FONT_SIZE := 8
 const BADGE_DESC_FONT_SIZE := 6
 
+# SFX kapag may bagong badge (random ang pili, hindi uulit ang kapareho ng huli)
+const BADGE_SFX_PATHS: Array = [
+	"res://assets/audio/sfx/achievement-badge-pop-sound-1.mp3",
+	"res://assets/audio/sfx/achievement-badge-pop-sound-2.mp3",
+	"res://assets/audio/sfx/achievement-badge-pop-sound-3.mp3",
+]
+const BADGE_SFX_BUS := "SFX"
+const BADGE_SFX_VOLUME_DB := 0.0
+
 # 14 badges. Ang "id" ang sine-save sa Supabase (user_progress.unlocked_badges)
 # "short" = isang sentence na ginagamit sa Achievements screen; "description" = buo, ginagamit sa pop up
 const BADGES: Array = [
@@ -143,6 +152,9 @@ var _badge_panel: PanelContainer
 var _badge_icon: TextureRect
 var _badge_title_lbl: Label
 var _badge_desc_lbl: Label
+var _badge_sfx_player: AudioStreamPlayer
+var _badge_sfx_streams: Array = []
+var _last_badge_sfx := -1
 
 var _name_scan_timer := 0.0
 
@@ -150,6 +162,7 @@ func _ready():
 	_ensure_audio_buses()
 	load_progress()
 	_build_badge_popup()
+	_build_badge_sfx()
 
 # Pantapal: awtomatikong pinapalitan ang "James" sa lahat ng Label/RichTextLabel
 # ng pangalan ng player, kahit hardcoded pa sa dialogue o menu.
@@ -739,6 +752,33 @@ func _build_badge_popup() -> void:
 	_badge_style(_badge_desc_lbl, font, BADGE_DESC_FONT_SIZE, Color.WHITE)
 	col.add_child(_badge_desc_lbl)
 
+# Gumagawa ng audio player at naglo-load ng tatlong sound
+func _build_badge_sfx() -> void:
+	_badge_sfx_player = AudioStreamPlayer.new()
+	_badge_sfx_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	_badge_sfx_player.volume_db = BADGE_SFX_VOLUME_DB
+	_badge_sfx_player.bus = BADGE_SFX_BUS if AudioServer.get_bus_index(BADGE_SFX_BUS) != -1 else "Master"
+	add_child(_badge_sfx_player)
+
+	_badge_sfx_streams.clear()
+	for path in BADGE_SFX_PATHS:
+		if ResourceLoader.exists(path):
+			_badge_sfx_streams.append(load(path))
+		else:
+			push_warning("Badge SFX: hindi makita ang " + str(path))
+
+# Random na sound, hindi pareho sa huling pinatugtog
+func _play_badge_sfx() -> void:
+	if _badge_sfx_player == null or _badge_sfx_streams.is_empty():
+		return
+	var idx := randi() % _badge_sfx_streams.size()
+	if _badge_sfx_streams.size() > 1:
+		while idx == _last_badge_sfx:
+			idx = randi() % _badge_sfx_streams.size()
+	_last_badge_sfx = idx
+	_badge_sfx_player.stream = _badge_sfx_streams[idx]
+	_badge_sfx_player.play()
+
 func _badge_style(lbl: Label, font: Font, size: int, color: Color) -> void:
 	if font:
 		lbl.add_theme_font_override("font", font)
@@ -757,6 +797,7 @@ func _show_next_badge() -> void:
 	_badge_icon.texture = load(path) if ResourceLoader.exists(path) else null
 
 	_badge_panel.visible = true
+	_play_badge_sfx()
 	_badge_panel.reset_size()
 	await get_tree().process_frame
 	_badge_panel.position.y = -_badge_panel.size.y - 10.0

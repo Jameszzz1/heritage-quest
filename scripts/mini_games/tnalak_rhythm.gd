@@ -284,6 +284,7 @@ func show_result(success: bool):
 	# Markahan agad na natapos ang mini game (hindi na mawawala kahit i-close ang game)
 	if success:
 		Global.mark_minigame_passed(Global.current_minigame_npc)
+		Global.unlock_badge("dreamweaver_apprentice")      # <-- BAGO
 
 	var overlay = ColorRect.new()
 	overlay.color = Color(0, 0, 0, 0.75)

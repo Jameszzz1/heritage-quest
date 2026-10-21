@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://evf7oc8gy8rm"]
+[gd_scene format=3 uid="uid://c1sx5ggmm2eu6"]
 
 [ext_resource type="Script" uid="uid://c26e25310crnr" path="res://scripts/ui/main_menu.gd" id="1_qch7b"]
 [ext_resource type="Texture2D" uid="uid://cbtrtp3tpvlp4" path="res://assets/images/menu/background.png" id="2_4ovp2"]
@@ -7,22 +7,6 @@
 [ext_resource type="Script" uid="uid://djdlkyki5s0gm" path="res://scripts/settings_audio_ingame_script/fullscreen_control.gd" id="6_ktljq"]
 [ext_resource type="Texture2D" uid="uid://dy5l2u8h3lhul" path="res://assets/images/menu/AchivementBackground.png" id="7_rbask"]
 [ext_resource type="Script" uid="uid://b1lqa3w8fei5x" path="res://scripts/achievements_container.gd" id="8_e6a60"]
-[ext_resource type="Texture2D" uid="uid://cqhcq7qpp4053" path="res://assets/images/badges/01_FirstDiscovery.png" id="9_5et21"]
-[ext_resource type="Texture2D" uid="uid://cosrkpj1vitkt" path="res://assets/images/badges/02_DreamweaverScholar.png" id="10_ei00g"]
-[ext_resource type="Texture2D" uid="uid://f00n27xpxs2" path="res://assets/images/badges/03_FloodSurvivor.png" id="11_75tx2"]
-[ext_resource type="Texture2D" uid="uid://bifebhhubk14e" path="res://assets/images/badges/04_LakeSebuExplorer.png" id="12_j4d8q"]
-[ext_resource type="Texture2D" uid="uid://b3thqbdhkot4" path="res://assets/images/badges/13_CaveExplorer.png" id="13_qpknu"]
-[ext_resource type="Texture2D" uid="uid://cxjgcnbcsk01x" path="res://assets/images/badges/14_MaitumScholar.png" id="14_wabu5"]
-[ext_resource type="Texture2D" uid="uid://dl68pacqe0kev" path="res://assets/images/badges/15_TsunamiSurvivor.png" id="15_3e805"]
-[ext_resource type="Texture2D" uid="uid://mtc58no28fwk" path="res://assets/images/badges/05_MosqueVisitor.png" id="16_dwgav"]
-[ext_resource type="Texture2D" uid="uid://beuibwo0w2pqy" path="res://assets/images/badges/06_SultanScholar.png" id="17_bvtfn"]
-[ext_resource type="Texture2D" uid="uid://bm5gplxnkrcei" path="res://assets/images/badges/07_LandslideSurvivor.png" id="18_r6ok0"]
-[ext_resource type="Texture2D" uid="uid://rd1dqaj4eal5" path="res://assets/images/badges/08_IsulanPioneer.png" id="19_oq1mw"]
-[ext_resource type="Texture2D" uid="uid://4go4d0g13cfe" path="res://assets/images/badges/09_MountainTrekker.png" id="20_cc4y2"]
-[ext_resource type="Texture2D" uid="uid://bs7sgnefraj40" path="res://assets/images/badges/10_HighlandScholar.png" id="21_iglv2"]
-[ext_resource type="Texture2D" uid="uid://4c0fuvyu5hxi" path="res://assets/images/badges/11_QuakeSurvivor.png" id="22_c68a3"]
-[ext_resource type="Texture2D" uid="uid://biytudfw8dfb4" path="res://assets/images/badges/12_LegendFinder.png" id="23_01voq"]
-[ext_resource type="Texture2D" uid="uid://cxo5fhncg31eh" path="res://assets/images/badges/16_HeritageMaster.png" id="24_hr2v7"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w44g7"]
 texture = ExtResource("2_4ovp2")
@@ -60,6 +44,38 @@ shadow_offset = Vector2(0, 3.41)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j5v2v"]
 texture = ExtResource("7_rbask")
 modulate_color = Color(0.1584723, 0.15847233, 0.1584723, 1)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_btxxm"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wb0q5"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_q85j6"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_8g5eo"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7suek"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_otr3d"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_8ekit"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_n4uci"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_877pj"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ayp64"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_y2j7i"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_y1h5l"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_pw24t"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_5dct7"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_qilvv"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_jbte4"]
 
 [node name="MainMenu" type="Control" unique_id=899148716]
 layout_mode = 3
@@ -320,7 +336,6 @@ text = "SFX Volume"
 layout_mode = 2
 
 [node name="Achievements" type="Panel" parent="." unique_id=599565214]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -396,7 +411,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("9_5et21")
+texture = SubResource("CompressedTexture2D_btxxm")
 expand_mode = 1
 stretch_mode = 5
 
@@ -419,7 +434,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("10_ei00g")
+texture = SubResource("CompressedTexture2D_wb0q5")
 expand_mode = 1
 stretch_mode = 5
 
@@ -441,7 +456,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("11_75tx2")
+texture = SubResource("CompressedTexture2D_q85j6")
 expand_mode = 1
 stretch_mode = 5
 
@@ -465,7 +480,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("12_j4d8q")
+texture = SubResource("CompressedTexture2D_8g5eo")
 expand_mode = 1
 stretch_mode = 5
 
@@ -497,7 +512,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("13_qpknu")
+texture = SubResource("CompressedTexture2D_7suek")
 expand_mode = 1
 stretch_mode = 5
 
@@ -520,7 +535,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("14_wabu5")
+texture = SubResource("CompressedTexture2D_otr3d")
 expand_mode = 1
 stretch_mode = 5
 
@@ -543,7 +558,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("15_3e805")
+texture = SubResource("CompressedTexture2D_8ekit")
 expand_mode = 1
 stretch_mode = 5
 
@@ -576,7 +591,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("16_dwgav")
+texture = SubResource("CompressedTexture2D_n4uci")
 expand_mode = 1
 stretch_mode = 5
 
@@ -599,7 +614,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("17_bvtfn")
+texture = SubResource("CompressedTexture2D_877pj")
 expand_mode = 1
 stretch_mode = 5
 
@@ -622,7 +637,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("18_r6ok0")
+texture = SubResource("CompressedTexture2D_ayp64")
 expand_mode = 1
 stretch_mode = 5
 
@@ -645,7 +660,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("19_oq1mw")
+texture = SubResource("CompressedTexture2D_y2j7i")
 expand_mode = 1
 stretch_mode = 5
 
@@ -681,7 +696,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("20_cc4y2")
+texture = SubResource("CompressedTexture2D_y1h5l")
 expand_mode = 1
 stretch_mode = 5
 
@@ -704,7 +719,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("21_iglv2")
+texture = SubResource("CompressedTexture2D_pw24t")
 expand_mode = 1
 stretch_mode = 5
 
@@ -727,7 +742,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("22_c68a3")
+texture = SubResource("CompressedTexture2D_5dct7")
 expand_mode = 1
 stretch_mode = 5
 
@@ -750,7 +765,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("23_01voq")
+texture = SubResource("CompressedTexture2D_qilvv")
 expand_mode = 1
 stretch_mode = 5
 
@@ -782,7 +797,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("24_hr2v7")
+texture = SubResource("CompressedTexture2D_jbte4")
 expand_mode = 1
 stretch_mode = 5
 

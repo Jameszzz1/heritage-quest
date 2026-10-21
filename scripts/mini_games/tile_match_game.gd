@@ -442,6 +442,7 @@ func trigger_end_state(is_victory: bool):
 
 	if is_victory:
 		Global.mark_minigame_passed(Global.current_minigame_npc)
+		Global.unlock_badge("master_of_the_golden_grid")      # <-- BAGO
 		timer_label.text = "TASK SUCCESS!"
 		score_label.modulate = Color(0.3, 1, 0.3)
 	else:

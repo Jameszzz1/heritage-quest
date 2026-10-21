@@ -1,14 +1,22 @@
 [gd_scene format=3 uid="uid://cmtyq20xauwlf"]
 
 [ext_resource type="Script" uid="uid://dle4t6hmk22eh" path="res://scripts/resourcesgamescript/fishing.gd" id="1_xb554"]
+[ext_resource type="Texture2D" uid="uid://drnxrby44ck5o" path="res://assets/images/fishing_background.png" id="2_fehfy"]
 [ext_resource type="Texture2D" uid="uid://b2pigrs7rxs0u" path="res://assets/mini_games/fish.png" id="2_qliby"]
+[ext_resource type="Shader" uid="uid://dwa75dxl4i4un" path="res://materials/fishingbgwater_shader.gdshader" id="2_sgs1c"]
 [ext_resource type="FontFile" uid="uid://n2eoxwxw2lf1" path="res://assets/fonts/GrapeSoda.ttf" id="3_lsi5g"]
 [ext_resource type="AudioStream" uid="uid://de7u4u0b0xs7w" path="res://assets/audio/sfx/fishing_water-splash-3.wav" id="4_qliby"]
 [ext_resource type="AudioStream" uid="uid://bvvpo22s1jeod" path="res://assets/audio/sfx/fishing_reel-.wav" id="5_gb8to"]
 [ext_resource type="AudioStream" uid="uid://c8ng6k0l2xj20" path="res://assets/audio/sfx/fishing_success.mp3" id="6_0xc70"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vc7xe"]
-bg_color = Color(0.05000019, 0, 1, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8krd0"]
+shader = ExtResource("2_sgs1c")
+shader_parameter/zoom = 0.9
+shader_parameter/pan_amount = 0.035
+shader_parameter/pan_speed = 0.35
+shader_parameter/wave_strength = 0.004
+shader_parameter/wave_speed = 2.0
+shader_parameter/wave_freq = 12.0
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vc7xe"]
 particle_flag_disable_z = true
@@ -37,14 +45,19 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xb554")
 
-[node name="Background" type="Panel" parent="." unique_id=1762316935]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=667377903]
+material = SubResource("ShaderMaterial_8krd0")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 1.0
+offset_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vc7xe")
+texture = ExtResource("2_fehfy")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="Tube" type="ColorRect" parent="." unique_id=991814010]
 custom_minimum_size = Vector2(40, 150)
@@ -71,7 +84,7 @@ offset_bottom = 132.0
 color = Color(1.504086e-07, 0.36472902, 3.85046e-07, 1)
 
 [node name="ProgressBar" type="ProgressBar" parent="Tube" unique_id=163941904]
-modulate = Color(0, 0.3647059, 0, 1)
+modulate = Color(0.8288101, 2.7193873e-06, 5.7756904e-07, 1)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.4690001

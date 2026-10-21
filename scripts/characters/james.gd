@@ -69,9 +69,15 @@ var death_layer: CanvasLayer
 var death_countdown_label: Label
 var is_dead: bool = false
 
+# Para sa mga badge
+var _endurance_awarded: bool = false
+var night_scene_path: String = ""
+var sprinting_now: bool = false   # para sa badge #11 (binabasa ng mga kalaban)
+
 func _ready():
 	add_to_group("player")
 	in_night_scene = is_night_scene()
+	night_scene_path = get_tree().current_scene.scene_file_path   # para sa badge #13
 
 	health = max_health
 	stamina = max_stamina
@@ -119,6 +125,9 @@ func _exit_tree():
 		Global.current_stamina = stamina
 		Global.current_energy = energy
 		Global.current_battery = battery
+		# Badge #13: nakaligtas sa night scene (hindi namatay)
+		if in_night_scene:
+			Global.mark_night_survived(night_scene_path)
 
 	if is_instance_valid(death_layer):
 		death_layer.queue_free()
@@ -300,10 +309,12 @@ func handle_movement(delta):
 		is_sprinting = false
 
 	if is_sprinting and iso_direction != Vector2.ZERO and stamina > 0:
+		sprinting_now = true
 		current_speed = walk_speed * sprint_multiplier
 		stamina -= 20 * delta
 		energy -= 3 * delta
 	else:
+		sprinting_now = false
 		current_speed = walk_speed
 		if is_weak():
 			current_speed = walk_speed * weak_speed_multiplier
@@ -348,6 +359,15 @@ func handle_stamina_regen(delta):
 func handle_energy(delta):
 	energy -= 0.2 * delta
 	energy = clamp(energy, 0, max_energy)
+
+	# Badge #12 (Endurance Explorer): 80% pataas ang energy sa loob ng 2 minuto
+	if energy >= max_energy * 0.8:
+		Global.high_energy_seconds += delta
+		if Global.high_energy_seconds >= 120.0 and not _endurance_awarded:
+			_endurance_awarded = true
+			Global.unlock_badge("endurance_explorer")
+	else:
+		Global.high_energy_seconds = 0.0
 
 	# Starvation: pag 0 ang energy, -1 health kada 30 seconds
 	if energy <= 0:
@@ -395,12 +415,23 @@ func take_hit(damage: float):
 		die()
 
 func heal(amount: float):
+	var before = health
 	health += amount
 	health = clamp(health, 0, max_health)
+	if health > before:
+		_check_perfect_sustenance()
 
 func restore_energy(amount: float):
+	var before = energy
 	energy += amount
 	energy = clamp(energy, 0, max_energy)
+	if energy > before:
+		_check_perfect_sustenance()
+
+# Badge #10 (Perfect Sustenance): parehong 100% ang Health at Energy dahil sa recovery item
+func _check_perfect_sustenance():
+	if health >= max_health and energy >= max_energy:
+		Global.unlock_badge("perfect_sustenance")
 
 func restore_stamina(amount: float):
 	stamina += amount

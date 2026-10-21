@@ -1,6 +1,6 @@
 extends CharacterBody2D
 # NPC script: interact prompt, Quick Study dialogue, 5-item quiz (Cultural Assessment),
-# Journal unlock, Mini Game, at Token.
+# Journal unlock, Badge unlock, Mini Game, at Token.
 # State flow: IDLE -> MENU -> DIALOGUE or QUIZ -> balik IDLE
 #
 # QUEST FLOW:
@@ -25,6 +25,15 @@ extends CharacterBody2D
 @export var return_spawn_pos: Vector2 = Vector2.ZERO
 
 @export var quiz_cooldown_seconds: float = 120.0
+
+# ---------- BADGE PER PROVINCE (ibinibigay sa perpektong 5/5 sa quiz) ----------
+
+const QUIZ_BADGES := {
+	"south_cotabato": "south_cotabato_historian",
+	"sarangani": "sarangani_archaeologist",
+	"sultan_kudarat": "sultan_kudarat_chronicler",
+	"cotabato_province": "highland_scholar",
+}
 
 # ---------- COLORS ----------
 
@@ -71,7 +80,7 @@ func get_province() -> String:
 		return "sarangani"
 	elif npc_name == "Ustadz Ameer" or npc_name == "Ameer":
 		return "sultan_kudarat"
-	elif npc_name == "Sandawa" or npc_name == "Sandawa":
+	elif npc_name == "Apo Sandawa" or npc_name == "Sandawa":
 		return "cotabato_province"
 	return "south_cotabato"
 
@@ -85,6 +94,18 @@ func get_province_display() -> String:
 			return "Cotabato"
 		_:
 			return "South Cotabato"
+
+
+# ---------- BADGE ----------
+
+# Idempotent: isang beses lang magpa-pop up ang badge (Global ang nagche-check).
+func unlock_quiz_badge() -> void:
+	var badge_id: String = QUIZ_BADGES.get(get_province(), "")
+	print("DEBUG BADGE: npc=", npc_name, " province=", get_province(), " badge=", badge_id)
+	if badge_id == "":
+		push_warning("NPC badge: walang badge para sa province " + get_province())
+		return
+	Global.unlock_badge(badge_id)
 
 
 # ---------- CULTURE-READ TRACKING ----------
@@ -229,7 +250,6 @@ func _input(event):
 # ---------- MENU AND DIALOGUE ----------
 
 func start_menu():
-	print("DEBUG NPC SCRIPT: player_name = ", Global.player_name)
 	state = "MENU"
 	var box = get_dialogue_box()
 	if box == null:
@@ -239,6 +259,10 @@ func start_menu():
 
 	var completed = Global.is_npc_completed(npc_name)
 	var culture_read = is_culture_read()
+
+	# Catch-up: kung na-5/5 na dati bago pa nagkaroon ng badge, ibigay ngayon (isang beses lang)
+	if completed:
+		unlock_quiz_badge()
 
 	var text = "Mabuting araw, Archivist " + Global.get_player_name() + ". Maligayang pagdating sa ating lupain.\n\n"
 
@@ -445,6 +469,9 @@ func check_answer(answer_idx: int):
 			var journal_title = npc_name + " - Historical Archive"
 			var journal_desc = get_deep_journal_content(npc_name)
 			Global.add_journal_entry(get_province(), journal_title, journal_desc)
+
+			# BADGE: perpektong 5/5 sa quiz
+			unlock_quiz_badge()
 
 			var unlock_msg = "Perfect 5/5! Na-unlock ang Journal entry kay " + npc_name + "!"
 			if has_minigame:

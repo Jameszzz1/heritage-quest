@@ -1,3 +1,4 @@
+# Gahum
 extends CharacterBody2D
 @export var speed: float = 50.0
 @export var chase_range: float = 30.0
@@ -34,6 +35,11 @@ var idle_timer: float = 0.0
 var is_idle: bool = false
 var attack_timer: float = 0.0
 var enemy_id := "gahum"
+
+# Para sa badge #11 (Apex Dodger)
+var _badge_chasing: bool = false
+var _chase_sprinted: bool = false
+var _chase_attacked: bool = false
 
 func _ready():
 	add_to_group("minimap_enemy")
@@ -89,11 +95,13 @@ func _physics_process(delta):
 	if distance < attack_range:
 		# Attack the player
 		was_chasing = false
+		_badge_chasing = true
 		velocity = Vector2.ZERO
 		anim.play("idle")
 		if attack_timer <= 0.0:
 			attack_timer = attack_cooldown
 			print("Dog attacked! Distance: ", distance)
+			_chase_attacked = true
 			# Tunog ng kagat (hindi kung patay na si James)
 			if player.get("is_dead") != true:
 				play_bite()
@@ -101,6 +109,9 @@ func _physics_process(delta):
 	elif distance < chase_range:
 		# Chase the player
 		is_idle = false
+		_badge_chasing = true
+		if player.get("sprinting_now") == true:
+			_chase_sprinted = true
 		var direction = (player.global_position - global_position).normalized()
 		velocity = direction * speed
 		sprite.flip_h = direction.x < 0
@@ -117,6 +128,7 @@ func _physics_process(delta):
 	else:
 		# Patrol logic
 		was_chasing = false
+		_check_apex_dodger()
 		patrol_timer += delta
 		if is_idle:
 			idle_timer += delta
@@ -137,3 +149,14 @@ func _physics_process(delta):
 			sprite.flip_h = patrol_direction.x < 0
 			anim.play("run")
 	move_and_slide()
+
+# Badge #11 (Apex Dodger): tumakbo (sprint) si James at nakatakas sa habol
+# nang hindi nakagat at hindi nawalan ng Health
+func _check_apex_dodger():
+	if not _badge_chasing:
+		return
+	_badge_chasing = false
+	if _chase_sprinted and not _chase_attacked and player.get("is_dead") != true:
+		Global.unlock_badge("apex_dodger")
+	_chase_sprinted = false
+	_chase_attacked = false

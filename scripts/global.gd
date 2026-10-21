@@ -3,15 +3,80 @@ extends Node
 signal inventory_changed
 signal journal_updated(province: String)
 signal token_claimed(province: String)
+signal badge_unlocked(id: String)
 
 const SAVE_PATH = "user://heritage_progress.save"
 const DEFAULT_PLAYER_NAME := "James"
 
+# ---------------- BADGE SETTINGS ----------------
+const BADGE_FONT_PATH := "res://assets/fonts/GrapeSoda.ttf"
+const BADGE_SHOW_SECONDS := 3.0
+const BADGE_POPUP_WIDTH := 150.0      # lapad ng description (palakihin kung masikip)
+const BADGE_POPUP_TOP_MARGIN := 8.0
+const BADGE_ICON_SIZE := Vector2(28, 30)
+const BADGE_HEADER_FONT_SIZE := 6
+const BADGE_TITLE_FONT_SIZE := 8
+const BADGE_DESC_FONT_SIZE := 6
+
+# 14 badges. Ang "id" ang sine-save sa Supabase (user_progress.unlocked_badges)
+# "short" = isang sentence na ginagamit sa Achievements screen; "description" = buo, ginagamit sa pop up
+const BADGES: Array = [
+	{"id": "south_cotabato_historian", "short": "Answered the T'boli cultural question correctly.", "title": "South Cotabato Historian",
+	 "description": "Correctly answered the T'boli cultural question and registered the lore in the Discovery Journal.",
+	 "icon": "res://assets/images/badges/1.Badge_South_Cotabato_Historian.png"},
+	{"id": "dreamweaver_apprentice", "short": "Finished Rhythmweaving with a 50-combo streak.", "title": "Dreamweaver Apprentice",
+	 "description": "Completed Rhythmweaving with a 50-combo streak and 150,000 points, and got the South Cotabato Token.",
+	 "icon": "res://assets/images/badges/2_Dreamweaver Apprentice.png"},
+	{"id": "sarangani_archaeologist", "short": "Answered the Ayub Cave question correctly.", "title": "Sarangani Archaeologist",
+	 "description": "Correctly answered the Ayub Cave historical question and saved the artifact profile in the Journal.",
+	 "icon": "res://assets/images/badges/3. Sarangani Archaeologist.png"},
+	{"id": "keeper_of_the_anthropomorphic_jars", "short": "Solved the Slide Puzzle in under 7 minutes.", "title": "Keeper of the Anthropomorphic Jars",
+	 "description": "Solved the Slide Puzzle in under 7 minutes and got the Sarangani Token.",
+	 "icon": "res://assets/images/badges/4. Keeper of the Anthropomorphic Jars.png"},
+	{"id": "sultan_kudarat_chronicler", "short": "Answered the Islamic heritage question correctly.", "title": "Sultan Kudarat Chronicler",
+	 "description": "Correctly answered the Islamic heritage and governance question.",
+	 "icon": "res://assets/images/badges/5. Sultan Kudarat Chronicler.png"},
+	{"id": "master_of_the_golden_grid", "short": "Scored 50,000 in Tile-Matching within 7 minutes.", "title": "Master of the Golden Grid",
+	 "description": "Scored 50,000 points in Tile-Matching within 7 minutes and got the Sultan Kudarat Token.",
+	 "icon": "res://assets/images/badges/6. Master of the Golden Grid.png"},
+	{"id": "highland_scholar", "short": "Answered the Mt. Apo legend question correctly.", "title": "Highland Scholar",
+	 "description": "Correctly answered the oral literature legend question and recorded the Mt. Apo lore.",
+	 "icon": "res://assets/images/badges/7. Highland Scholar.png"},
+	{"id": "mountain_climber_safe_descent", "short": "Reached the Mt. Apo summit and descended unharmed.", "title": "Mountain Climber & Safe Descent",
+	 "description": "Reached the summit of Mt. Apo and finished the descent without taking damage. Got the Cotabato Province Token.",
+	 "icon": "res://assets/images/badges/8. Peak Guardian & Swift Escape.png"},
+	{"id": "resourceful_archivist", "short": "Collected food through fishing and farming.", "title": "Resourceful Archivist",
+	 "description": "Used fishing and farming to collect food resources into the Archivist Pack.",
+	 "icon": "res://assets/images/badges/9.Resourceful Archivist.png"},
+	{"id": "perfect_sustenance", "short": "Restored Health and Energy to 100%.", "title": "Perfect Sustenance",
+	 "description": "Restored both Health and Energy to 100% using recovery items.",
+	 "icon": "res://assets/images/badges/10.Perfect Sustenance.png"},
+	{"id": "apex_dodger", "short": "Escaped a hostile animal without losing Health.", "title": "Apex Dodger",
+	 "description": "Sprinted away from a hostile animal's attack without losing Health.",
+	 "icon": "res://assets/images/badges/11. Apex Dodger.png"},
+	{"id": "endurance_explorer", "short": "Kept Energy at 80% or higher for 2 minutes.", "title": "Endurance Explorer",
+	 "description": "Kept Energy at 80% or higher for 2 minutes.",
+	 "icon": "res://assets/images/badges/12.Endurance Explorer.png"},
+	{"id": "chronicles_of_the_wild", "short": "Survived all four night scenes.", "title": "Chronicles of the Wild",
+	 "description": "Survived all four night scenes while tracking regional quests.",
+	 "icon": "res://assets/images/badges/13. Chronicles of the Wild.png"},
+	{"id": "soccsksargen_heritage_master", "short": "Inserted all 4 Tokens and completed the Knowledge Vault.", "title": "SOCCSKSARGEN Heritage Master",
+	 "description": "Inserted all 4 regional Tokens into the Heritage Pillar and completed the Knowledge Vault.",
+	 "icon": "res://assets/images/badges/14. SOCCSKSARGEN Heritage Master.png"},
+]
+
+# ---------------- DEBUG / NAME FIX SETTINGS ----------------
+const DEBUG_PLAYER_NAME := true         # i-set sa false kapag ayos na
+const AUTO_REPLACE_NAME_IN_UI := true   # pantapal: pinapalitan ang "James" sa lahat ng Label/RichTextLabel
+const NAME_SCAN_INTERVAL := 0.3
+
 # Pangalan ng player (galing sa Create Account)
 var player_name: String = DEFAULT_PLAYER_NAME:
 	set(value):
-		print("DEBUG PLAYER NAME: ", player_name, " -> ", value)
-		print_stack()
+		if DEBUG_PLAYER_NAME:
+			print("DEBUG PLAYER NAME: ", player_name, " -> ", value)
+			if str(player_name) != str(value):
+				print_stack()
 		player_name = value
 
 var current_health: float = -1
@@ -55,9 +120,59 @@ var saved_position: Vector2 = Vector2.ZERO
 # Cloud
 var cloud_user_id: String = ""
 
+# Para sa badge #12 (Endurance Explorer): ilang segundo nang 80%+ ang energy
+var high_energy_seconds: float = 0.0
+
+# Para sa badge #13 (Chronicles of the Wild): mga night scene na nalampasan na
+const NIGHT_SCENES: Array = [
+	"res://scenes/short_provinces/south_cotabato_shortway.tscn",
+	"res://scenes/short_provinces/sarangani_shortway.tscn",
+	"res://scenes/short_provinces/sultan_kudarat_shortway.tscn",
+	"res://scenes/short_provinces/cotabato_province_shortway.tscn",
+]
+var night_scenes_survived: Dictionary = {}
+
+# Badges (hindi binubura ng reset_progress; nasa Supabase user_progress)
+var unlocked_badges: Array = []
+var _badges_loaded := false
+var _badges_loading := false
+var _badge_row_exists := false
+var _badge_queue: Array = []
+var _badge_showing := false
+var _badge_panel: PanelContainer
+var _badge_icon: TextureRect
+var _badge_title_lbl: Label
+var _badge_desc_lbl: Label
+
+var _name_scan_timer := 0.0
+
 func _ready():
 	_ensure_audio_buses()
 	load_progress()
+	_build_badge_popup()
+
+# Pantapal: awtomatikong pinapalitan ang "James" sa lahat ng Label/RichTextLabel
+# ng pangalan ng player, kahit hardcoded pa sa dialogue o menu.
+func _process(delta: float) -> void:
+	if not AUTO_REPLACE_NAME_IN_UI:
+		return
+	_name_scan_timer += delta
+	if _name_scan_timer < NAME_SCAN_INTERVAL:
+		return
+	_name_scan_timer = 0.0
+	var pname := get_player_name()
+	if pname == DEFAULT_PLAYER_NAME:
+		return
+	_replace_name_in_tree(get_tree().root, pname)
+
+func _replace_name_in_tree(node: Node, pname: String) -> void:
+	if node == null or node == self:
+		return
+	if node is RichTextLabel or node is Label:
+		if node.text.contains(DEFAULT_PLAYER_NAME):
+			node.text = node.text.replace(DEFAULT_PLAYER_NAME, pname)
+	for child in node.get_children():
+		_replace_name_in_tree(child, pname)
 
 func _ensure_audio_buses():
 	if AudioServer.get_bus_index("SFX") == -1:
@@ -80,7 +195,7 @@ func get_player_name() -> String:
 
 # Pinapalitan ang "James" sa text ng pangalan ng player
 func apply_player_name(text: String) -> String:
-	return text.replace("James", get_player_name())
+	return text.replace(DEFAULT_PLAYER_NAME, get_player_name())
 
 func save_player_stats(player):
 	current_health = player.health
@@ -139,6 +254,8 @@ func get_save_data() -> Dictionary:
 		"collected_items": collected_items,
 		"battery_items": battery_items,
 		"fish_items": fish_items,
+		"night_scenes_survived": night_scenes_survived,
+		"unlocked_badges": unlocked_badges,
 		"saved_scene": saved_scene,
 		"saved_position": {"x": saved_position.x, "y": saved_position.y},
 		"stats": {
@@ -152,6 +269,8 @@ func get_save_data() -> Dictionary:
 
 # Ipinapasok ang data (galing local file o Supabase) sa Global
 func _set_data(d: Dictionary) -> void:
+	if DEBUG_PLAYER_NAME:
+		print("DEBUG _set_data: player_name in data = '", d.get("player_name", "<WALA>"), "'")
 	player_name = str(d.get("player_name", DEFAULT_PLAYER_NAME))
 	province_journals = d.get("province_journals", {})
 	completed_npcs = d.get("completed_npcs", {})
@@ -161,6 +280,12 @@ func _set_data(d: Dictionary) -> void:
 	collected_items = d.get("collected_items", {})
 	battery_items = int(d.get("battery_items", 0))
 	fish_items = int(d.get("fish_items", 0))
+	night_scenes_survived = d.get("night_scenes_survived", {})
+	var saved_badges = d.get("unlocked_badges", [])
+	if saved_badges is Array:
+		for bid in saved_badges:
+			if not unlocked_badges.has(bid):
+				unlocked_badges.append(bid)
 	saved_scene = str(d.get("saved_scene", ""))
 	var p = d.get("saved_position", {})
 	if p is Dictionary and p.has("x") and p.has("y"):
@@ -193,6 +318,7 @@ func apply_save_data(d: Dictionary) -> void:
 func save_progress() -> void:
 	var f = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f == null:
+		push_warning("save_progress: hindi mabuksan ang " + SAVE_PATH)
 		return
 	f.store_var(get_save_data())
 
@@ -220,6 +346,8 @@ func reset_progress() -> void:
 	current_minigame_npc = ""
 	battery_items = 0
 	fish_items = 0
+	night_scenes_survived = {}
+	high_energy_seconds = 0.0
 	saved_scene = ""
 	saved_position = Vector2.ZERO
 	current_health = -1
@@ -326,9 +454,19 @@ func get_quiz_cooldown_remaining(npc_name: String) -> float:
 
 # Tinatawag pagka-verify ng OTP. Kinukuha ang user id mula sa auth result.
 func set_cloud_user_from_auth(auth_data) -> void:
+	var prev_uid := cloud_user_id
 	cloud_user_id = ""
 	if auth_data == null:
 		return
+	_set_cloud_user_inner(auth_data)
+	if cloud_user_id != prev_uid:
+		# ibang user: huwag mag-leak ang badges ng nakaraang account
+		unlocked_badges.clear()
+		_badges_loaded = false
+		_badges_loading = false
+		_badge_row_exists = false
+
+func _set_cloud_user_inner(auth_data) -> void:
 	if auth_data is Dictionary and auth_data.has("user"):
 		var u = auth_data["user"]
 		if u is Dictionary and u.has("id"):
@@ -362,8 +500,12 @@ func download_cloud_save() -> bool:
 	if res.data is Array and res.data.size() > 0:
 		var d = res.data[0].get("data", {})
 		if d is Dictionary and not d.is_empty():
+			if DEBUG_PLAYER_NAME:
+				print("DEBUG download_cloud_save: cloud player_name = '", d.get("player_name", "<WALA>"), "'")
 			apply_save_data(d)
 			return true
+	if DEBUG_PLAYER_NAME:
+		print("DEBUG download_cloud_save: walang row/data sa cloud")
 	return false
 
 # Ina-upload ang kasalukuyang progress. Returns true kung nagtagumpay.
@@ -375,6 +517,8 @@ func upload_cloud_save() -> bool:
 	capture_player_position()   # scene, pwesto, at stats ni James
 	save_progress()
 	var data = get_save_data()
+	if DEBUG_PLAYER_NAME:
+		print("DEBUG upload_cloud_save: ina-upload ang player_name = '", data["player_name"], "'")
 
 	var check = await Supabase.database.query(
 		SupabaseQuery.new().from("game_saves").select(["user_id"]).eq("user_id", uid)
@@ -396,4 +540,235 @@ func upload_cloud_save() -> bool:
 	if res.error != null:
 		push_warning("Cloud save error: " + str(res.error))
 		return false
+	if DEBUG_PLAYER_NAME:
+		print("DEBUG upload_cloud_save: SUCCESS")
 	return true
+
+# ---------------- BADGES ----------------
+# Gamitin kahit saan:  Global.unlock_badge("south_cotabato_historian")
+# Isang beses lang magpa-pop up ang bawat badge, at nase-save sa Supabase (user_progress.unlocked_badges)
+
+func get_badge(id: String) -> Dictionary:
+	for b in BADGES:
+		if b["id"] == id:
+			return b
+	return {}
+
+func is_badge_unlocked(id: String) -> bool:
+	return unlocked_badges.has(id)
+
+# Tawagin kapag nakaligtas ang player sa isang night scene. Kapag lahat ng apat, ibibigay ang #13.
+func mark_night_survived(scene_path: String) -> void:
+	if not NIGHT_SCENES.has(scene_path):
+		return
+	night_scenes_survived[scene_path] = true
+	save_progress()
+	for p in NIGHT_SCENES:
+		if not night_scenes_survived.has(p):
+			return
+	unlock_badge("chronicles_of_the_wild")
+
+# Ibibigay ang huling badge (#14) kapag kumpleto na ang 13 pang ibang badge.
+# Tawagin sa homebase pagkatapos ng Descent.
+func check_final_badge() -> void:
+	await _ensure_badges_loaded()
+	for b in BADGES:
+		if b["id"] == "soccsksargen_heritage_master":
+			continue
+		if not unlocked_badges.has(b["id"]):
+			return
+	await unlock_badge("soccsksargen_heritage_master")
+
+func unlock_badge(id: String) -> void:
+	var data := get_badge(id)
+	if data.is_empty():
+		push_warning("Badge: walang badge na may id '%s'" % id)
+		return
+	await _ensure_badges_loaded()
+	if unlocked_badges.has(id):
+		return
+	unlocked_badges.append(id)
+	print("Badge: unlocked ", id, " | user id = '", _badge_user_id(), "'")
+	save_progress()   # local save, kahit walang internet/session
+	badge_unlocked.emit(id)
+	_badge_queue.append(data)
+	_show_next_badge()
+	await _save_badges()
+
+# Tinatawag pagka-login: ina-upload sa user_progress ang mga badge na nasa local pero wala pa sa cloud
+func sync_badges_to_cloud() -> void:
+	await _ensure_badges_loaded()
+	if not _badges_loaded:
+		push_warning("Badge sync: hindi makuha ang cloud badges, hindi muna mag-a-upload")
+		return
+	if unlocked_badges.is_empty():
+		return
+	print("Badge: syncing to cloud ", unlocked_badges)
+	await _save_badges()
+
+# Para sa testing lang: buburahin lahat ng badge ng user
+func debug_reset_badges() -> void:
+	await _ensure_badges_loaded()
+	unlocked_badges.clear()
+	await _save_badges()
+
+func _badge_user_id() -> String:
+	if cloud_user_id != "":
+		return cloud_user_id
+	if Supabase.auth != null and Supabase.auth._session != null and Supabase.auth._session.has("user"):
+		return str(Supabase.auth._session["user"]["id"])
+	return ""
+
+func _ensure_badges_loaded() -> void:
+	if _badges_loaded:
+		return
+	if _badges_loading:
+		while _badges_loading:
+			await get_tree().process_frame
+		return
+	_badges_loading = true
+	_badges_loaded = await _fetch_badges()
+	_badges_loading = false
+
+func _fetch_badges() -> bool:
+	var uid := _badge_user_id()
+	if uid == "":
+		push_warning("Badge: walang user id, hindi makuha ang badges")
+		return false
+	var q = SupabaseQuery.new().from("user_progress").select(["unlocked_badges"]).eq("user_id", uid)
+	var res = await Supabase.database.query(q).completed
+	if res.error != null:
+		push_warning("Badge load error: " + str(res.error))
+		return false
+	_badge_row_exists = res.data is Array and res.data.size() > 0
+	if _badge_row_exists:
+		var saved = res.data[0].get("unlocked_badges", [])
+		if saved is Array:
+			for b in saved:
+				if not unlocked_badges.has(b):
+					unlocked_badges.append(b)
+	print("Badge: loaded ", unlocked_badges)
+	return true
+
+func _save_badges() -> void:
+	var uid := _badge_user_id()
+	if uid == "":
+		push_warning("Badge: walang user id, hindi nasave ang badge")
+		return
+	var res
+	if _badge_row_exists:
+		res = await Supabase.database.query(
+			SupabaseQuery.new().from("user_progress").update({"unlocked_badges": unlocked_badges}).eq("user_id", uid)
+		).completed
+	else:
+		res = await Supabase.database.query(
+			SupabaseQuery.new().from("user_progress").insert([{"user_id": uid, "unlocked_badges": unlocked_badges}])
+		).completed
+		if res.error == null:
+			_badge_row_exists = true
+	if res.error != null:
+		print("❌ Badge save error: ", res.error)
+		push_warning("Badge save error: " + str(res.error))
+	else:
+		print("Badge: saved ", unlocked_badges)
+
+# ---------------- BADGE POPUP ----------------
+
+func _build_badge_popup() -> void:
+	var font: Font = null
+	if ResourceLoader.exists(BADGE_FONT_PATH):
+		font = load(BADGE_FONT_PATH)
+
+	var layer := CanvasLayer.new()
+	layer.layer = 100
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(layer)
+
+	var root := Control.new()
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(root)
+
+	_badge_panel = PanelContainer.new()
+	_badge_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_badge_panel.visible = false
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0.8)
+	sb.border_color = Color(1.0, 0.9, 0.3)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(6)
+	sb.content_margin_left = 8
+	sb.content_margin_right = 8
+	sb.content_margin_top = 6
+	sb.content_margin_bottom = 6
+	_badge_panel.add_theme_stylebox_override("panel", sb)
+	root.add_child(_badge_panel)
+	_badge_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	_badge_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_badge_panel.add_child(row)
+
+	_badge_icon = TextureRect.new()
+	_badge_icon.custom_minimum_size = BADGE_ICON_SIZE
+	_badge_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_badge_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_badge_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_badge_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(_badge_icon)
+
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 1)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(col)
+
+	var header := Label.new()
+	header.text = "BADGE UNLOCKED!"
+	_badge_style(header, font, BADGE_HEADER_FONT_SIZE, Color(0.6, 1.0, 0.6))
+	col.add_child(header)
+
+	_badge_title_lbl = Label.new()
+	_badge_style(_badge_title_lbl, font, BADGE_TITLE_FONT_SIZE, Color(1.0, 0.9, 0.3))
+	col.add_child(_badge_title_lbl)
+
+	_badge_desc_lbl = Label.new()
+	_badge_desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_badge_desc_lbl.custom_minimum_size = Vector2(BADGE_POPUP_WIDTH, 0)
+	_badge_style(_badge_desc_lbl, font, BADGE_DESC_FONT_SIZE, Color.WHITE)
+	col.add_child(_badge_desc_lbl)
+
+func _badge_style(lbl: Label, font: Font, size: int, color: Color) -> void:
+	if font:
+		lbl.add_theme_font_override("font", font)
+	lbl.add_theme_font_size_override("font_size", size)
+	lbl.add_theme_color_override("font_color", color)
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+func _show_next_badge() -> void:
+	if _badge_showing or _badge_queue.is_empty():
+		return
+	_badge_showing = true
+	var data: Dictionary = _badge_queue.pop_front()
+	_badge_title_lbl.text = data["title"]
+	_badge_desc_lbl.text = data["description"]
+	var path: String = data["icon"]
+	_badge_icon.texture = load(path) if ResourceLoader.exists(path) else null
+
+	_badge_panel.visible = true
+	_badge_panel.reset_size()
+	await get_tree().process_frame
+	_badge_panel.position.y = -_badge_panel.size.y - 10.0
+
+	var tw := create_tween()
+	tw.tween_property(_badge_panel, "position:y", BADGE_POPUP_TOP_MARGIN, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await tw.finished
+	await get_tree().create_timer(BADGE_SHOW_SECONDS).timeout
+	var tw2 := create_tween()
+	tw2.tween_property(_badge_panel, "position:y", -_badge_panel.size.y - 10.0, 0.3)
+	await tw2.finished
+
+	_badge_panel.visible = false
+	_badge_showing = false
+	_show_next_badge()

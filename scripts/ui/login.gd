@@ -207,21 +207,32 @@ func _is_email_taken(result) -> bool:
 
 # Pumapasok na sa game: load ng cloud save, tapos main menu
 func _finish_login(auth_data, is_new_account: bool = false) -> void:
+	print("[LOGIN] _finish_login | is_new_account=", is_new_account, " | pending_player_name='", pending_player_name, "'")
 	Global.reset_progress()
 	Global.player_name = Global.DEFAULT_PLAYER_NAME   # linisin muna bago mag-load ng account
 	Global.set_cloud_user_from_auth(auth_data)
-	print("Cloud user id: ", Global.cloud_user_id)
+	print("[LOGIN] Cloud user id: ", Global.cloud_user_id)
 	var found = await Global.download_cloud_save()
-	print("Cloud save found: ", found)
+	print("[LOGIN] Cloud save found: ", found, " | name after download: ", Global.player_name)
+	await Global.sync_badges_to_cloud()   # i-upload ang mga badge na wala pa sa user_progress
 
 	# Bagong account: laging gamitin ang Player Name na tinype sa Register
 	if is_new_account and pending_player_name != "":
 		Global.player_name = pending_player_name
 		Global.save_progress()
-		await Global.upload_cloud_save()
+		var ok = await Global.upload_cloud_save()
+		if not ok:
+			# subukan ulit isang beses
+			await get_tree().create_timer(0.5).timeout
+			ok = await Global.upload_cloud_save()
+		print("[LOGIN] Cloud upload of new name OK: ", ok)
+		if not ok:
+			show_popup("Warning", "Could not save your player name to the cloud. Check your internet.")
+	elif is_new_account:
+		push_warning("[LOGIN] Bagong account pero walang pending_player_name!")
 	pending_player_name = ""
 
-	print("Player name: ", Global.player_name)
+	print("[LOGIN] FINAL Player name: ", Global.player_name)
 	LoadingScreen.change_scene("res://scenes/ui/main_menu.tscn")
 
 # ---------------- NAVIGATION ----------------
@@ -332,6 +343,7 @@ func _on_register_pressed() -> void:
 	var password = password_field.text
 	# Tinatanggal ang [ ] para hindi masira ang BBCode sa dialogue box
 	var player_name = player_name_field.text.strip_edges().replace("[", "").replace("]", "")
+	print("[REGISTER] player_name typed: '", player_name, "'")
 
 	if email == "" or password == "" or player_name == "":
 		show_popup("Register", "Please fill in your player name, email and password.")
@@ -364,6 +376,7 @@ func _on_register_pressed() -> void:
 	print("✅ REGISTER SUCCESS! OTP sent automatically by Supabase!")
 	current_email = email
 	pending_player_name = player_name
+	print("[REGISTER] pending_player_name set to: '", pending_player_name, "'")
 	is_login_otp = false
 	create_account_ui.hide()
 	otp_ui.show()

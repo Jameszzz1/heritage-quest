@@ -351,6 +351,7 @@ func show_result(success: bool):
 	# Markahan agad na natapos ang mini game
 	if success:
 		Global.mark_minigame_passed(Global.current_minigame_npc)
+		Global.unlock_badge("keeper_of_the_anthropomorphic_jars")      # <-- BAGO
 
 	var overlay = ColorRect.new()
 	overlay.color = Color(0, 0, 0, 0.75)

@@ -107,6 +107,12 @@ var fish_items: int = 0
 var province_journals: Dictionary = {}
 var completed_npcs: Dictionary = {}
 
+# NPC na nakausap na ni James (para sa Quest Log: "Find ...")
+var met_npcs: Dictionary = {}
+
+# BAGO: Mga scene na napasukan na ni James (para sa Quest Log: "Proceed to the next province")
+var visited_scenes: Dictionary = {}
+
 # NPC na natapos nang basahin ang "Pag-aralan ang Kultura"
 var culture_read_npcs: Dictionary = {}
 
@@ -261,6 +267,8 @@ func get_save_data() -> Dictionary:
 		"player_name": player_name,
 		"province_journals": province_journals,
 		"completed_npcs": completed_npcs,
+		"met_npcs": met_npcs,
+		"visited_scenes": visited_scenes,   # BAGO
 		"culture_read_npcs": culture_read_npcs,
 		"minigame_passed": minigame_passed,
 		"tokens_claimed": tokens_claimed,
@@ -287,6 +295,8 @@ func _set_data(d: Dictionary) -> void:
 	player_name = str(d.get("player_name", DEFAULT_PLAYER_NAME))
 	province_journals = d.get("province_journals", {})
 	completed_npcs = d.get("completed_npcs", {})
+	met_npcs = d.get("met_npcs", {})
+	visited_scenes = d.get("visited_scenes", {})   # BAGO
 	culture_read_npcs = d.get("culture_read_npcs", {})
 	minigame_passed = d.get("minigame_passed", {})
 	tokens_claimed = d.get("tokens_claimed", {})
@@ -350,6 +360,8 @@ func load_progress() -> void:
 func reset_progress() -> void:
 	province_journals = {}
 	completed_npcs = {}
+	met_npcs = {}
+	visited_scenes = {}   # BAGO
 	culture_read_npcs = {}
 	npc_quiz_cooldowns = {}
 	minigame_passed = {}
@@ -424,6 +436,29 @@ func mark_npc_completed(npc_name: String) -> void:
 
 func is_npc_completed(npc_name: String) -> bool:
 	return completed_npcs.get(npc_name, false)
+
+# ---------------- NPC MET (Quest Log: "Find ...") ----------------
+
+func mark_npc_met(npc_name: String) -> void:
+	if npc_name == "" or met_npcs.get(npc_name, false):
+		return
+	met_npcs[npc_name] = true
+	save_progress()
+
+func is_npc_met(npc_name: String) -> bool:
+	return met_npcs.get(npc_name, false)
+
+# ---------------- SCENE VISITED (Quest Log: "Proceed to the next province") ----------------
+# BAGO
+
+func mark_scene_visited(scene_path: String) -> void:
+	if scene_path == "" or visited_scenes.get(scene_path, false):
+		return
+	visited_scenes[scene_path] = true
+	save_progress()
+
+func has_visited_scene(scene_path: String) -> bool:
+	return visited_scenes.get(scene_path, false)
 
 # ---------------- CULTURE READ (Pag-aralan ang Kultura) ----------------
 

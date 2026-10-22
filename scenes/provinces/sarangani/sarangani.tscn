@@ -394,6 +394,7 @@ position = Vector2(-713, -310)
 script = ExtResource("19_87wo0")
 target_scene = "res://scenes/short_provinces/sultan_kudarat_shortway.tscn"
 spawn_pos = Vector2(741, 259)
+required_token = "sarangani"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToSultanKudarat" unique_id=1578417798]
 position = Vector2(22, -20)

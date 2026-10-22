@@ -345,7 +345,8 @@ func trigger_game_over() -> void:
 
 func trigger_win() -> void:
 	has_won = true
-	Global.unlock_badge("mountain_climber_safe_descent")      # <-- BAGO
+	Global.unlock_badge("mountain_climber_safe_descent")
+	Global.mark_minigame_passed(Global.current_minigame_npc)   # <-- BAGO: para sa Quest Log at Token
 	stop_falling_sfx()
 	if player.has_method("set_control_enabled"):
 		player.set_control_enabled(false)

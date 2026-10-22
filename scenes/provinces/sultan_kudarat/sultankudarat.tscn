@@ -485,6 +485,7 @@ shape = SubResource("RectangleShape2D_mp7ln")
 script = ExtResource("20_4etat")
 target_scene = "res://scenes/short_provinces/sultan_kudarat_shortway.tscn"
 spawn_pos = Vector2(730, -150)
+required_token = "sultan_kudarat"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToCotabato/ToShortwaySultanKudarat" unique_id=1550170826]
 position = Vector2(604.99994, 517)

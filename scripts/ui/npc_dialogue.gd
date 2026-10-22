@@ -257,6 +257,9 @@ func start_menu():
 	enable_bbcode(box)
 	box.show_name(npc_name)
 
+	# Quest Log: naitala na nakausap na si James ang NPC na ito
+	Global.mark_npc_met(npc_name)
+
 	var completed = Global.is_npc_completed(npc_name)
 	var culture_read = is_culture_read()
 

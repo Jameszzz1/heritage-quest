@@ -17,6 +17,7 @@ const FISH_ITEM_RESTORE: float = 25.0
 const BATTERY_ICON_PATH: String = "res://assets/sprites/things/battery.png"
 const FISH_ICON_PATH: String = "res://assets/sprites/things/item_fish.png"
 const UI_FONT_PATH: String = "res://assets/fonts/GrapeSoda.ttf"
+const QUEST_LOG_SCRIPT_PATH: String = "res://scripts/ui/quest_log.gd"
 
 # ---- Provincial Tokens ----
 const TOKENS: Array = [
@@ -71,6 +72,20 @@ func _ready():
 	Global.journal_updated.connect(_on_journal_updated)
 	Global.token_claimed.connect(_on_token_claimed)
 	setup_journal_tab()
+	setup_quest_log()
+
+# ---------------- QUEST LOG ----------------
+
+func setup_quest_log() -> void:
+	print("[QuestLog] setup called")
+	if not ResourceLoader.exists(QUEST_LOG_SCRIPT_PATH):
+		push_error("Quest Log: hindi makita ang " + QUEST_LOG_SCRIPT_PATH)
+		return
+	var quest_log := Control.new()
+	quest_log.name = "QuestLog"
+	quest_log.set_script(load(QUEST_LOG_SCRIPT_PATH))
+	add_child(quest_log)
+	print("[QuestLog] added")
 
 func setup_death_overlay():
 	death_screen = ColorRect.new()

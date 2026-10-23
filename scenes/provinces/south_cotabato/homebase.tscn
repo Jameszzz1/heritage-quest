@@ -21,7 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://dlh6lk7gas66c" path="res://scenes/ui/dialogue_box.tscn" id="19_nv3fa"]
 [ext_resource type="Texture2D" uid="uid://c5kygyetaa4el" path="res://assets/sprites/things/south cotabato sign.png" id="20_184ba"]
 [ext_resource type="Texture2D" uid="uid://b384beam8nf03" path="res://assets/sprites/things/heritage_pillar_notoken.png" id="21_rb3oi"]
-[ext_resource type="Script" uid="uid://dx278hm2yk8" path="res://scripts/provinces/heritage_pillar.gd" id="22_lgkdm"]
+[ext_resource type="Script" path="res://scripts/provinces/heritage_pillar.gd" id="22_lgkdm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b8ivk"]
 texture = ExtResource("2_dwfn3")
@@ -363,7 +363,6 @@ position = Vector2(136, -72)
 dialogue_file = "res://dialogues/angkol_joey.json"
 
 [node name="DialoguePlayer" parent="." unique_id=1264107373 instance=ExtResource("19_nv3fa")]
-visible = false
 
 [node name="HeritagePillar" type="Sprite2D" parent="." unique_id=1475810879]
 position = Vector2(22.999998, 30)

@@ -73,7 +73,7 @@ offset_right = 21.0
 offset_bottom = 83.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0.39297795, 1, 1)
+color = Color(0.36765125, 0.6520037, 0.89254665, 1)
 
 [node name="Greenbar" type="ColorRect" parent="Tube" unique_id=221165890]
 custom_minimum_size = Vector2(40, 20)

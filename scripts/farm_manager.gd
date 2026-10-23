@@ -4,13 +4,13 @@ extends Node
 @export var ground_layer: TileMapLayer
 @export var farm_overlay: TileMapLayer
 
-# Tilled-soil tile in FarmOverlay's separate TileSet
+# Tilled-soil tile settings
 @export var tilled_source_id: int = 5
 @export var tilled_atlas_coords: Vector2i = Vector2i(3, 4)
 @export var tilled_alternative_tile: int = 0
 
-@export var interaction_distance: float = 32.0
 
+# Tracks tiles already tilled during this session
 var tilled_plots: Dictionary = {}
 
 
@@ -23,6 +23,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	# Only till when E/interact is pressed.
 	if not Input.is_action_just_pressed("interact"):
 		return
 
@@ -31,80 +32,62 @@ func _process(_delta: float) -> void:
 	if james == null:
 		return
 
+	# Require the shovel to be equipped.
 	if not Global.shovel_equipped:
 		print("Equip your shovel first.")
 		return
 
+	# Require the shovel to exist in inventory.
 	if int(Global.inventory_items.get("shovel", 0)) <= 0:
 		print("You need a shovel.")
 		return
 
-	till_nearest_plot(james)
+	till_player_tile(james)
 
 
-func till_nearest_plot(james: Node2D) -> void:
-	if ground_layer == null or farm_overlay == null:
-		push_warning("FarmManager: Assign Ground and FarmOverlay.")
+func till_player_tile(james: Node2D) -> void:
+	if ground_layer == null:
+		push_warning("FarmManager: Ground Layer is not assigned.")
 		return
 
-	# Convert James's position into Ground's tile coordinates.
+# Check the tile beneath James's feet.
+	var feet_position: Vector2 = james.global_position + Vector2(0, 8)
+
 	var player_local: Vector2 = ground_layer.to_local(
-		james.global_position
+		feet_position
 	)
+
 	var player_cell: Vector2i = ground_layer.local_to_map(
 		player_local
 	)
 
-	var nearest_cell := Vector2i.ZERO
-	var nearest_distance := INF
-	var found_plot := false
+	# Check whether a tile exists beneath James.
+	var tile_data: TileData = ground_layer.get_cell_tile_data(
+		player_cell
+	)
 
-	# Search nearby cells for farmable land.
-	for x in range(-1, 2):
-		for y in range(-1, 2):
-			var cell: Vector2i = player_cell + Vector2i(x, y)
-
-			var tile_data: TileData = ground_layer.get_cell_tile_data(cell)
-
-			if tile_data == null:
-				continue
-
-			if not bool(tile_data.get_custom_data("farmable")):
-				continue
-
-			if tilled_plots.has(cell):
-				continue
-
-			# Check whether James is close enough.
-			var cell_center: Vector2 = ground_layer.to_global(
-				ground_layer.map_to_local(cell)
-			)
-			var distance: float = james.global_position.distance_to(
-				cell_center
-			)
-
-			if distance > interaction_distance:
-				continue
-
-			if distance < nearest_distance:
-				nearest_distance = distance
-				nearest_cell = cell
-				found_plot = true
-
-	if not found_plot:
-		print("No untilled farmable soil nearby.")
+	if tile_data == null:
+		print("There is no ground beneath you.")
 		return
 
-	# Use the SAME cell coordinates on the aligned FarmOverlay.
-	# Do not erase or replace the original Ground tile.
-# Replace the original Ground tile with tilled soil.
+	# Only allow tiles marked farmable.
+	if not bool(tile_data.get_custom_data("farmable")):
+		print("This tile cannot be tilled.")
+		return
+
+	# Prevent tilling the same tile twice.
+	if tilled_plots.has(player_cell):
+		print("This tile is already tilled.")
+		return
+
+	# Replace the tile on Ground with the tilled-soil tile.
 	ground_layer.set_cell(
-		nearest_cell,
+		player_cell,
 		tilled_source_id,
 		tilled_atlas_coords,
 		tilled_alternative_tile
 	)
 
-	tilled_plots[nearest_cell] = true
+	tilled_plots[player_cell] = true
 
-	print("Soil tilled successfully at: ", nearest_cell)
+	print("Tilled tile: ", player_cell)

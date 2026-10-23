@@ -10,15 +10,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -125.0
-offset_top = -62.5
-offset_right = 125.0
-offset_bottom = 62.5
+offset_left = -150.0
+offset_top = -52.0
+offset_right = 150.0
+offset_bottom = 60.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nmwop")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1081590178]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -26,25 +27,34 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -112.5
-offset_top = -42.5
+offset_top = -45.0
 offset_right = 112.5
-offset_bottom = 42.5
+offset_bottom = 45.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=946472575]
 layout_mode = 2
+alignment = 1
 
 [node name="ChestGrid" type="GridContainer" parent="PanelContainer/VBoxContainer" unique_id=1738267176]
 layout_mode = 2
-columns = 6
+columns = 5
+
+[node name="BackpackGrid" type="GridContainer" parent="PanelContainer/VBoxContainer" unique_id=1379637173]
+layout_mode = 2
+columns = 5
 
 [node name="CloseButton" type="Button" parent="." unique_id=1697515216]
-layout_mode = 0
-offset_left = 207.0
-offset_top = -0.5
-offset_right = 237.0
-offset_bottom = 19.5
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -67.0
+offset_top = -27.0
+offset_right = -37.0
+offset_bottom = -7.0
+grow_horizontal = 0
 theme_override_fonts/font = ExtResource("1_k0g7p")
 theme_override_font_sizes/font_size = 8
 text = "Close"

@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://uc8655lnjn2" path="res://assets/sprites/characters/james/walk_upleft_flashlight_james_.png" id="11_lhmol"]
 [ext_resource type="Texture2D" uid="uid://p3vyt3v08njq" path="res://assets/sprites/characters/james/walk_upright_flashlight_james_.png" id="12_sfvls"]
 [ext_resource type="Texture2D" uid="uid://blbaeyce0t0l5" path="res://assets/sprites/things/shovel.png" id="14_sfvls"]
+[ext_resource type="Texture2D" uid="uid://bw7os34gowad0" path="res://assets/sprites/things/watering can.png" id="15_vvm53"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l2wma"]
 atlas = ExtResource("2_8y6tc")
@@ -1158,3 +1159,7 @@ position = Vector2(-4.999999, 19.999998)
 texture = ExtResource("14_sfvls")
 region_enabled = true
 region_rect = Rect2(6.886176, -0.059396267, 18.309467, 32.117634)
+
+[node name="HeldWateringCan" type="Sprite2D" parent="ShovelHoldPoint" unique_id=1499461588]
+position = Vector2(-4.9999995, 24.999998)
+texture = ExtResource("15_vvm53")

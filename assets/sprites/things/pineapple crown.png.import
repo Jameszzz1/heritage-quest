@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://xcko4vtjum71"
-path="res://.godot/imported/pineapple  crown.png-c4def0d8186de6fb9b7ed4037b8a2cc7.ctex"
+path="res://.godot/imported/pineapple crown.png-431bbe49c0764e7a983b01097e0f769c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/things/pineapple  crown.png"
-dest_files=["res://.godot/imported/pineapple  crown.png-c4def0d8186de6fb9b7ed4037b8a2cc7.ctex"]
+source_file="res://assets/sprites/things/pineapple crown.png"
+dest_files=["res://.godot/imported/pineapple crown.png-431bbe49c0764e7a983b01097e0f769c.ctex"]
 
 [params]
 

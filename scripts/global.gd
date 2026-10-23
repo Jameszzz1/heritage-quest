@@ -104,7 +104,7 @@ var current_location: String = ""
 var battery_items: int = 0
 var fish_items: int = 0
 var shovel_equipped: bool = false
-
+var watering_can_equipped: bool = false
 
 # Chest storage: item ID -> quantity
 var chest_inventory: Dictionary = {}
@@ -112,6 +112,9 @@ var chest_inventory: Dictionary = {}
 # Generic inventory for future item types.
 # Battery and Fish continue using their existing counters.
 var inventory_items: Dictionary = {}
+
+# Currently selected crop for planting
+var selected_seed: String = ""
 
 # ---------------- CHEST STORAGE ----------------
 
@@ -840,6 +843,7 @@ func _ensure_badges_loaded() -> void:
 	_badges_loading = true
 	_badges_loaded = await _fetch_badges()
 	_badges_loading = false
+
 
 func _fetch_badges() -> bool:
 	var uid := _badge_user_id()

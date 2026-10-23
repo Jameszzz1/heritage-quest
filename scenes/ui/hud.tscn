@@ -23,7 +23,6 @@ process_mode = 3
 script = ExtResource("1_6fi6k")
 
 [node name="Settings" parent="." unique_id=2094690682 instance=ExtResource("2_h022r")]
-visible = false
 
 [node name="HealthBar" parent="." unique_id=460268891 instance=ExtResource("2_oj5la")]
 offset_top = 12.0
@@ -82,7 +81,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_6fi6k")
 [node name="TabContainer" type="TabContainer" parent="BackpackPopup" unique_id=1637497862]
 layout_mode = 0
 offset_top = 30.0
-offset_right = 225.0
+offset_right = 230.0
 offset_bottom = 130.0
 theme_override_fonts/font = ExtResource("5_uo2fv")
 theme_override_font_sizes/font_size = 8
@@ -92,12 +91,16 @@ current_tab = 0
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="GridContainer" type="GridContainer" parent="BackpackPopup/TabContainer/Inventory" unique_id=3363484]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 4.0
-offset_right = 224.0
-offset_bottom = 81.0
+[node name="ScrollContainer" type="ScrollContainer" parent="BackpackPopup/TabContainer/Inventory" unique_id=1402372184]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="BackpackPopup/TabContainer/Inventory/ScrollContainer" unique_id=3363484]
+layout_mode = 2
 columns = 5
 
 [node name="Journal" type="Control" parent="BackpackPopup/TabContainer" unique_id=1542711737]
@@ -107,9 +110,9 @@ metadata/_tab_index = 1
 
 [node name="Button" type="Button" parent="BackpackPopup" unique_id=620090882]
 layout_mode = 1
-offset_left = 195.0
+offset_left = 200.0
 offset_top = 26.0
-offset_right = 225.0
+offset_right = 230.0
 offset_bottom = 46.0
 theme_override_fonts/font = ExtResource("5_uo2fv")
 theme_override_font_sizes/font_size = 8

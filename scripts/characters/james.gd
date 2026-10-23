@@ -59,6 +59,9 @@ var starvation_timer: float = 0.0
 
 @onready var held_shovel: Sprite2D = $ShovelHoldPoint/HeldShovel
 
+var is_holding_watering_can: bool = false
+
+@onready var held_watering_can: Sprite2D = $ShovelHoldPoint/HeldWateringCan
 var is_holding_shovel: bool = false
 
 var stamina_bar = null
@@ -117,6 +120,9 @@ func _ready():
 	setup_death_screen()
 	update_ui()
 	update_held_shovel()
+	Global.watering_can_equipped = false
+	is_holding_watering_can = false
+	update_held_watering_can()
 
 	if Global.spawn_position != Vector2.ZERO:
 		position = Global.spawn_position
@@ -138,13 +144,36 @@ func _exit_tree():
 		death_layer.queue_free()
 
 func update_held_shovel() -> void:
-	if not is_instance_valid(held_shovel):
+	if held_shovel == null:
 		return
 
 	held_shovel.visible = (
 		is_holding_shovel
 		and int(Global.inventory_items.get("shovel", 0)) > 0
 	)
+
+	held_shovel.visible = (
+		is_holding_shovel
+		and int(Global.inventory_items.get("shovel", 0)) > 0
+	)
+
+
+
+
+
+
+
+
+func update_held_watering_can() -> void:
+	if is_instance_valid(held_watering_can):
+		held_watering_can.visible = Global.watering_can_equipped
+
+
+func _process(_delta: float) -> void:
+	if is_instance_valid(held_watering_can):
+		held_watering_can.visible = Global.watering_can_equipped
+
+
 
 
 func _find_ui_node(group_name: String, node_name: String):

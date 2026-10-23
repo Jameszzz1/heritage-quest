@@ -1,10 +1,9 @@
-
 extends CanvasLayer
 
 @onready var backpack_button = $Backpack
 @onready var backpack_popup = $BackpackPopup
 @onready var close_button = $BackpackPopup/Button
-@onready var grid = $BackpackPopup/TabContainer/Inventory/GridContainer
+@onready var grid = $BackpackPopup/TabContainer/Inventory/ScrollContainer/GridContainer
 @onready var minimap = $MiniMap
 @onready var settings = $Settings
 @onready var pause_label = $PauseLabel
@@ -28,11 +27,17 @@ const TOKENS: Array = [
 	{"id": "cotabato_province", "label": "Cotabato", "title": "Cotabato Province Token", "path": "res://assets/images/tokens/token_cotabatoprovince.png"}
 ]
 
-const SLOT_SIZE: Vector2 = Vector2(28, 30)
+const SLOT_SIZE: Vector2 = Vector2(42, 48)
 const ICON_SIZE: int = 16
 const SLOT_FONT_SIZE: int = 5
 const TOAST_FONT_SIZE: int = 6
 const SHOW_COUNT: bool = true
+
+const INVENTORY_COLUMNS: int = 5
+const INVENTORY_SCROLL_HEIGHT: float = 100.0
+
+var inventory_scroll: ScrollContainer
+var ui_font: Font
 
 var death_screen: ColorRect
 var death_countdown_label: Label
@@ -172,25 +177,37 @@ func _make_slot_label(label_text: String) -> Label:
 	return lbl
 
 
-func _build_slot(icon_path: String, label_text: String, on_press: Callable) -> Dictionary:
-	var slot = Button.new()
+
+func _build_slot(
+	icon_path: String,
+	label_text: String,
+	on_press: Callable,
+	amount: int = 1
+) -> Dictionary:
+	var slot := Button.new()
 	slot.custom_minimum_size = SLOT_SIZE
 	slot.focus_mode = Control.FOCUS_NONE
-	slot.tooltip_text = label_text
+	slot.tooltip_text = ""
+	
+	if ResourceLoader.exists(UI_FONT_PATH):
+		var font := load(UI_FONT_PATH) as Font
+		if font:
+			slot.add_theme_font_override("font", font)
 
 	if on_press.is_valid():
 		slot.pressed.connect(on_press)
 
-	var box = VBoxContainer.new()
+	var box := VBoxContainer.new()
 	box.set_anchors_preset(Control.PRESET_FULL_RECT)
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	box.add_theme_constant_override("separation", 1)
+	box.add_theme_constant_override("separation", 0)
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(box)
 
-	var icon = TextureRect.new()
-	if ResourceLoader.exists(icon_path):
-		icon.texture = load(icon_path)
+	var icon := TextureRect.new()
+
+	if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
+		icon.texture = load(icon_path) as Texture2D
 
 	icon.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -199,17 +216,20 @@ func _build_slot(icon_path: String, label_text: String, on_press: Callable) -> D
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(icon)
 
-	box.add_child(_make_slot_label(label_text))
+	var name_label := _make_slot_label(label_text)
+	name_label.custom_minimum_size = Vector2(38, 0)
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(name_label)
 
-	var count_label = _make_slot_label("x1")
-	count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	count_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	count_label.offset_left = 0
-	count_label.offset_right = -2
-	count_label.offset_top = 1
-	count_label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.3))
+	var count_label := _make_slot_label("x%d" % amount)
+	count_label.add_theme_color_override(
+		"font_color",
+		Color(1.0, 0.9, 0.3)
+	)
 	count_label.visible = SHOW_COUNT
-	slot.add_child(count_label)
+	box.add_child(count_label)
 
 	return {
 		"slot": slot,
@@ -222,24 +242,36 @@ func _get_shovel_count() -> int:
 
 
 func setup_inventory() -> void:
-	grid.columns = 6
+	grid.columns = 5
 	grid.add_theme_constant_override("h_separation", 3)
 	grid.add_theme_constant_override("v_separation", 3)
 
-	var battery_built = _build_slot(BATTERY_ICON_PATH, "Battery", use_battery_item)
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+	var scroll := grid.get_parent() as ScrollContainer
+	if scroll:
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	var battery_built := _build_slot(
+		BATTERY_ICON_PATH, "Battery", use_battery_item, Global.battery_items
+	)
 	battery_slot = battery_built["slot"]
 	battery_count_label = battery_built["count_label"]
 	grid.add_child(battery_slot)
 
-	var fish_built = _build_slot(FISH_ICON_PATH, "Fish", use_fish_item)
+	var fish_built := _build_slot(
+		FISH_ICON_PATH, "Fish", use_fish_item, Global.fish_items
+	)
 	fish_slot = fish_built["slot"]
 	fish_count_label = fish_built["count_label"]
 	grid.add_child(fish_slot)
 
-	var shovel_built = _build_slot(
-		SHOVEL_ICON_PATH,
-		"Shovel",
-		_toggle_shovel
+	var shovel_built := _build_slot(
+		SHOVEL_ICON_PATH, "Shovel", _toggle_shovel, _get_shovel_count()
 	)
 	shovel_slot = shovel_built["slot"]
 	shovel_count_label = shovel_built["count_label"]
@@ -248,25 +280,148 @@ func setup_inventory() -> void:
 	_refresh_inventory()
 
 
+func _get_item_icon_path(item_id: String) -> String:
+	match item_id:
+		"battery":
+			return BATTERY_ICON_PATH
+		"fish":
+			return FISH_ICON_PATH
+		"shovel":
+			return SHOVEL_ICON_PATH
+		"watering_can":
+			return "res://assets/sprites/things/watering can.png"
+		"eggplant_seeds":
+			return "res://assets/sprites/things/eggplant seeds.png"
+		"corn_seeds":
+			return "res://assets/sprites/things/corn seeds.png"
+		"eggplant":
+			return "res://assets/sprites/things/eggplant.png"
+		"corn":
+			return "res://assets/sprites/things/corn.png"
+		"pineapple":
+			return "res://assets/sprites/things/pineapple.png"
+		"pineapple_crown":
+			return "res://assets/sprites/things/pineapple crown.png"
+		_:
+			return BATTERY_ICON_PATH
+
+
+
+
 func _refresh_inventory() -> void:
+	if not is_instance_valid(grid):
+		return
+
+	# Battery slot.
 	if is_instance_valid(battery_slot):
 		battery_slot.visible = Global.battery_items > 0
-		if is_instance_valid(battery_count_label):
-			battery_count_label.text = "x%d" % Global.battery_items
+		battery_count_label.text = "x%d" % Global.battery_items
 
+	# Fish slot.
 	if is_instance_valid(fish_slot):
 		fish_slot.visible = Global.fish_items > 0
-		if is_instance_valid(fish_count_label):
-			fish_count_label.text = "x%d" % Global.fish_items
+		fish_count_label.text = "x%d" % Global.fish_items
 
-	var shovel_count = _get_shovel_count()
+	# Shovel slot.
+	var shovel_count := _get_shovel_count()
 
 	if is_instance_valid(shovel_slot):
 		shovel_slot.visible = shovel_count > 0
-		if is_instance_valid(shovel_count_label):
-			shovel_count_label.text = "x%d" % shovel_count
+		shovel_count_label.text = "x%d" % shovel_count
+
+	# Remove generic item slots from the previous refresh.
+	for child in grid.get_children():
+		if child.has_meta("generic_inventory_item"):
+			grid.remove_child(child)
+			child.queue_free()
+
+	# Display backpack items.
+	for item_id in Global.inventory_items.keys():
+		var id := str(item_id)
+		var amount := int(Global.inventory_items[item_id])
+
+		if amount <= 0:
+			continue
+
+		if id == "shovel":
+			continue
+
+		var item_name := id.replace("_", " ").capitalize()
+		var icon_path := _get_item_icon_path(id)
+		var item_action := Callable()
+
+		# Watering can.
+		if id == "watering_can":
+			item_action = _toggle_watering_can
+
+		# Plantable seeds and pineapple crown.
+		elif id in [
+			"eggplant_seeds",
+			"corn_seeds",
+			"pineapple_crown"
+		]:
+			item_action = _select_seed.bind(id)
+
+		# Consumable harvested crops.
+		elif id in ["eggplant", "corn", "pineapple"]:
+			item_action = _consume_item.bind(id)
+
+		# Create the inventory slot.
+		var built := _build_slot(
+			icon_path,
+			item_name,
+			item_action,
+			amount
+		)
+
+		var slot: Button = built["slot"]
+		slot.set_meta("generic_inventory_item", true)
+
+		# Enable only usable items.
+		slot.disabled = not (
+			id in [
+				"watering_can",
+				"eggplant_seeds",
+				"corn_seeds",
+				"pineapple_crown",
+				"eggplant",
+				"corn",
+				"pineapple"
+			]
+		)
+
+		grid.add_child(slot)
 
 	_refresh_tokens()
+
+func _consume_item(item_id: String) -> void:
+	var james = get_tree().get_first_node_in_group("player")
+
+	if james == null:
+		return
+
+	if Global.get_backpack_item_count(item_id) <= 0:
+		_show_toast("You don't have this item.")
+		return
+
+	match item_id:
+		"eggplant":
+			james.energy = minf(james.energy + 10.0, james.max_energy)
+			_show_toast("Consumed Eggplant! +10 Energy")
+
+		"corn":
+			james.energy = minf(james.energy + 15.0, james.max_energy)
+			_show_toast("Consumed Corn! +15 Energy")
+
+		"pineapple":
+			james.health = minf(james.health + 20.0, james.max_health)
+			_show_toast("Consumed Pineapple! +20 Health")
+
+		_:
+			return
+
+	Global.remove_item(item_id, 1)
+	_refresh_inventory()
 
 
 func _on_inventory_changed() -> void:
@@ -573,23 +728,87 @@ func _on_backpack_pressed() -> void:
 		_refresh_tokens()
 		_refresh_inventory()
 
+
+func _select_seed(item_id: String) -> void:
+	if Global.get_backpack_item_count(item_id) <= 0:
+		_show_toast("You don't have this item.")
+		return
+
+	var james := get_tree().get_first_node_in_group("player")
+
+	Global.selected_seed = item_id
+	Global.shovel_equipped = false
+	Global.watering_can_equipped = false
+
+	if james != null:
+		james.is_holding_shovel = false
+		james.is_holding_watering_can = false
+		james.update_held_shovel()
+		james.update_held_watering_can()
+
+	match item_id:
+		"eggplant_seeds":
+			_show_toast("Eggplant Seeds selected.")
+		"corn_seeds":
+			_show_toast("Corn Seeds selected.")
+		"pineapple_crown":
+			_show_toast("Pineapple Crown selected.")
+
+
 func _toggle_shovel() -> void:
 	if int(Global.inventory_items.get("shovel", 0)) <= 0:
 		_show_toast("You don't have a shovel!")
 		return
 
+	var james = get_tree().get_first_node_in_group("player")
+	if james == null:
+		return
+
 	Global.shovel_equipped = not Global.shovel_equipped
 
-	var james = get_tree().get_first_node_in_group("player")
-
-	if james:
-		james.is_holding_shovel = Global.shovel_equipped
-		james.update_held_shovel()
-
 	if Global.shovel_equipped:
+		# Unequip the watering can.
+		Global.watering_can_equipped = false
+		james.is_holding_watering_can = false
+		james.update_held_watering_can()
+
+		james.is_holding_shovel = true
+		james.update_held_shovel()
 		_show_toast("Shovel equipped!")
 	else:
+		james.is_holding_shovel = false
+		james.update_held_shovel()
 		_show_toast("Shovel unequipped!")
+
+
+
+func _toggle_watering_can() -> void:
+	var james = get_tree().get_first_node_in_group("player")
+
+	if james == null:
+		return
+
+	if int(Global.inventory_items.get("watering_can", 0)) <= 0:
+		_show_toast("You don't have a watering can.")
+		return
+
+	Global.watering_can_equipped = not Global.watering_can_equipped
+
+	if Global.watering_can_equipped:
+		Global.shovel_equipped = false
+		james.is_holding_shovel = false
+		james.is_holding_watering_can = true
+	else:
+		james.is_holding_watering_can = false
+
+	james.update_held_shovel()
+	james.update_held_watering_can()
+
+	if Global.watering_can_equipped:
+		_show_toast("Watering can equipped!")
+	else:
+		_show_toast("Watering can unequipped!")
+
 
 
 func _on_close_pressed() -> void:

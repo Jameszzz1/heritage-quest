@@ -102,6 +102,48 @@ var current_location: String = ""
 # Inventory
 var battery_items: int = 0
 var fish_items: int = 0
+var shovel_equipped: bool = false
+
+
+# Chest storage: item ID -> quantity
+var chest_inventory: Dictionary = {}
+
+# Generic inventory for future item types.
+# Battery and Fish continue using their existing counters.
+var inventory_items: Dictionary = {}
+
+# ---------------- CHEST STORAGE ----------------
+
+func store_in_chest(item_id: String, amount: int = 1) -> bool:
+	if item_id.is_empty() or amount <= 0:
+		return false
+
+	chest_inventory[item_id] = int(chest_inventory.get(item_id, 0)) + amount
+	inventory_changed.emit()
+	save_progress()
+	return true
+
+
+func take_from_chest(item_id: String, amount: int = 1) -> bool:
+	if amount <= 0:
+		return false
+
+	var current_amount := int(chest_inventory.get(item_id, 0))
+
+	if current_amount < amount:
+		return false
+
+	current_amount -= amount
+
+	if current_amount <= 0:
+		chest_inventory.erase(item_id)
+	else:
+		chest_inventory[item_id] = current_amount
+
+	inventory_changed.emit()
+	save_progress()
+	return true
+
 
 # Journal & NPC Progress System
 var province_journals: Dictionary = {}
@@ -275,6 +317,8 @@ func get_save_data() -> Dictionary:
 		"collected_items": collected_items,
 		"battery_items": battery_items,
 		"fish_items": fish_items,
+		"inventory_items": inventory_items,
+		"chest_inventory": chest_inventory,
 		"night_scenes_survived": night_scenes_survived,
 		"unlocked_badges": unlocked_badges,
 		"saved_scene": saved_scene,
@@ -303,6 +347,8 @@ func _set_data(d: Dictionary) -> void:
 	collected_items = d.get("collected_items", {})
 	battery_items = int(d.get("battery_items", 0))
 	fish_items = int(d.get("fish_items", 0))
+	inventory_items = d.get("inventory_items", {}).duplicate(true)
+	chest_inventory = d.get("chest_inventory", {}).duplicate(true)
 	night_scenes_survived = d.get("night_scenes_survived", {})
 	var saved_badges = d.get("unlocked_badges", [])
 	if saved_badges is Array:
@@ -371,6 +417,8 @@ func reset_progress() -> void:
 	current_minigame_npc = ""
 	battery_items = 0
 	fish_items = 0
+	inventory_items.clear()
+	chest_inventory.clear()
 	night_scenes_survived = {}
 	high_energy_seconds = 0.0
 	saved_scene = ""
@@ -384,6 +432,104 @@ func reset_progress() -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
 	inventory_changed.emit()
 	journal_updated.emit("")
+
+
+# ---------------- GENERIC INVENTORY ----------------
+
+func get_backpack_item_count(item_id: String) -> int:
+	if item_id == "battery":
+		return battery_items
+
+	if item_id == "fish":
+		return fish_items
+
+	return int(inventory_items.get(item_id, 0))
+
+
+func add_item(item_id: String, amount: int = 1) -> bool:
+	if item_id.is_empty() or amount <= 0:
+		return false
+
+	if item_id == "battery":
+		add_battery(amount)
+		return true
+
+	if item_id == "fish":
+		add_fish(amount)
+		return true
+
+	inventory_items[item_id] = get_backpack_item_count(item_id) + amount
+	inventory_changed.emit()
+	save_progress()
+	return true
+
+
+func remove_item(item_id: String, amount: int = 1) -> bool:
+	if item_id.is_empty() or amount <= 0:
+		return false
+
+	var current := get_backpack_item_count(item_id)
+
+	if current < amount:
+		return false
+
+	if item_id == "battery":
+		for i in range(amount):
+			if not consume_battery():
+				return false
+		return true
+
+	if item_id == "fish":
+		for i in range(amount):
+			if not consume_fish():
+				return false
+		return true
+
+	var remaining := current - amount
+
+	if remaining == 0:
+		inventory_items.erase(item_id)
+	else:
+		inventory_items[item_id] = remaining
+
+	inventory_changed.emit()
+	save_progress()
+	return true
+
+
+func transfer_to_chest(item_id: String, amount: int = 1) -> bool:
+	if amount <= 0:
+		return false
+
+	if get_backpack_item_count(item_id) < amount:
+		return false
+
+	if not remove_item(item_id, amount):
+		return false
+
+	if not store_in_chest(item_id, amount):
+		add_item(item_id, amount)
+		return false
+
+	return true
+
+
+func transfer_to_backpack(item_id: String, amount: int = 1) -> bool:
+	if amount <= 0:
+		return false
+
+	if int(chest_inventory.get(item_id, 0)) < amount:
+		return false
+
+	if not take_from_chest(item_id, amount):
+		return false
+
+	if not add_item(item_id, amount):
+		store_in_chest(item_id, amount)
+		return false
+
+	return true
+
 
 # ---------------- INVENTORY ----------------
 

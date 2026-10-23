@@ -65,7 +65,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("2_h175o")
-text = "Switch to fullscreen"
+text = "Switch to Fullscreen"
 
 [node name="VolumeSettingsButton" type="Button" parent="Background/Panel/VBoxContainer" unique_id=248711772]
 layout_mode = 2
@@ -83,7 +83,7 @@ text = "Save Game"
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_h175o")
-text = "MainMenu"
+text = "Main Menu"
 
 [node name="VolumePopup" type="Panel" parent="Background" unique_id=986209632]
 visible = false

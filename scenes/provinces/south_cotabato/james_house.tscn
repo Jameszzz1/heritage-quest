@@ -22,7 +22,7 @@ region_rect = Rect2(492.0885, 66.78126, 961.5006, 718.9856)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=129184692]
 position = Vector2(9.090909, 10)
-polygon = PackedVector2Array(-436.36365, 10, -172.72728, 130, -72.72727, 170, 100, 80, 200, 30, 409.0909, -70, 100, -230)
+polygon = PackedVector2Array(-436.36365, 10, -172.72728, 130, -72.72727, 170, -63.636364, 180, 81.81818, 110, 100, 80, 200, 30, 227.27272, 40, 454.54544, -60, 100, -230)
 
 [node name="LeftEntrance" type="Area2D" parent="." unique_id=967175434]
 position = Vector2(9.090909, 10)

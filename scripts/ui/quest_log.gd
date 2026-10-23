@@ -28,7 +28,6 @@ const QUESTS: Array = [
 ]
 
 var _font: Font = null
-var _open_btn: Button
 var _panel: PanelContainer
 var _list_buttons: Array = []
 var _detail_title: Label
@@ -37,11 +36,14 @@ var _selected: int = 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	if ResourceLoader.exists(FONT_PATH):
 		_font = load(FONT_PATH)
+
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_build_open_button()
+
+	# Create only the quest popup.
 	_build_panel()
 	_panel.visible = false
 
@@ -74,28 +76,6 @@ func _make_box(color: Color) -> StyleBoxFlat:
 	sb.content_margin_top = 1
 	sb.content_margin_bottom = 1
 	return sb
-
-func _build_open_button() -> void:
-	_open_btn = Button.new()
-	_open_btn.name = "QuestButton"
-	_open_btn.text = "QUEST"
-	_open_btn.focus_mode = Control.FOCUS_NONE
-	_open_btn.mouse_filter = Control.MOUSE_FILTER_STOP
-	_open_btn.z_index = 100
-	_style_label(_open_btn, BUTTON_FONT_SIZE, Color.BLACK)
-	_open_btn.add_theme_color_override("font_hover_color", Color.BLACK)
-	_open_btn.add_theme_color_override("font_pressed_color", Color.BLACK)
-	_open_btn.add_theme_stylebox_override("normal", _make_box(Color.WHITE))
-	_open_btn.add_theme_stylebox_override("hover", _make_box(Color(0.9, 0.9, 0.9)))
-	_open_btn.add_theme_stylebox_override("pressed", _make_box(Color(0.78, 0.78, 0.78)))
-	add_child(_open_btn)
-	# Taas kanan, sa kaliwa ng gear icon
-	_open_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	_open_btn.offset_left = -70
-	_open_btn.offset_right = -26
-	_open_btn.offset_top = 5
-	_open_btn.offset_bottom = 21
-	_open_btn.pressed.connect(_toggle)
 
 func _build_panel() -> void:
 	_panel = PanelContainer.new()
@@ -305,3 +285,7 @@ func _refresh() -> void:
 		else:
 			out += "[color=" + COLOR_TODO + "]" + texts[i] + "[/color]\n"
 	_detail_text.text = out
+
+
+func _on_quest_log_button_pressed() -> void:
+	pass # Replace with function body.

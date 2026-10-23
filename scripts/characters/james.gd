@@ -57,6 +57,10 @@ var starvation_timer: float = 0.0
 @onready var flashlight: PointLight2D = $FlashLight
 @onready var ambient_sight: PointLight2D = $AmbientSight
 
+@onready var held_shovel: Sprite2D = $ShovelHoldPoint/HeldShovel
+
+var is_holding_shovel: bool = false
+
 var stamina_bar = null
 var health_bar = null
 var energy_bar = null
@@ -112,6 +116,7 @@ func _ready():
 	setup_hit_sfx()
 	setup_death_screen()
 	update_ui()
+	update_held_shovel()
 
 	if Global.spawn_position != Vector2.ZERO:
 		position = Global.spawn_position
@@ -131,6 +136,16 @@ func _exit_tree():
 
 	if is_instance_valid(death_layer):
 		death_layer.queue_free()
+
+func update_held_shovel() -> void:
+	if not is_instance_valid(held_shovel):
+		return
+
+	held_shovel.visible = (
+		is_holding_shovel
+		and int(Global.inventory_items.get("shovel", 0)) > 0
+	)
+
 
 func _find_ui_node(group_name: String, node_name: String):
 	var n = get_tree().get_first_node_in_group(group_name)
@@ -335,13 +350,26 @@ func handle_movement(delta):
 
 func get_surface_type() -> String:
 	var tilemap = get_tree().get_first_node_in_group("land_tilemap")
+
 	if tilemap == null:
 		return ""
-	var tile_pos = tilemap.local_to_map(tilemap.to_local(global_position))
+
+	var tile_pos = tilemap.local_to_map(
+		tilemap.to_local(global_position)
+	)
+
 	var tile_data = tilemap.get_cell_tile_data(tile_pos)
+
 	if tile_data == null:
 		return ""
-	return tile_data.get_custom_data("surface_type")
+
+	var surface_data = tile_data.get_custom_data("surface_type")
+
+	if surface_data == null:
+		return ""
+
+	return str(surface_data)
+
 
 func handle_stamina_regen(delta):
 	# Pag 0 ang energy, walang stamina: hindi bumabalik ang yellow bar

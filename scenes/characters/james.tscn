@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://bebg2u8ewujjm" path="res://assets/sprites/characters/james/walk_WASD_flashlight_james.png" id="7_tmir0"]
 [ext_resource type="Texture2D" uid="uid://uc8655lnjn2" path="res://assets/sprites/characters/james/walk_upleft_flashlight_james_.png" id="11_lhmol"]
 [ext_resource type="Texture2D" uid="uid://p3vyt3v08njq" path="res://assets/sprites/characters/james/walk_upright_flashlight_james_.png" id="12_sfvls"]
+[ext_resource type="Texture2D" uid="uid://blbaeyce0t0l5" path="res://assets/sprites/things/shovel.png" id="14_sfvls"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l2wma"]
 atlas = ExtResource("2_8y6tc")
@@ -1149,3 +1150,11 @@ color = Color(1, 0.7019608, 0.4, 1)
 energy = 1.5
 
 [node name="AmbientSight" type="PointLight2D" parent="." unique_id=1930141107]
+
+[node name="ShovelHoldPoint" type="Marker2D" parent="." unique_id=797271151]
+
+[node name="HeldShovel" type="Sprite2D" parent="ShovelHoldPoint" unique_id=27359676]
+position = Vector2(-4.999999, 19.999998)
+texture = ExtResource("14_sfvls")
+region_enabled = true
+region_rect = Rect2(6.886176, -0.059396267, 18.309467, 32.117634)

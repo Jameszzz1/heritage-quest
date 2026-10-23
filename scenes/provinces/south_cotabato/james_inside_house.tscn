@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://bfrfilu0nhwme" path="res://assets/sprites/tiles/window.png" id="3_kfe2e"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="4_cfgkd"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="5_iallg"]
+[ext_resource type="PackedScene" uid="uid://bx5wxri74tukp" path="res://scenes/chest.tscn" id="7_p7plo"]
+[ext_resource type="PackedScene" uid="uid://vvxybls7xhn4" path="res://scenes/ui/chest_panel.tscn" id="9_8tirl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kfe2e"]
 texture = ExtResource("1_p0d4s")
@@ -78,23 +80,26 @@ texture_filter = 1
 tile_map_data = PackedByteArray("AAD9//3/AAAAAAAAAAD9//7/AAAAAAAAAAD9////AAAAAAAAAAD+//v/AAAAAAAAAAD+//z/AAAAAAAAAAD+//3/AAAAAAAAAAD+//7/AAAAAAAAAAD+////AAAAAAAAAAD+/wAAAAAAAAAAAAD+/wEAAAAAAAAAAAD///n/AAAAAAAAAAD///r/AAAAAAAAAAD///v/AAAAAAAAAAD///z/AAAAAAAAAAD///3/AAAAAAAAAAD///7/AAAAAAAAAAD/////AAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAAAAAD//wIAAAAAAAAAAAD//wMAAAAAAAAAAAAAAPr/AAAAAAAAAAAAAPv/AAAAAAAAAAAAAPz/AAAAAAAAAAAAAP3/AAAAAAAAAAAAAP7/AAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAABAPz/AAAAAAAAAAABAP3/AAAAAAAAAAABAP7/AAAAAAAAAAABAP//AAAAAAAAAAABAAAAAAAAAAAAAAACAP7/AAAAAAAAAAD8////AAAAAAAAAAD9/wAAAAAAAAAAAAD9/wEAAAAAAAAAAAD+/wIAAAAAAAAAAAD+/wMAAAAAAAAAAAD//wQAAAAAAAAAAAD//wUAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAACAP//AAAAAAAAAAACAAAAAAAAAAAAAAADAP//AAAAAAAAAAD8/wAAAAAAAAAAAAD8/wEAAAAAAAAAAAD9/wIAAAAAAAAAAAD9/wMAAAAAAAAAAAD+/wQAAAAAAAAAAAD+/wUAAAAAAAAAAAD//wYAAAAAAAAAAAD//wcAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAkAAAAAAAAAAAABAAgAAAAAAAAAAAABAAcAAAAAAAAAAAACAAYAAAAAAAAAAAACAAUAAAAAAAAAAAADAAQAAAAAAAAAAAADAAMAAAAAAAAAAAAEAAIAAAAAAAAAAAAEAAEAAAAAAAAAAAAEAAAAAAAAAAAAAAADAAAAAAAAAAAAAAACAAEAAAAAAAAAAAACAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAYAAAAAAAAAAAABAAUAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAADAAIAAAAAAAAAAAADAAEAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAPj/AAAAAAAAAAACAPz/AAAAAAAAAAACAP3/AAAAAAAAAAADAP7/AAAAAAAAAAABAPv/AAAAAAAAAAABAPr/AAAAAAAAAAAAAPn/AAAAAAAAAAAAAAoAAAAAAAAAAAD//wkAAAAAAAAAAAD//wgAAAAAAAAAAAD+/wcAAAAAAAAAAAD+/wYAAAAAAAAAAAD9/wUAAAAAAAAAAAD9/wQAAAAAAAAAAAD8/wMAAAAAAAAAAAD8/wIAAAAAAAAAAAD7/wEAAAAAAAAAAAD7/wIAAAAAAAAAAAD7/wMAAAAAAAAAAAD8/wQAAAAAAAAAAAD8/wUAAAAAAAAAAAD9/wYAAAAAAAAAAAD9/wcAAAAAAAAAAAD+/wgAAAAAAAAAAAD+/wkAAAAAAAAAAAD//woAAAAAAAAAAAD//wsAAAAAAAAAAAA=")
 tile_set = SubResource("TileSet_iallg")
 
-[node name="Node2D" type="Node2D" parent="." unique_id=692572259]
+[node name="Y-Sort" type="Node2D" parent="." unique_id=692572259]
 y_sort_enabled = true
 
-[node name="James" parent="Node2D" unique_id=636874803 instance=ExtResource("4_cfgkd")]
+[node name="James" parent="Y-Sort" unique_id=636874803 instance=ExtResource("4_cfgkd")]
 position = Vector2(42, 18)
 
-[node name="Bed" type="Sprite2D" parent="Node2D" unique_id=1200669540]
+[node name="Bed" type="Sprite2D" parent="Y-Sort" unique_id=1200669540]
 position = Vector2(8, -11.000001)
 scale = Vector2(0.06, 0.052)
 texture = ExtResource("2_kuo5g")
 region_enabled = true
 region_rect = Rect2(657.5693, 55.01567, 741.8106, 750.0954)
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Node2D/Bed" unique_id=854768116]
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-Sort/Bed" unique_id=854768116]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Node2D/Bed/StaticBody2D" unique_id=2111113389]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Y-Sort/Bed/StaticBody2D" unique_id=2111113389]
 polygon = PackedVector2Array(-300, 115.38463, 16.666672, 250, 249.99998, 115.38463, -16.666664, -38.461517)
+
+[node name="Chest" parent="Y-Sort" unique_id=1746720358 node_paths=PackedStringArray("chest_panel") instance=ExtResource("7_p7plo")]
+chest_panel = NodePath("../../ChestPanel")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=976569891]
 
@@ -111,5 +116,7 @@ spawn_pos = Vector2(59, -49)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Exit" unique_id=828227565]
 polygon = PackedVector2Array(31.909092, 22, 34.909092, 25, 52.909092, 15, 50.909092, 12)
+
+[node name="ChestPanel" parent="." unique_id=1070219138 instance=ExtResource("9_8tirl")]
 
 [connection signal="body_entered" from="Exit" to="Exit" method="_on_body_entered"]

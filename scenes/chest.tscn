@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://bx5wxri74tukp"]
+
+[ext_resource type="Script" uid="uid://7q278uqvynf2" path="res://scripts/chest.gd" id="1_sy5e1"]
+[ext_resource type="Texture2D" uid="uid://dtfrfihxlvxsg" path="res://assets/sprites/things/chest.png" id="2_gqd3d"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_p7plo"]
+radius = 26.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8tirl"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[node name="Chest" type="Node2D" unique_id=1746720358]
+position = Vector2(-59, 3)
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_sy5e1")
+
+[node name="Chest" type="Sprite2D" parent="." unique_id=810378840]
+position = Vector2(2, -14)
+texture = ExtResource("2_gqd3d")
+
+[node name="Barrier" type="StaticBody2D" parent="." unique_id=452365358]
+position = Vector2(2, -14)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Barrier" unique_id=152400380]
+position = Vector2(-2, 14)
+polygon = PackedVector2Array(-14, -18, -14, -12, -2, -8, 18, -14, 18, -24, 14, -28, 8, -28)
+
+[node name="InteractionRange" type="Area2D" parent="." unique_id=1934932818]
+position = Vector2(2, -10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionRange" unique_id=1275352312]
+shape = SubResource("CircleShape2D_p7plo")
+
+[node name="InteractionLabel" type="Label" parent="." unique_id=823144809]
+offset_left = -26.000008
+offset_top = -48.0
+offset_right = 33.999992
+offset_bottom = -37.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_8tirl")
+text = "Press \"E\" to Interact"
+metadata/_edit_use_anchors_ = true

@@ -9,9 +9,12 @@
 [ext_resource type="PackedScene" uid="uid://dmf4mccvfnfa6" path="res://scenes/ui/battery_bar.tscn" id="6_4jqwt"]
 [ext_resource type="PackedScene" uid="uid://cov0jyhb0rx5i" path="res://scenes/ui/mini_map.tscn" id="6_047uy"]
 [ext_resource type="PackedScene" uid="uid://pqvdhde0ypbb" path="res://scenes/ui/energy_bar.tscn" id="7_gss2c"]
+[ext_resource type="Script" uid="uid://cun8f082ebnq3" path="res://scripts/ui/quest_log.gd" id="10_kicr4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fi6k"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4jqwt"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h022r"]
 
@@ -70,17 +73,17 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -115.0
 offset_top = -82.0
-offset_right = 141.0
-offset_bottom = 30.0
+offset_right = -115.0
+offset_bottom = -82.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_6fi6k")
 
 [node name="TabContainer" type="TabContainer" parent="BackpackPopup" unique_id=1637497862]
 layout_mode = 0
-offset_top = 23.0
+offset_top = 30.0
 offset_right = 225.0
-offset_bottom = 126.0
+offset_bottom = 130.0
 theme_override_fonts/font = ExtResource("5_uo2fv")
 theme_override_font_sizes/font_size = 8
 current_tab = 0
@@ -104,16 +107,10 @@ metadata/_tab_index = 1
 
 [node name="Button" type="Button" parent="BackpackPopup" unique_id=620090882]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.795
-anchor_top = 0.268
-anchor_right = 0.795
-anchor_bottom = 0.268
-offset_left = -8.520004
-offset_top = -11.016001
-offset_right = 20.479996
-offset_bottom = 8.983999
-grow_horizontal = 0
+offset_left = 195.0
+offset_top = 26.0
+offset_right = 225.0
+offset_bottom = 46.0
 theme_override_fonts/font = ExtResource("5_uo2fv")
 theme_override_font_sizes/font_size = 8
 text = "Close"
@@ -124,9 +121,28 @@ offset_top = 113.0
 offset_right = 0.0
 offset_bottom = -1.0
 
+[node name="QuestLogButton" type="Button" parent="." unique_id=989919050]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -39.0
+offset_right = -25.0
+offset_bottom = 14.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4jqwt")
+text = "📜
+"
+
+[node name="QuestLog" type="Control" parent="." unique_id=1796775768]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("10_kicr4")
+
 [node name="SettingsButton" type="Button" parent="." unique_id=1121677931]
 process_mode = 3
-custom_minimum_size = Vector2(0.5, 0.5)
 anchors_preset = -1
 anchor_left = 0.97800004
 anchor_top = 0.032
@@ -174,4 +190,5 @@ theme_override_font_sizes/font_size = 10
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="pressed" from="QuestLogButton" to="." method="_on_quest_log_button_pressed"]
 [connection signal="pressed" from="SettingsButton" to="." method="_on_settings_pressed"]

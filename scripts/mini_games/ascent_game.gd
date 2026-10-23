@@ -109,6 +109,7 @@ var sandawa_trigger: Area2D
 var cutscene_has_played: bool = false
 
 func _ready() -> void:
+	MusicManager.stop_music()   # ← IDAGDAG ITO
 	randomize()
 
 	camera = Camera2D.new()

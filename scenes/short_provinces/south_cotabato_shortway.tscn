@@ -11,7 +11,6 @@
 [ext_resource type="PackedScene" uid="uid://b1lo4mxcwvqlk" path="res://scenes/battery_pickup.tscn" id="8_j010d"]
 [ext_resource type="Texture2D" uid="uid://cickprqx43ws" path="res://assets/sprites/things/48x48cocotree.png" id="9_th5rv"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="10_m0hrg"]
-[ext_resource type="PackedScene" uid="uid://lakc8wyw5ac4" path="res://scenes/provinces/cotabato/sandawa.tscn" id="11_tjr3i"]
 [ext_resource type="Shader" uid="uid://dh8b5tp3gyuqv" path="res://materials/trees.gdshader" id="12_th5rv"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="12_xjq4p"]
 [ext_resource type="Script" uid="uid://c0ffo331v0ub4" path="res://scripts/settings_audio_ingame_script/night_overlay.gd" id="13_3j67a"]
@@ -172,9 +171,6 @@ tile_set = SubResource("TileSet_j0k36")
 
 [node name="Y-sort" type="Node2D" parent="." unique_id=251625512]
 
-[node name="Maliksi" parent="Y-sort" unique_id=1725549303 instance=ExtResource("21_tjr3i")]
-position = Vector2(490, 362)
-
 [node name="BatteryPickup3" parent="Y-sort" unique_id=1296642580 instance=ExtResource("8_j010d")]
 position = Vector2(387, 273)
 
@@ -188,9 +184,6 @@ position = Vector2(-223, -111)
 position = Vector2(513, 364)
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
-
-[node name="Sandawa" parent="Y-sort" unique_id=2100318797 instance=ExtResource("11_tjr3i")]
-position = Vector2(-181.99997, -379)
 
 [node name="Enemies" type="Node" parent="Y-sort" unique_id=558640517]
 
@@ -321,6 +314,9 @@ rotation = -0.036651913
 scale = Vector2(0.9999996, 0.99999964)
 skew = -0.06981317
 shape = SubResource("RectangleShape2D_hrqf7")
+
+[node name="Maliksi" parent="." unique_id=1664049547 instance=ExtResource("21_tjr3i")]
+position = Vector2(132.00003, -407.99994)
 
 [connection signal="body_entered" from="ToHomeBase" to="ToHomeBase" method="_on_body_entered"]
 [connection signal="body_entered" from="ToSouthCot" to="ToSouthCot" method="_on_body_entered"]

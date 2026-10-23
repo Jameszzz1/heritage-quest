@@ -25,7 +25,7 @@ var score = 0
 var max_combo = 0
 
 func _ready():
-	randomize()
+	MusicManager.stop_music()   # ← IDAGDAG ITO
 	grid_container.columns = GRID_COLS
 	
 	if game_over_label: game_over_label.visible = false
@@ -402,7 +402,7 @@ func show_result(success: bool):
 	if success:
 		title.text = "CONGRATULATIONS!"
 		msg.text = "Natapos mo ang Slide Puzzle!\nTime Left: " + str(int(time_left)) + "s\n\nKausapin si Ayu para makuha ang Token."
-		btn.text = "Bumalik"
+		btn.text = "Back"
 	else:
 		title.text = "TRY AGAIN!"
 		msg.text = "Time's up! Hindi natapos ang puzzle."

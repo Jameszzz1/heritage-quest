@@ -1,4 +1,4 @@
 extends Node2D
 
 func _ready():
-	MusicManager.play_music("res://BackgroundNBGMusic/SultanKudarat.mp3")
+	MusicManager.play_music("res://assets/audio/music/SultanKudarat.mp3")

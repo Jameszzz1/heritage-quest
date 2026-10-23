@@ -12,9 +12,9 @@
 [ext_resource type="Texture2D" uid="uid://cyy7iybptvn0k" path="res://assets/sprites/things/48x48 trees.png" id="9_ge67e"]
 [ext_resource type="Texture2D" uid="uid://cickprqx43ws" path="res://assets/sprites/things/48x48cocotree.png" id="10_b2rik"]
 [ext_resource type="PackedScene" uid="uid://d4hfn5wfmdob0" path="res://scenes/characters/james.tscn" id="11_rt1hl"]
-[ext_resource type="PackedScene" uid="uid://lakc8wyw5ac4" path="res://scenes/provinces/cotabato/sandawa.tscn" id="12_fu60l"]
 [ext_resource type="Script" uid="uid://c0ffo331v0ub4" path="res://scripts/settings_audio_ingame_script/night_overlay.gd" id="13_5bodw"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="14_kyy8q"]
+[ext_resource type="PackedScene" uid="uid://cyl6yp08e0qvb" path="res://scenes/characters/maliksi.tscn" id="15_w3s62"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w3s62"]
 shader = ExtResource("1_83w7c")
@@ -204,9 +204,6 @@ position = Vector2(-194, -368)
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
 
-[node name="Sandawa" parent="Y-sort" unique_id=2100318797 instance=ExtResource("12_fu60l")]
-position = Vector2(286, -263)
-
 [node name="NightOverlay" type="CanvasModulate" parent="Y-sort" unique_id=875234630]
 script = ExtResource("13_5bodw")
 
@@ -242,6 +239,9 @@ rotation = -1.5742869
 scale = Vector2(0.9999997, 0.9999998)
 skew = -0.17453289
 shape = SubResource("RectangleShape2D_hrqf7")
+
+[node name="Maliksi" parent="." unique_id=2100318797 instance=ExtResource("15_w3s62")]
+position = Vector2(246.99997, 231.99994)
 
 [connection signal="body_entered" from="ToSouthCotabatoShortway" to="ToSouthCotabatoShortway" method="_on_body_entered"]
 [connection signal="body_entered" from="ToSultanKudaratShortway" to="ToSultanKudaratShortway" method="_on_body_entered"]

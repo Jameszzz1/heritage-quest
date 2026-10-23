@@ -1,0 +1,70 @@
+{
+	"south_cotabato_shortway": {
+		"speaker": "???",
+		"encounters": [
+			[
+				{"who": "maliksi", "text": "Ikaw pala ang bagong Archivist. Ang gaan ng hakbang mo para sa bigat ng dala mo."},
+				{"who": "player", "text": "Sino ka? Bakit ka naglalakad dito sa Memory Path?"},
+				{"who": "maliksi", "text": "Isang taong marunong tumingin sa mga nawawala."},
+				{"who": "maliksi", "text": "Hindi lahat ng alaala ay kailangang dalhin, {player}. Ang ilan ay sugat lang."}
+			],
+			[
+				{"who": "maliksi", "text": "Naririnig mo ba? Ang mga hibla ng alaala, isa-isang kumakalas."},
+				{"who": "player", "text": "Ikaw ba ang may gawa nito?"},
+				{"who": "maliksi", "text": "Hindi ko sinasabing ako. Hindi ko rin sinasabing hindi."},
+				{"who": "maliksi", "text": "Magpatuloy ka. Tingnan mo kung gaano kabigat ang nakaraan para sa mga nagdadala nito."}
+			]
+		]
+	},
+	"sarangani_shortway": {
+		"speaker": "Hooded Figure",
+		"encounters": [
+			[
+				{"who": "maliksi", "text": "Nakita mo ba ang mga garapon sa kuweba? Mas mabilis na silang nagiging alikabok ngayon."},
+				{"who": "player", "text": "Tigilan mo na ito. Kasaysayan ang binubura mo."},
+				{"who": "maliksi", "text": "Kasaysayan, o sakit na paulit-ulit na ipinapaalala?"},
+				{"who": "maliksi", "text": "Kung walang mukhang maaalala, walang mukhang masasaktan."}
+			],
+			[
+				{"who": "maliksi", "text": "Dati, tulad mo rin ako. Naniniwala akong sapat na ang mag-ingat ng mga talaan."},
+				{"who": "player", "text": "Ano ang nagbago?"},
+				{"who": "maliksi", "text": "Binasa ko ang lahat ng record. Digmaan, pagkawala, pagsisisi. Paulit-ulit."},
+				{"who": "maliksi", "text": "Hindi ko na kayang ingatan ang mga bagay na paulit-ulit lang nakakasakit."}
+			]
+		]
+	},
+	"sultan_kudarat_shortway": {
+		"speaker": "Maliksi",
+		"encounters": [
+			[
+				{"who": "maliksi", "text": "Kumikislap na ang buong paligid. Hindi mo ba napapansin?"},
+				{"who": "player", "text": "Ikaw ba ang nagbubura ng datos dito?"},
+				{"who": "maliksi", "text": "Maliksi ang pangalan ko. Dating Archivist. Isa ako sa nagdisenyo ng Archive na sinusubukan mong buuin."},
+				{"who": "maliksi", "text": "Kaya alam ko kung saan ito marupok."}
+			],
+			[
+				{"who": "maliksi", "text": "Bakit kailangang itago ang lahat ng talaan? Dahil may mga sigalot din sa likod nito."},
+				{"who": "player", "text": "At dahil may natutunan tayo mula sa mga iyon."},
+				{"who": "maliksi", "text": "Natutunan? O natakot lang tayong ulitin?"},
+				{"who": "maliksi", "text": "Kung pipili tayo ng dapat manatili, hindi ba mas magaan ang kinabukasan?"}
+			]
+		]
+	},
+	"cotabato_province_shortway": {
+		"speaker": "Maliksi",
+		"encounters": [
+			[
+				{"who": "maliksi", "text": "Malapit na ang bundok. Malapit na rin ang huling Token."},
+				{"who": "player", "text": "Hindi mo mapipigilan ang mga taong alalahanin kung sino sila."},
+				{"who": "maliksi", "text": "Hindi ko sila pinipigilang mabuhay. Pinagagaan ko lang ang dala nila."},
+				{"who": "maliksi", "text": "Ang kinabukasan ay hindi makakalakad kung nakatali sa bigat ng nakaraan."}
+			],
+			[
+				{"who": "maliksi", "text": "Sige, ituloy mo. Ipasok mo ang apat na Token sa Heritage Pillar."},
+				{"who": "player", "text": "Hindi nawawala ang kultura kapag nasira. Nawawala ito kapag hindi na naaalala."},
+				{"who": "maliksi", "text": "Kung gayon, tingnan natin kung sino sa atin ang tama."},
+				{"who": "maliksi", "text": "Magkikita tayo sa dulo, Archivist."}
+			]
+		]
+	}
+}

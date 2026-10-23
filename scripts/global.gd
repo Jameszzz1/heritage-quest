@@ -4,6 +4,7 @@ signal inventory_changed
 signal journal_updated(province: String)
 signal token_claimed(province: String)
 signal badge_unlocked(id: String)
+signal heritage_completed   # HERITAGE
 
 const SAVE_PATH = "user://heritage_progress.save"
 const DEFAULT_PLAYER_NAME := "James"
@@ -152,8 +153,11 @@ var completed_npcs: Dictionary = {}
 # NPC na nakausap na ni James (para sa Quest Log: "Find ...")
 var met_npcs: Dictionary = {}
 
-# BAGO: Mga scene na napasukan na ni James (para sa Quest Log: "Proceed to the next province")
+# Mga scene na napasukan na ni James (para sa Quest Log: "Proceed to the next province")
 var visited_scenes: Dictionary = {}
+
+# HERITAGE: kumpleto na ang Heritage Pillar (itinatakda pagkatapos ng Descent)
+var heritage_complete: bool = false
 
 # NPC na natapos nang basahin ang "Pag-aralan ang Kultura"
 var culture_read_npcs: Dictionary = {}
@@ -310,7 +314,8 @@ func get_save_data() -> Dictionary:
 		"province_journals": province_journals,
 		"completed_npcs": completed_npcs,
 		"met_npcs": met_npcs,
-		"visited_scenes": visited_scenes,   # BAGO
+		"visited_scenes": visited_scenes,
+		"heritage_complete": heritage_complete,   # HERITAGE
 		"culture_read_npcs": culture_read_npcs,
 		"minigame_passed": minigame_passed,
 		"tokens_claimed": tokens_claimed,
@@ -340,7 +345,8 @@ func _set_data(d: Dictionary) -> void:
 	province_journals = d.get("province_journals", {})
 	completed_npcs = d.get("completed_npcs", {})
 	met_npcs = d.get("met_npcs", {})
-	visited_scenes = d.get("visited_scenes", {})   # BAGO
+	visited_scenes = d.get("visited_scenes", {})
+	heritage_complete = bool(d.get("heritage_complete", false))   # HERITAGE
 	culture_read_npcs = d.get("culture_read_npcs", {})
 	minigame_passed = d.get("minigame_passed", {})
 	tokens_claimed = d.get("tokens_claimed", {})
@@ -407,7 +413,8 @@ func reset_progress() -> void:
 	province_journals = {}
 	completed_npcs = {}
 	met_npcs = {}
-	visited_scenes = {}   # BAGO
+	visited_scenes = {}
+	heritage_complete = false   # HERITAGE
 	culture_read_npcs = {}
 	npc_quiz_cooldowns = {}
 	minigame_passed = {}
@@ -432,6 +439,7 @@ func reset_progress() -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
 	inventory_changed.emit()
 	journal_updated.emit("")
+	heritage_completed.emit()   # HERITAGE: para bumalik sa walang-token ang pillar
 
 
 # ---------------- GENERIC INVENTORY ----------------
@@ -595,7 +603,6 @@ func is_npc_met(npc_name: String) -> bool:
 	return met_npcs.get(npc_name, false)
 
 # ---------------- SCENE VISITED (Quest Log: "Proceed to the next province") ----------------
-# BAGO
 
 func mark_scene_visited(scene_path: String) -> void:
 	if scene_path == "" or visited_scenes.get(scene_path, false):
@@ -605,6 +612,16 @@ func mark_scene_visited(scene_path: String) -> void:
 
 func has_visited_scene(scene_path: String) -> bool:
 	return visited_scenes.get(scene_path, false)
+
+# ---------------- HERITAGE PILLAR ----------------
+# HERITAGE: tawagin sa dulo ng Descent (pagkatapos ng cutscene, bago lumipat sa homebase)
+
+func complete_heritage_pillar() -> void:
+	if heritage_complete:
+		return
+	heritage_complete = true
+	save_progress()
+	heritage_completed.emit()
 
 # ---------------- CULTURE READ (Pag-aralan ang Kultura) ----------------
 

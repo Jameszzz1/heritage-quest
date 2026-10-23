@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://2eqteecvlxxn" path="res://scenes/characters/maragtas.tscn" id="16_j010d"]
 [ext_resource type="Texture2D" uid="uid://c7vm3gmwvjlty" path="res://assets/sprites/things/coconut tree 2.png" id="18_th5rv"]
 [ext_resource type="Texture2D" uid="uid://ccjnspn3yshl3" path="res://assets/sprites/things/coconut tree.png" id="19_m0hrg"]
+[ext_resource type="PackedScene" uid="uid://cyl6yp08e0qvb" path="res://scenes/characters/maliksi.tscn" id="21_tjr3i"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8s8to"]
 shader = ExtResource("2_j1ruk")
@@ -170,6 +171,9 @@ tile_map_data = PackedByteArray("AAAFAAgAAAAAAAAAAAAIAP7/AAAAAAAAAAAJACQAAAAAAAA
 tile_set = SubResource("TileSet_j0k36")
 
 [node name="Y-sort" type="Node2D" parent="." unique_id=251625512]
+
+[node name="Maliksi" parent="Y-sort" unique_id=1725549303 instance=ExtResource("21_tjr3i")]
+position = Vector2(490, 362)
 
 [node name="BatteryPickup3" parent="Y-sort" unique_id=1296642580 instance=ExtResource("8_j010d")]
 position = Vector2(387, 273)

@@ -57,6 +57,13 @@ var starvation_timer: float = 0.0
 @onready var flashlight: PointLight2D = $FlashLight
 @onready var ambient_sight: PointLight2D = $AmbientSight
 
+@onready var held_shovel: Sprite2D = $ShovelHoldPoint/HeldShovel
+
+var is_holding_watering_can: bool = false
+
+@onready var held_watering_can: Sprite2D = $ShovelHoldPoint/HeldWateringCan
+var is_holding_shovel: bool = false
+
 var stamina_bar = null
 var health_bar = null
 var energy_bar = null
@@ -69,9 +76,15 @@ var death_layer: CanvasLayer
 var death_countdown_label: Label
 var is_dead: bool = false
 
+# Para sa mga badge
+var _endurance_awarded: bool = false
+var night_scene_path: String = ""
+var sprinting_now: bool = false   # para sa badge #11 (binabasa ng mga kalaban)
+
 func _ready():
 	add_to_group("player")
 	in_night_scene = is_night_scene()
+	night_scene_path = get_tree().current_scene.scene_file_path   # para sa badge #13
 
 	health = max_health
 	stamina = max_stamina
@@ -106,6 +119,10 @@ func _ready():
 	setup_hit_sfx()
 	setup_death_screen()
 	update_ui()
+	update_held_shovel()
+	Global.watering_can_equipped = false
+	is_holding_watering_can = false
+	update_held_watering_can()
 
 	if Global.spawn_position != Vector2.ZERO:
 		position = Global.spawn_position
@@ -119,9 +136,45 @@ func _exit_tree():
 		Global.current_stamina = stamina
 		Global.current_energy = energy
 		Global.current_battery = battery
+		# Badge #13: nakaligtas sa night scene (hindi namatay)
+		if in_night_scene:
+			Global.mark_night_survived(night_scene_path)
 
 	if is_instance_valid(death_layer):
 		death_layer.queue_free()
+
+func update_held_shovel() -> void:
+	if held_shovel == null:
+		return
+
+	held_shovel.visible = (
+		is_holding_shovel
+		and int(Global.inventory_items.get("shovel", 0)) > 0
+	)
+
+	held_shovel.visible = (
+		is_holding_shovel
+		and int(Global.inventory_items.get("shovel", 0)) > 0
+	)
+
+
+
+
+
+
+
+
+func update_held_watering_can() -> void:
+	if is_instance_valid(held_watering_can):
+		held_watering_can.visible = Global.watering_can_equipped
+
+
+func _process(_delta: float) -> void:
+	if is_instance_valid(held_watering_can):
+		held_watering_can.visible = Global.watering_can_equipped
+
+
+
 
 func _find_ui_node(group_name: String, node_name: String):
 	var n = get_tree().get_first_node_in_group(group_name)
@@ -287,40 +340,31 @@ func is_weak() -> bool:
 	return health <= max_health * weak_health_ratio
 
 func handle_movement(delta):
-	var input_dir = Vector2.ZERO
-
-	if Input.is_action_pressed("move_up"):
-		input_dir.y -= 1
-	if Input.is_action_pressed("move_down"):
-		input_dir.y += 1
-	if Input.is_action_pressed("move_left"):
-		input_dir.x -= 1
-	if Input.is_action_pressed("move_right"):
-		input_dir.x += 1
-
-	input_dir = input_dir.normalized()
-
-	if input_dir != Vector2.ZERO:
-		facing_dir = input_dir
+	var input_direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	
+	var iso_direction = Vector2(
+	input_direction.x - input_direction.y,
+	(input_direction.x + input_direction.y) / 2.0
+	).normalized()
 
 	var current_speed = walk_speed
 	var is_sprinting = Input.is_action_pressed("sprint")
-
 	if exhausted:
 		is_sprinting = false
 
-	if is_sprinting and input_dir != Vector2.ZERO and stamina > 0:
+	if is_sprinting and iso_direction != Vector2.ZERO and stamina > 0:
+		sprinting_now = true
 		current_speed = walk_speed * sprint_multiplier
 		stamina -= 20 * delta
 		energy -= 3 * delta
 	else:
+		sprinting_now = false
 		current_speed = walk_speed
 		if is_weak():
 			current_speed = walk_speed * weak_speed_multiplier
 
-	velocity = input_dir * current_speed
+	velocity = iso_direction * current_speed
 	move_and_slide()
-	update_animations(input_dir)
 
 	update_animations(iso_direction)
 
@@ -329,15 +373,32 @@ func handle_movement(delta):
 	if is_moving:
 		facing_dir = iso_direction
 
+
+	var surface = get_surface_type()
+	FootstepManager.play_footstep(surface, delta, is_moving, is_sprinting)
+
 func get_surface_type() -> String:
 	var tilemap = get_tree().get_first_node_in_group("land_tilemap")
+
 	if tilemap == null:
 		return ""
-	var tile_pos = tilemap.local_to_map(tilemap.to_local(global_position))
+
+	var tile_pos = tilemap.local_to_map(
+		tilemap.to_local(global_position)
+	)
+
 	var tile_data = tilemap.get_cell_tile_data(tile_pos)
+
 	if tile_data == null:
 		return ""
-	return tile_data.get_custom_data("surface_type")
+
+	var surface_data = tile_data.get_custom_data("surface_type")
+
+	if surface_data == null:
+		return ""
+
+	return str(surface_data)
+
 
 func handle_stamina_regen(delta):
 	# Pag 0 ang energy, walang stamina: hindi bumabalik ang yellow bar
@@ -355,6 +416,15 @@ func handle_stamina_regen(delta):
 func handle_energy(delta):
 	energy -= 0.2 * delta
 	energy = clamp(energy, 0, max_energy)
+
+	# Badge #12 (Endurance Explorer): 80% pataas ang energy sa loob ng 2 minuto
+	if energy >= max_energy * 0.8:
+		Global.high_energy_seconds += delta
+		if Global.high_energy_seconds >= 120.0 and not _endurance_awarded:
+			_endurance_awarded = true
+			Global.unlock_badge("endurance_explorer")
+	else:
+		Global.high_energy_seconds = 0.0
 
 	# Starvation: pag 0 ang energy, -1 health kada 30 seconds
 	if energy <= 0:
@@ -402,12 +472,23 @@ func take_hit(damage: float):
 		die()
 
 func heal(amount: float):
+	var before = health
 	health += amount
 	health = clamp(health, 0, max_health)
+	if health > before:
+		_check_perfect_sustenance()
 
 func restore_energy(amount: float):
+	var before = energy
 	energy += amount
 	energy = clamp(energy, 0, max_energy)
+	if energy > before:
+		_check_perfect_sustenance()
+
+# Badge #10 (Perfect Sustenance): parehong 100% ang Health at Energy dahil sa recovery item
+func _check_perfect_sustenance():
+	if health >= max_health and energy >= max_energy:
+		Global.unlock_badge("perfect_sustenance")
 
 func restore_stamina(amount: float):
 	stamina += amount

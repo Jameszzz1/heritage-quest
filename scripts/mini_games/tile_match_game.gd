@@ -39,7 +39,7 @@ var is_holding = false
 var combo_count = 0
 
 func _ready():
-	randomize()
+	MusicManager.stop_music()   # ← IDAGDAG ITO
 	build_cropped_textures()
 	grid_container.columns = GRID_SIZE
 	grid_container.add_theme_constant_override("h_separation", TILE_GAP)
@@ -526,7 +526,7 @@ func build_end_game_panel() -> Control:
 	vbox.add_child(spacer)
 
 	var btn = Button.new()
-	btn.text = "Bumalik" if success else "TRY AGAIN"
+	btn.text = "Back" if success else "TRY AGAIN"
 	btn.add_theme_font_override("font", END_GAME_FONT)
 	btn.custom_minimum_size = Vector2(80, 20)
 	btn.add_theme_font_size_override("font_size", 7)

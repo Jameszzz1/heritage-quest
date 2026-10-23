@@ -10,8 +10,8 @@ extends CharacterBody2D
 
 # Flashlight tuning
 @export var battery_drain_rate: float = 1.5      # per second
-@export var flashlight_range_scale: float = 0.9  # laki/layo ng ilaw
-@export var flashlight_half_angle: float = 35.0   # luwang ng cone (degrees)
+@export var flashlight_range_scale: float = 3.0  # laki/layo ng ilaw
+@export var flashlight_half_angle: float = 28.0   # luwang ng cone (degrees)
 @export var low_battery_threshold: float = 0.2    # 20% pababa = flicker
 
 @export var ambient_sight_scale: float = 0.35

@@ -13,9 +13,16 @@ extends Node2D
 @export var camera_follow_threshold: float = 30.0
 
 # I-set ito sa Inspector: saan babalik si James pagkatapos matapos ang FINAL na laro
-@export var return_scene_path: String = "res://scenes/homebase/homebase.tscn"
+@export var return_scene_path: String = "res://scenes/provinces/south_cotabato/homebase.tscn"
 @export var return_spawn_pos: Vector2 = Vector2.ZERO
 @export var win_delay_seconds: float = 3.0
+
+# ---------- ENDING CUTSCENES ----------
+const DESCENT_FIRST_CUTSCENE_PATH: String = "res://assets/cutscenes/mini_game_cutscenes/descent_first_cutscenes.ogv"
+const DESCENT_LAST_CUTSCENE_PATH: String = "res://assets/cutscenes/mini_game_cutscenes/descent_last_cutscenes.ogv"
+
+var cutscene_player: VideoStreamPlayer
+var ending_sequence_started: bool = false
 
 # ---------- SFX ----------
 @export var falling_sfx_volume_db: float = 0.0
@@ -344,26 +351,83 @@ func trigger_game_over() -> void:
 	game_over_label.visible = true
 
 func trigger_win() -> void:
+	if has_won:
+		return
+
 	has_won = true
-	Global.unlock_badge("mountain_climber_safe_descent")
-	Global.mark_minigame_passed(Global.current_minigame_npc)   # para sa Quest Log at Token
-	Global.complete_heritage_pillar()   # BAGO: pupuno ang Heritage Pillar sa homebase
 	stop_falling_sfx()
+
 	if player.has_method("set_control_enabled"):
 		player.set_control_enabled(false)
 	else:
 		player.set_physics_process(false)
+
+	win_popup_label.text = "You made it down safely!"
 	win_popup_label.visible = true
 
-	# Antayin munang makita ng player ang win message, tapos bumalik sa homebase
-	return_to_homebase()
+	# Ipakita muna ang win message, pagkatapos ay i-play ang dalawang cutscene.
+	await get_tree().create_timer(win_delay_seconds).timeout
+	await play_ending_cutscenes()
+
+	# I-mark ang completion at i-unlock ang badge pagkatapos ng cutscenes.
+	Global.mark_minigame_passed(Global.current_minigame_npc)
+	Global.complete_heritage_pillar()
+	Global.unlock_badge("mountain_climber_safe_descent")
+
+	await return_to_homebase()
+
+func play_ending_cutscenes() -> void:
+	if ending_sequence_started:
+		return
+	ending_sequence_started = true
+
+	# Gumawa ng full-screen video player sa ibabaw ng game UI.
+	cutscene_player = VideoStreamPlayer.new()
+	cutscene_player.name = "DescentEndingCutscenePlayer"
+	cutscene_player.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	cutscene_player.expand = true
+	cutscene_player.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cutscene_player.z_index = 100
+	ui_layer.add_child(cutscene_player)
+
+	# First cutscene
+	var first_video := load(DESCENT_FIRST_CUTSCENE_PATH) as VideoStream
+	if first_video == null:
+		push_error("Hindi ma-load ang first descent cutscene: " + DESCENT_FIRST_CUTSCENE_PATH)
+		cutscene_player.queue_free()
+		cutscene_player = null
+		return
+
+	cutscene_player.stream = first_video
+	cutscene_player.visible = true
+	cutscene_player.play()
+	await cutscene_player.finished
+
+	# Second cutscene
+	var last_video := load(DESCENT_LAST_CUTSCENE_PATH) as VideoStream
+	if last_video == null:
+		push_error("Hindi ma-load ang last descent cutscene: " + DESCENT_LAST_CUTSCENE_PATH)
+		cutscene_player.stop()
+		cutscene_player.queue_free()
+		cutscene_player = null
+		return
+
+	cutscene_player.stop()
+	cutscene_player.stream = last_video
+	cutscene_player.play()
+	await cutscene_player.finished
+
+	cutscene_player.stop()
+	cutscene_player.queue_free()
+	cutscene_player = null
 
 func return_to_homebase() -> void:
-	await get_tree().create_timer(win_delay_seconds).timeout
-	if return_scene_path == "":
-		print("ERROR: return_scene_path is empty!")
+	if return_scene_path.is_empty():
+		push_error("return_scene_path is empty!")
 		return
+
 	Global.spawn_position = return_spawn_pos
+
 	if has_node("/root/LoadingScreen"):
 		LoadingScreen.change_scene(return_scene_path)
 	else:

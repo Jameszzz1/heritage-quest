@@ -49,7 +49,7 @@ var drum_sfx = {
 
 
 func _ready():
-	# DO NOT stop MusicManager here
+	MusicManager.stop_music()   # ← IDAGDAG ITO (para tumigil ang South Cotabato music)
 	load_drum_chart()
 
 	note_textures = [
@@ -335,7 +335,7 @@ func show_result(success: bool):
 	if success:
 		title.text = "CONGRATULATIONS!"
 		msg.text = "Natapos mo ang Mini Game!\nScore: " + str(score) + "\nMax Combo: " + str(max_combo) + "\n\nKausapin si Bai Linay para makuha ang Token."
-		btn.text = "Bumalik"
+		btn.text = "Back"
 	else:
 		title.text = "TRY AGAIN!"
 		msg.text = "Score: " + str(score) + "/" + str(target_score) + "\nMax Combo: " + str(max_combo) + "/" + str(target_combo)

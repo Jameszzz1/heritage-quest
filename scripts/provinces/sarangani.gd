@@ -4,6 +4,7 @@ var near_water = false
 
 func _ready():
 	MusicManager.play_music("res://assets/audio/music/Sarangani.mp3")
+	Global.current_location = "Sarangani"
 
 func _input(event):
 	if near_water and event.is_action_pressed("fish_key"):

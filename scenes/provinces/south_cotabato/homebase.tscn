@@ -387,4 +387,10 @@ position = Vector2(136, -72)
 
 [node name="DialoguePlayer" parent="." unique_id=1264107373 instance=ExtResource("19_nv3fa")]
 
+[node name="HeritagePillar" type="Sprite2D" parent="." unique_id=1475810879]
+position = Vector2(225.00002, -136)
+scale = Vector2(0.10400001, 0.096999995)
+texture = ExtResource("21_rb3oi")
+script = ExtResource("22_lgkdm")
+
 [connection signal="body_entered" from="ToSouthCotabatoRoute" to="ToSouthCotabatoRoute" method="_on_body_entered"]

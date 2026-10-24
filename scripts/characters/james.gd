@@ -25,6 +25,9 @@ extends CharacterBody2D
 @export var weak_health_ratio: float = 0.2
 @export var weak_speed_multiplier: float = 0.5
 
+# Footstep: i-adjust kung off ng isang tile ang detect (subukan (0, 8) o (0, -8))
+@export var surface_offset: Vector2 = Vector2(0, 0)
+
 const HELD_ANIM_SUFFIX: String = "_flashlight"
 const FLASHLIGHT_ENERGY: float = 1.0
 
@@ -80,6 +83,11 @@ var is_dead: bool = false
 var _endurance_awarded: bool = false
 var night_scene_path: String = ""
 var sprinting_now: bool = false   # para sa badge #11 (binabasa ng mga kalaban)
+
+# Footstep debug / cache
+var _debug_footstep: bool = true   # gawing false kapag ayos na
+var _cached_layers: Array = []
+var _last_debug: String = ""
 
 func _ready():
 	add_to_group("player")
@@ -152,18 +160,6 @@ func update_held_shovel() -> void:
 		and int(Global.inventory_items.get("shovel", 0)) > 0
 	)
 
-	held_shovel.visible = (
-		is_holding_shovel
-		and int(Global.inventory_items.get("shovel", 0)) > 0
-	)
-
-
-
-
-
-
-
-
 func update_held_watering_can() -> void:
 	if is_instance_valid(held_watering_can):
 		held_watering_can.visible = Global.watering_can_equipped
@@ -172,8 +168,6 @@ func update_held_watering_can() -> void:
 func _process(_delta: float) -> void:
 	if is_instance_valid(held_watering_can):
 		held_watering_can.visible = Global.watering_can_equipped
-
-
 
 
 func _find_ui_node(group_name: String, node_name: String):
@@ -341,10 +335,10 @@ func is_weak() -> bool:
 
 func handle_movement(delta):
 	var input_direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	
+
 	var iso_direction = Vector2(
-	input_direction.x - input_direction.y,
-	(input_direction.x + input_direction.y) / 2.0
+		input_direction.x - input_direction.y,
+		(input_direction.x + input_direction.y) / 2.0
 	).normalized()
 
 	var current_speed = walk_speed
@@ -373,32 +367,67 @@ func handle_movement(delta):
 	if is_moving:
 		facing_dir = iso_direction
 
-
 	var surface = get_surface_type()
 	FootstepManager.play_footstep(surface, delta, is_moving, is_sprinting)
 
+# ---------------- FOOTSTEP SURFACE ----------------
+
+func _collect_tile_layers(node: Node, out: Array) -> void:
+	if node is TileMapLayer and node.name.to_lower().find("wall") == -1:
+		out.append(node)
+	for child in node.get_children():
+		_collect_tile_layers(child, out)
+
+func _get_surface_layers() -> Array:
+	var grouped := get_tree().get_nodes_in_group("land_tilemap")
+	if not grouped.is_empty():
+		return grouped
+
+	var valid := _cached_layers.filter(func(l): return is_instance_valid(l))
+	if valid.size() != _cached_layers.size() or _cached_layers.is_empty():
+		_cached_layers = []
+		var scene := get_tree().current_scene
+		if scene:
+			_collect_tile_layers(scene, _cached_layers)
+	return _cached_layers
+
+# Binabasa ang custom data kahit "surface" o "surface_type" ang pangalan ng layer
+func _read_surface(data: TileData, ts: TileSet) -> String:
+	for layer_name in ["surface", "surface_type"]:
+		if ts.get_custom_data_layer_by_name(layer_name) != -1:
+			var v = data.get_custom_data(layer_name)
+			if v != null and str(v).strip_edges() != "":
+				return str(v).strip_edges().to_lower()
+	return ""
+
 func get_surface_type() -> String:
-	var tilemap = get_tree().get_first_node_in_group("land_tilemap")
+	var scene_path: String = get_tree().current_scene.scene_file_path
+	var in_house: bool = scene_path.find("inside_house") != -1
+	var pos: Vector2 = global_position + surface_offset
 
-	if tilemap == null:
-		return ""
+	for layer in _get_surface_layers():
+		if not (layer is TileMapLayer) or layer.tile_set == null:
+			continue
+		var cell: Vector2i = layer.local_to_map(layer.to_local(pos))
+		var data: TileData = layer.get_cell_tile_data(cell)
+		if data == null:
+			continue
 
-	var tile_pos = tilemap.local_to_map(
-		tilemap.to_local(global_position)
-	)
+		var s := _read_surface(data, layer.tile_set)
 
-	var tile_data = tilemap.get_cell_tile_data(tile_pos)
+		if _debug_footstep:
+			var msg := "[FOOTSTEP] layer=%s cell=%s surface='%s'" % [layer.name, cell, s]
+			if msg != _last_debug:
+				_last_debug = msg
+				print(msg)
 
-	if tile_data == null:
-		return ""
+		if s != "":
+			return s
 
-	var surface_data = tile_data.get_custom_data("surface_type")
-
-	if surface_data == null:
-		return ""
-
-	return str(surface_data)
-
+	# Walang nabasa: wood sa loob ng bahay, dirt sa labas
+	if in_house:
+		return "wood"
+	return "dirt"
 
 func handle_stamina_regen(delta):
 	# Pag 0 ang energy, walang stamina: hindi bumabalik ang yellow bar

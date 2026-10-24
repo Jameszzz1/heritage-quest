@@ -77,11 +77,13 @@ texture = ExtResource("5_yka0h")
 texture = ExtResource("8_ejv8h")
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, -4)
+0:0/0/custom_data_0 = "dirt"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_804to"]
 texture = ExtResource("9_qhbge")
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, -4)
+0:0/0/custom_data_0 = "grass"
 
 [sub_resource type="TileSet" id="TileSet_depfw"]
 tile_shape = 1

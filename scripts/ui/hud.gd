@@ -717,6 +717,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_settings_pressed() -> void:
+	MusicManager.play_button_sfx()
 	settings.toggle()
 
 
@@ -816,6 +817,8 @@ func _on_close_pressed() -> void:
 
 
 func _on_quest_log_button_pressed() -> void:
+	MusicManager.play_button_sfx()
+
 	if is_instance_valid(quest_log):
 		if quest_log.has_method("toggle"):
 			quest_log.call("toggle")

@@ -10,8 +10,8 @@ extends CharacterBody2D
 
 # Flashlight tuning
 @export var battery_drain_rate: float = 1.5      # per second
-@export var flashlight_range_scale: float = 0.9  # laki/layo ng ilaw
-@export var flashlight_half_angle: float = 35.0   # luwang ng cone (degrees)
+@export var flashlight_range_scale: float = 5.0  # laki/layo ng ilaw
+@export var flashlight_half_angle: float = 20.0   # luwang ng cone (degrees)
 @export var low_battery_threshold: float = 0.2    # 20% pababa = flicker
 
 @export var ambient_sight_scale: float = 0.35
@@ -355,8 +355,8 @@ func handle_movement(delta):
 	if is_sprinting and iso_direction != Vector2.ZERO and stamina > 0:
 		sprinting_now = true
 		current_speed = walk_speed * sprint_multiplier
-		stamina -= 20 * delta
-		energy -= 3 * delta
+		stamina -= 0 * delta ##pota  #20
+		energy -= 0 * delta #3
 	else:
 		sprinting_now = false
 		current_speed = walk_speed

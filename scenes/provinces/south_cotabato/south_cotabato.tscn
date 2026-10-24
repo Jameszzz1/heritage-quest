@@ -572,9 +572,8 @@ shape = SubResource("RectangleShape2D_8o4x2")
 [node name="ToHomebaseSouthCotRoute" type="Area2D" parent="." unique_id=588385674]
 script = ExtResource("17_aupoh")
 target_scene = "res://scenes/short_provinces/south_cotabato_shortway.tscn"
-spawn_pos = Vector2(322, -368.99994)
+spawn_pos = Vector2(335, -503)
 return_scene = "res://scenes/provinces/south_cotabato/homebase.tscn"
-required_token = "south_cotabato"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToHomebaseSouthCotRoute" unique_id=1847511687]
 position = Vector2(885.00006, 108.99999)

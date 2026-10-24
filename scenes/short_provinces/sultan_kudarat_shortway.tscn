@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://lweog4buavpo"]
 
+[ext_resource type="Script" uid="uid://r774irl6dpdv" path="res://scripts/scene_music.gd" id="1_pq1ey"]
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="2_pq1ey"]
 [ext_resource type="Texture2D" uid="uid://7g3vnvxhcbyh" path="res://assets/sprites/tiles/dark_water.png" id="3_mwre5"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="4_62ho5"]
@@ -154,20 +155,10 @@ size = Vector2(63.19918, 30.466309)
 size = Vector2(74.214485, 24.369637)
 
 [node name="sultan_kudarat_shortway" type="Node2D" unique_id=1066175384]
+script = ExtResource("1_pq1ey")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1345688183]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1072.0
-offset_top = -654.0
-offset_right = 1132.0
-offset_bottom = 649.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 1)
+[node name="NightOverlay" type="CanvasModulate" parent="." unique_id=346024382]
+script = ExtResource("13_mpfhs")
 
 [node name="Water" type="TileMapLayer" parent="." unique_id=524976323]
 y_sort_enabled = true
@@ -194,9 +185,6 @@ tile_set = SubResource("TileSet_i5btb")
 position = Vector2(741, 259)
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
-
-[node name="NightOverlay" type="CanvasModulate" parent="Y-sort" unique_id=875234630]
-script = ExtResource("13_mpfhs")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1866606339]
 

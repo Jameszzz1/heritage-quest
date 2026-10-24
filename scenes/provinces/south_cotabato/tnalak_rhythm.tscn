@@ -99,6 +99,7 @@ vertical_alignment = 1
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("1_uk1p8")
 
 [node name="ButtonD" type="TextureButton" parent="HitZone" unique_id=759134107]
 custom_minimum_size = Vector2(2, 0)

@@ -213,6 +213,16 @@ var _last_badge_sfx := -1
 
 var _name_scan_timer := 0.0
 
+# Farm plots per scene: scene_path -> { "x,y": {"state": String, "ready_at": float} }
+var farm_plots: Dictionary = {}
+
+func get_farm_scene(scene_path: String) -> Dictionary:
+	return farm_plots.get(scene_path, {})
+
+func set_farm_scene(scene_path: String, plots: Dictionary) -> void:
+	farm_plots[scene_path] = plots
+	save_progress()
+	
 func _ready():
 	_ensure_audio_buses()
 	load_progress()

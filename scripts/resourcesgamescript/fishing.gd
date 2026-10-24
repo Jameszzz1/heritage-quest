@@ -55,6 +55,7 @@ const BAR_HEIGHT = 40
 # ============================================================
 
 func _ready():
+	MusicManager.stop_music()
 	caught_label.visible = false
 	particle_burst.emitting = false
 	progress_bar.value = 0

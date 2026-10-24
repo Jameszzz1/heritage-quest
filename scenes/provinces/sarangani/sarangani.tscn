@@ -558,7 +558,7 @@ polygon = PackedVector2Array(473, -186, 515, -162, 585, -199, 542, -236, 474, -1
 polygon = PackedVector2Array(-110, -544, -144, -562, -143, -580, -151, -587, -83, -620, -41, -597, -50, -592, -49, -572, -68, -563, -65, -556, -81, -548, -90, -559, -108, -544, -107, -543, -90, -558, -81, -547, -63, -556, -67, -563, -48, -572, -49, -592, -39, -597, -83, -621, -152, -587, -144, -580, -145, -562, -111, -543, -110, -543)
 
 [node name="FishingZone" type="Area2D" parent="." unique_id=1361456845]
-position = Vector2(-1201, -17)
+position = Vector2(-1189, -13)
 script = ExtResource("19_87wo0")
 target_scene = "res://scenes/fishing.tscn"
 return_scene = "res://scenes/provinces/sarangani/sarangani.tscn"

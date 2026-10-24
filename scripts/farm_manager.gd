@@ -1,4 +1,3 @@
-
 extends Node
 
 @export var ground_layer: TileMapLayer
@@ -37,21 +36,124 @@ extends Node
 # "pineapple_crown", or their "_watered"/"_ready" versions.
 var plot_states: Dictionary = {}
 
-# Cell coordinates -> remaining growth time in seconds.
-var growth_timers: Dictionary = {}
+# Cell coordinates -> Unix time (seconds) when the crop becomes ready.
+# Uses real time, so crops keep growing while you are in another scene.
+var growth_ready_at: Dictionary = {}
+
+# The scene this farm belongs to (used as the key in Global.farm_plots).
+var _scene_key: String = ""
 
 
 func _ready() -> void:
 	if ground_layer == null:
 		push_warning("FarmManager: Assign Ground Layer in the Inspector.")
+		return
+
+	var scene := get_tree().current_scene
+	if scene:
+		_scene_key = scene.scene_file_path
+
+	_restore_plots()
 
 
-func _process(delta: float) -> void:
-	_update_crop_growth(delta)
+func _process(_delta: float) -> void:
+	_update_crop_growth()
 
 	if Input.is_action_just_pressed("interact"):
 		_handle_interaction()
 
+
+# ---------------------------------------------------------------- PERSISTENCE
+
+# Saves every plot of this scene into Global (which also writes the save file).
+func _save_plots() -> void:
+	if _scene_key == "":
+		return
+
+	var data: Dictionary = {}
+	for cell in plot_states.keys():
+		var c: Vector2i = cell
+		data["%d,%d" % [c.x, c.y]] = {
+			"state": str(plot_states[cell]),
+			"ready_at": float(growth_ready_at.get(cell, 0.0))
+		}
+
+	Global.set_farm_scene(_scene_key, data)
+
+
+# Rebuilds the tiles from Global when the scene is entered again.
+func _restore_plots() -> void:
+	if _scene_key == "":
+		return
+
+	var saved: Dictionary = Global.get_farm_scene(_scene_key)
+	var now: float = Time.get_unix_time_from_system()
+
+	for key in saved.keys():
+		var parts := str(key).split(",")
+		if parts.size() != 2:
+			continue
+
+		var cell := Vector2i(int(parts[0]), int(parts[1]))
+		var entry = saved[key]
+		if not (entry is Dictionary):
+			continue
+
+		var state: String = str(entry.get("state", ""))
+		var ready_at: float = float(entry.get("ready_at", 0.0))
+
+		if state.ends_with("_watered"):
+			if now >= ready_at:
+				# It finished growing while the player was away.
+				state = state.trim_suffix("_watered") + "_ready"
+			else:
+				growth_ready_at[cell] = ready_at
+
+		plot_states[cell] = state
+		_paint_cell(cell, state)
+
+	print("FarmManager: restored ", plot_states.size(), " plots for ", _scene_key)
+
+
+# ---------------------------------------------------------------- TILE HELPERS
+
+func _tile_for_state(state: String) -> Dictionary:
+	match state:
+		"tilled":
+			return {"source": tilled_source_id, "coords": tilled_atlas_coords, "alt": tilled_alternative_tile}
+
+		"eggplant_seeds":
+			return {"source": eggplant_source_id, "coords": eggplant_atlas_coords, "alt": eggplant_alternative_tile}
+		"eggplant_seeds_watered":
+			return {"source": eggplant_source_id, "coords": eggplant_watered_coords, "alt": eggplant_alternative_tile}
+		"eggplant_seeds_ready":
+			return {"source": eggplant_source_id, "coords": eggplant_ready_coords, "alt": eggplant_alternative_tile}
+
+		"corn_seeds":
+			return {"source": corn_source_id, "coords": corn_atlas_coords, "alt": corn_alternative_tile}
+		"corn_seeds_watered":
+			return {"source": corn_source_id, "coords": corn_watered_coords, "alt": corn_alternative_tile}
+		"corn_seeds_ready":
+			return {"source": corn_source_id, "coords": corn_ready_coords, "alt": corn_alternative_tile}
+
+		"pineapple_crown":
+			return {"source": pineapple_source_id, "coords": pineapple_atlas_coords, "alt": pineapple_alternative_tile}
+		"pineapple_crown_watered":
+			return {"source": pineapple_source_id, "coords": pineapple_watered_coords, "alt": pineapple_alternative_tile}
+		"pineapple_crown_ready":
+			return {"source": pineapple_source_id, "coords": pineapple_ready_coords, "alt": pineapple_alternative_tile}
+
+	return {}
+
+
+func _paint_cell(cell: Vector2i, state: String) -> void:
+	var t := _tile_for_state(state)
+	if t.is_empty():
+		return
+	ground_layer.set_cell(cell, t["source"], t["coords"], t["alt"])
+
+
+# ---------------------------------------------------------------- INTERACTION
 
 func _handle_interaction() -> void:
 	if ground_layer == null:
@@ -166,14 +268,9 @@ func till_player_tile(cell: Vector2i) -> void:
 		print("This tile has already been worked.")
 		return
 
-	ground_layer.set_cell(
-		cell,
-		tilled_source_id,
-		tilled_atlas_coords,
-		tilled_alternative_tile
-	)
-
+	_paint_cell(cell, "tilled")
 	plot_states[cell] = "tilled"
+	_save_plots()
 	print("Tilled tile: ", cell)
 
 
@@ -189,146 +286,67 @@ func plant_crop(cell: Vector2i) -> void:
 		Global.selected_seed = ""
 		return
 
-	var source_id: int
-	var atlas_coords: Vector2i
-	var alternative_tile: int
-
-	match seed_id:
-		"eggplant_seeds":
-			source_id = eggplant_source_id
-			atlas_coords = eggplant_atlas_coords
-			alternative_tile = eggplant_alternative_tile
-
-		"corn_seeds":
-			source_id = corn_source_id
-			atlas_coords = corn_atlas_coords
-			alternative_tile = corn_alternative_tile
-
-		"pineapple_crown":
-			source_id = pineapple_source_id
-			atlas_coords = pineapple_atlas_coords
-			alternative_tile = pineapple_alternative_tile
-
-		_:
-			print("That item cannot be planted.")
-			return
+	if _tile_for_state(seed_id).is_empty():
+		print("That item cannot be planted.")
+		return
 
 	if not Global.remove_item(seed_id, 1):
 		print("Could not consume the selected item.")
 		return
 
-	ground_layer.set_cell(
-		cell,
-		source_id,
-		atlas_coords,
-		alternative_tile
-	)
-
+	_paint_cell(cell, seed_id)
 	plot_states[cell] = seed_id
-	growth_timers.erase(cell)
+	growth_ready_at.erase(cell)
+	_save_plots()
 
 	print("Planted ", seed_id, " at ", cell)
 
 
 func water_crop(cell: Vector2i, crop_id: String) -> void:
-	var source_id: int
-	var watered_coords: Vector2i
-	var alternative_tile: int
+	var watered_state := crop_id + "_watered"
 
-	match crop_id:
-		"eggplant_seeds":
-			source_id = eggplant_source_id
-			watered_coords = eggplant_watered_coords
-			alternative_tile = eggplant_alternative_tile
+	if _tile_for_state(watered_state).is_empty():
+		print("This crop cannot be watered.")
+		return
 
-		"corn_seeds":
-			source_id = corn_source_id
-			watered_coords = corn_watered_coords
-			alternative_tile = corn_alternative_tile
-
-		"pineapple_crown":
-			source_id = pineapple_source_id
-			watered_coords = pineapple_watered_coords
-			alternative_tile = pineapple_alternative_tile
-
-		_:
-			print("This crop cannot be watered.")
-			return
-
-	ground_layer.set_cell(
-		cell,
-		source_id,
-		watered_coords,
-		alternative_tile
-	)
-
-	plot_states[cell] = crop_id + "_watered"
-	growth_timers[cell] = maxf(growth_time_seconds, 0.1)
+	_paint_cell(cell, watered_state)
+	plot_states[cell] = watered_state
+	growth_ready_at[cell] = Time.get_unix_time_from_system() + maxf(growth_time_seconds, 0.1)
+	_save_plots()
 
 	print("Watered ", crop_id, ". Growth started at ", cell)
 
 
-func _update_crop_growth(delta: float) -> void:
-	if ground_layer == null:
+func _update_crop_growth() -> void:
+	if ground_layer == null or growth_ready_at.is_empty():
 		return
 
-	# Duplicate keys so the dictionary can safely be updated.
-	for cell in growth_timers.keys():
-		var remaining: float = float(growth_timers[cell]) - delta
-		growth_timers[cell] = remaining
+	var now: float = Time.get_unix_time_from_system()
+	var changed := false
 
-		if remaining > 0.0:
+	# keys() returns a copy, so it is safe to modify the dictionary inside.
+	for cell in growth_ready_at.keys():
+		if now < float(growth_ready_at[cell]):
 			continue
 
 		var state := str(plot_states.get(cell, ""))
 
-		match state:
-			"eggplant_seeds_watered":
-				_set_crop_ready(
-					cell,
-					"eggplant_seeds",
-					eggplant_source_id,
-					eggplant_ready_coords,
-					eggplant_alternative_tile
-				)
+		if state.ends_with("_watered"):
+			_set_crop_ready(cell, state.trim_suffix("_watered"))
+			changed = true
+		else:
+			growth_ready_at.erase(cell)
 
-			"corn_seeds_watered":
-				_set_crop_ready(
-					cell,
-					"corn_seeds",
-					corn_source_id,
-					corn_ready_coords,
-					corn_alternative_tile
-				)
-
-			"pineapple_crown_watered":
-				_set_crop_ready(
-					cell,
-					"pineapple_crown",
-					pineapple_source_id,
-					pineapple_ready_coords,
-					pineapple_alternative_tile
-				)
-			_:
-				growth_timers.erase(cell)
+	if changed:
+		_save_plots()
 
 
-func _set_crop_ready(
-	cell: Vector2i,
-	crop_id: String,
-	source_id: int,
-	atlas_coords: Vector2i,
-	alternative_tile: int
-) -> void:
-	ground_layer.set_cell(
-		cell,
-		source_id,
-		atlas_coords,
-		alternative_tile
-	)
+func _set_crop_ready(cell: Vector2i, crop_id: String) -> void:
+	var ready_state := crop_id + "_ready"
 
-	plot_states[cell] = crop_id + "_ready"
-	growth_timers.erase(cell)
+	_paint_cell(cell, ready_state)
+	plot_states[cell] = ready_state
+	growth_ready_at.erase(cell)
 
 	print(crop_id, " is ready to harvest at ", cell)
 
@@ -350,23 +368,20 @@ func harvest_crop(cell: Vector2i, state: String) -> void:
 			print("This crop is not ready to harvest.")
 			return
 
+	# Return the plot to tilled soil and save it first.
+	_paint_cell(cell, "tilled")
+	plot_states[cell] = "tilled"
+	growth_ready_at.erase(cell)
+	_save_plots()
+
 	# Add one harvested crop to the backpack.
 	Global.add_item(product_id, 1)
-
-	# Return the plot to tilled soil.
-	ground_layer.set_cell(
-		cell,
-		tilled_source_id,
-		tilled_atlas_coords,
-		tilled_alternative_tile
-	)
-
-	plot_states[cell] = "tilled"
-	growth_timers.erase(cell)
 
 	print("Harvested ", product_id, " at ", cell)
 
 
 func reset_plot_tracking() -> void:
 	plot_states.clear()
-	growth_timers.clear()
+	growth_ready_at.clear()
+	if _scene_key != "":
+		Global.set_farm_scene(_scene_key, {})

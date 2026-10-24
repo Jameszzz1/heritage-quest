@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ifrkqnt4248l"]
 
-[ext_resource type="Script" uid="uid://b3r17f8ne8ikj" path="res://scripts/ui/npc_dialogue.gd" id="1_7lx08"]
+[ext_resource type="Script" uid="uid://dl2aeruf2robh" path="res://scripts/characters/angkoljoey.gd" id="1_4dten"]
 [ext_resource type="Texture2D" uid="uid://co2uiasrq31by" path="res://assets/images/provinces/cotabato/aposandawa.png" id="1_em1mg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7lx08"]
@@ -31,10 +31,7 @@ border_color = Color(0, 0, 0, 1)
 
 [node name="Angkol Joey" type="CharacterBody2D" unique_id=1305782038]
 scale = Vector2(0.2, 0.2)
-script = ExtResource("1_7lx08")
-npc_name = "Angkol Joey"
-dialogue_file = "angkol_joey.json"
-npc_type = "Guide NPC"
+script = ExtResource("1_4dten")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1414805308]
 texture = ExtResource("1_em1mg")

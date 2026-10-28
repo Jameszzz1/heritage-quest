@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+const COMIC_PATH := "res://scenes/ui/comic_maliksi.tscn"
+const STORY_META := "maliksi_story_seen"
+
 @export_file("*.json") var json_file_path: String = "res://dialogues/angkol_joey.json"
 @export var play_once: bool = false   # true = only talks the first time
 
@@ -8,9 +11,10 @@ extends CharacterBody2D
 
 var player_nearby: bool = false
 var state: String = "IDLE"          # IDLE or DIALOGUE
-var dialogue_lines: Array = []      # flat array of {name, text}
+var dialogue_lines: Array = []      # flat array of {name, text, event?}
 var line_index: int = 0
 var has_talked: bool = false
+var _pending_event: String = ""     # event na tatakbo sa susunod na interact
 
 
 func _ready() -> void:
@@ -37,7 +41,7 @@ func load_dialogue_json() -> void:
 	var parsed = JSON.parse_string(text)
 	if parsed is Array:
 		dialogue_lines = parsed
-		print("✅ Angkol Joey JSON loaded: ", dialogue_lines.size(), " lines")
+		print("✅ Angkol Joey JSON loaded (", json_file_path, "): ", dialogue_lines.size(), " lines")
 	else:
 		print("❌ Failed to parse Angkol Joey JSON (must be an Array)")
 
@@ -73,11 +77,11 @@ func _input(event: InputEvent) -> void:
 		if state == "IDLE":
 			if play_once and has_talked:
 				return
+			get_viewport().set_input_as_handled()
 			start_conversation()
-			get_viewport().set_input_as_handled()
 		elif state == "DIALOGUE":
-			show_next_line()
 			get_viewport().set_input_as_handled()
+			show_next_line()
 
 
 func start_conversation() -> void:
@@ -86,6 +90,7 @@ func start_conversation() -> void:
 		return
 
 	line_index = 0
+	_pending_event = ""
 	state = "DIALOGUE"
 	if label:
 		label.visible = false
@@ -100,15 +105,21 @@ func show_next_line() -> void:
 		print("❌ dialogue_box group not found!")
 		return
 
+	# May event na naiwan mula sa naunang linya (hal. comic): patakbuhin muna
+	if _pending_event != "":
+		var ev := _pending_event
+		_pending_event = ""
+		await _run_event(ev)
+		if state != "DIALOGUE":
+			return
+
 	if line_index >= dialogue_lines.size():
 		close_dialogue()
 		return
 
 	var line = dialogue_lines[line_index]
 	var who: String = str(line.get("name", "Angkol Joey"))
-	var text: String = str(line.get("text", ""))
-
-	text = apply_name(text)
+	var text: String = apply_name(str(line.get("text", "")))
 
 	var display_name = who
 	if who.to_lower() == "player" or who.to_lower() == "james":
@@ -117,7 +128,53 @@ func show_next_line() -> void:
 	box.show_name(display_name)
 	box.show_text(text)
 
+	# Kapag may "event" ang linyang ito, tatakbo ito sa susunod na interact
+	if line.has("event"):
+		_pending_event = str(line["event"])
+		print("🎬 Pending event: ", _pending_event)
+
 	line_index += 1
+
+
+# ---------- EVENTS ----------
+func _run_event(event_name: String) -> void:
+	print("🎬 Running event: ", event_name)
+	match event_name:
+		"maliksi_comic":
+			await _play_maliksi_comic()
+		_:
+			print("⚠️ Unknown event: ", event_name)
+
+
+func _play_maliksi_comic() -> void:
+	# Isang beses lang bawat session (itatago pa sa save kapag nakita ko ang global.gd)
+	if Global.has_meta(STORY_META):
+		print("ℹ️ Maliksi comic already seen this session")
+		return
+
+	if not ResourceLoader.exists(COMIC_PATH):
+		print("❌ Comic scene not found: ", COMIC_PATH)
+		return
+
+	Global.set_meta(STORY_META, true)
+
+	var box = get_dialogue_box()
+	if box and box.has_method("hide_box"):
+		box.hide_box()
+
+	var layer := CanvasLayer.new()
+	layer.layer = 128
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().current_scene.add_child(layer)
+
+	var comic = load(COMIC_PATH).instantiate()
+	comic.next_scene = ""   # popup mode: magsasara lang, hindi lilipat ng scene
+	layer.add_child(comic)
+
+	get_tree().paused = true
+	await comic.finished
+	get_tree().paused = false
+	layer.queue_free()
 
 
 func close_dialogue() -> void:
@@ -126,6 +183,7 @@ func close_dialogue() -> void:
 
 	state = "IDLE"
 	line_index = 0
+	_pending_event = ""
 
 	var box = get_dialogue_box()
 	if box and box.has_method("hide_box"):

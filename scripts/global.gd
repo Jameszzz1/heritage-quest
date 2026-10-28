@@ -177,6 +177,9 @@ var pending_token_toast: String = ""
 # Mga pickup na nakuha na (para hindi mag-respawn)
 var collected_items: Dictionary = {}
 
+# Mga story/comic na nakita na (key = story id, hal. "maliksi_prequel")
+var story_flags: Dictionary = {}
+
 # Huling save na scene at pwesto ni James
 var saved_scene: String = ""
 var saved_position: Vector2 = Vector2.ZERO
@@ -293,6 +296,25 @@ func load_player_stats(player):
 		player.battery = current_battery
 	player.flashlight_on = flashlight_on
 
+# ---------------- STORY / COMIC FLAGS ----------------
+# Gamitin: if not Global.has_seen_story("maliksi_prequel"): ... Global.mark_story_seen("maliksi_prequel")
+# Naka-save sa local file at sa Supabase (game_saves) kasama ng ibang progress.
+
+func mark_story_seen(story_id: String) -> void:
+	if story_id == "" or story_flags.get(story_id, false):
+		return
+	story_flags[story_id] = true
+	save_progress()
+
+func has_seen_story(story_id: String) -> bool:
+	return story_flags.get(story_id, false)
+
+# Para sa testing lang: ibalik ang isang story para lumabas ulit
+func clear_story_seen(story_id: String) -> void:
+	if story_flags.has(story_id):
+		story_flags.erase(story_id)
+		save_progress()
+
 # ---------------- COLLECTED ITEMS ----------------
 
 # item_id ay dapat unique, halimbawa: scene_path + ":" + node_name
@@ -333,6 +355,7 @@ func get_save_data() -> Dictionary:
 		"minigame_passed": minigame_passed,
 		"tokens_claimed": tokens_claimed,
 		"collected_items": collected_items,
+		"story_flags": story_flags,
 		"battery_items": battery_items,
 		"fish_items": fish_items,
 		"inventory_items": inventory_items,
@@ -364,6 +387,7 @@ func _set_data(d: Dictionary) -> void:
 	minigame_passed = d.get("minigame_passed", {})
 	tokens_claimed = d.get("tokens_claimed", {})
 	collected_items = d.get("collected_items", {})
+	story_flags = d.get("story_flags", {})
 	battery_items = int(d.get("battery_items", 0))
 	fish_items = int(d.get("fish_items", 0))
 	inventory_items = d.get("inventory_items", {}).duplicate(true)
@@ -433,6 +457,7 @@ func reset_progress() -> void:
 	minigame_passed = {}
 	tokens_claimed = {}
 	collected_items = {}
+	story_flags = {}
 	pending_token_toast = ""
 	current_minigame_npc = ""
 	battery_items = 0

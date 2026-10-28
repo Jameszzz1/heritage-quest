@@ -9,7 +9,7 @@ var footstep_timer = 0.0
 var footstep_interval = 0.4
 
 # Gawing true para makita sa Output kung anong surface ang nababasa
-var debug_footstep: bool = false
+var debug_footstep: bool = true
 
 
 func _ready():
@@ -20,6 +20,13 @@ func _ready():
 		audio_player.bus = "Master"
 		push_warning("FootstepManager: walang 'SFX' bus, Master ang ginamit.")
 	add_child(audio_player)
+
+
+func _is_indoor_scene() -> bool:
+	var scene = get_tree().current_scene
+	if scene == null:
+		return false
+	return scene.scene_file_path.find("inside_house") != -1
 
 
 func play_footstep(surface: String, delta: float, is_moving: bool, is_sprinting: bool):
@@ -35,6 +42,10 @@ func play_footstep(surface: String, delta: float, is_moving: bool, is_sprinting:
 	footstep_timer += delta
 	if footstep_timer >= footstep_interval:
 		footstep_timer = 0.0
+
+		# Sa loob ng bahay: laging wood
+		if _is_indoor_scene():
+			surface = "wood"
 
 		# Kapag blangko o hindi kilala ang surface, dirt ang default
 		if surface != "grass" and surface != "dirt" and surface != "wood":

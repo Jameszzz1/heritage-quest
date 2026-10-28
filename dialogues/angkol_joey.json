@@ -1,42 +1,59 @@
 [
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "Oy, dayo! Ikaw ba si Archivist ? Maligayang pagdating sa aming lugar!"
 	},
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "Kung nais mong matuklasan ang mga kuwento at tradisyon ng SOCCSKSARGEN, nasa tamang lugar ka."
 	},
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "May ilang bagay kang dapat tandaan habang naglalakbay ka rito."
 	},
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "Una, kausapin mo ang mga taong makakasalubong mo. Bawat isa ay may kuwentong maibabahagi tungkol sa aming kultura at kasaysayan."
 	},
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "Pangalawa, makinig nang mabuti at basahin ang lahat ng kanilang sasabihin. Maaari kang matuto tungkol sa mga tradisyon, makasaysayang lugar, at mga tanyag na tao."
 	},
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "Kapag natapos mo nang pag-aralan ang kultura ng isang tagapagsalaysay, maaari mong sagutin ang limang tanong sa Cultural Assessment."
 	},
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "Dapat ay makakuha ka ng perpektong iskor na 5 sa 5 upang maitala ang iyong natutuhan sa Historical Journal at mabuksan ang kaugnay na Mini Game, kung mayroon man."
 	},
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "Maaari ka ring mag-explore sa mga daan. May mas maikling ruta at mas mahabang ruta, kaya piliin mo nang mabuti ang iyong dadaanan."
 	},
 	{
-		"name": "Manong",
+		"name": "Angkol Joey",
 		"text": "Huwag kalimutang bantayan ang iyong kalusugan, enerhiya, at stamina. Magpahinga kung kinakailangan at mag-ingat sa mga panganib sa iyong paglalakbay."
 	},
 	{
-		"name": "Manong",
-		"text": "Iyan lamang ang aking maipapayo, . Maging mausisa, igalang ang ating kultura, at pahalagahan ang bawat kuwentong iyong matutuklasan. Suwertehin ka sana sa iyong paglalakbay!"
+		"name": "Angkol Joey",
+		"text": "Teka, may isa pa akong dapat sabihin sa iyo. Tungkol ito sa dati kong estudyante."
+	},
+	{
+		"name": "Angkol Joey",
+		"text": "Hayaan mong ipakita ko ang nangyari.",
+		"event": "maliksi_comic"
+	},
+	{
+		"name": "Angkol Joey",
+		"text": "Si Maliksi ang dahilan kung bakit madilim na ang mga daan ngayon. Gusto niyang burahin ang lahat ng masakit na alaala."
+	},
+	{
+		"name": "Angkol Joey",
+		"text": "Hanapin mo ang apat na Token at ibalik sa Heritage Pillar. Ikaw na lang ang aasahan namin."
+	},
+	{
+		"name": "Angkol Joey",
+		"text": "Iyan lamang ang aking maipapayo, {player}. Maging mausisa, igalang ang ating kultura, at pahalagahan ang bawat kuwentong iyong matutuklasan. Suwertehin ka sana sa iyong paglalakbay!"
 	}
 ]

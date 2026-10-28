@@ -1,18 +1,54 @@
 extends Control
 # Quest Log: button sa taas kanan (sa tabi ng gear) + popup na may listahan ng quest.
 # Gawa sa code, walang node na kailangang idagdag sa hud.tscn.
+# UI: parchment scroll panel + parchment scroll buttons (isang design lang para consistent).
+
+# ---- ASSETS ----
+const FONT_PATH := "res://assets/fonts/GrapeSoda.ttf"
+const PANEL_TEXTURE_PATH := "res://assets/sprites/things/ui_quest_pop_up_panel.png"
+const BUTTON_TEXTURE_PATH := "res://assets/sprites/things/ui_quest_button.png"
+const SFX_OPEN_PATH := "res://assets/audio/sfx/quest_icon_pop_up.mp3"
 
 # ---- SETTINGS ----
-const FONT_PATH := "res://assets/fonts/GrapeSoda.ttf"
 const TITLE_FONT_SIZE := 9
 const TEXT_FONT_SIZE := 7
 const BUTTON_FONT_SIZE := 6
-const PANEL_SIZE := Vector2(270, 135)
-const PANEL_BG_ALPHA := 0.75
+const CLOSE_FONT_SIZE := 8
 
-const COLOR_DONE := "#6bd16b"
-const COLOR_CURRENT := "#ffe14d"
-const COLOR_TODO := "#ffffff"
+# Gawing true para makita ang pula (title) at asul (X) na kahon pang-adjust
+const DEBUG_LAYOUT := false
+
+# Volume ng sfx pag nag-open (0 = normal, -6 = mas mahina, -12 = mas mahina pa)
+const SFX_VOLUME_DB := 0.0
+
+# Laki ng buong panel (16:9 para tugma sa image)
+const PANEL_SIZE := Vector2(280, 158)
+# Transparency ng scroll (1.0 = solid, 0.85 = konting transparent). Hindi apektado ang text.
+const PANEL_ALPHA := 0.85
+
+# Posisyon ng title at X, sa porsyento ng MISMONG SCROLL (hindi ng buong image)
+# Rect2(x, y, width, height), 0.0 - 1.0
+# Para i-adjust: x = kaliwa/kanan, y = taas/baba
+const TITLE_RECT := Rect2(0.406, 0.113, 0.190, 0.075)  # loob ng ribbon
+const CLOSE_RECT := Rect2(0.880, 0.118, 0.033, 0.070)  # loob ng kahon sa kanan taas
+
+# Content area (listahan + steps), sa porsyento ng buong panel
+const CONTENT_RECT := Rect2(0.11, 0.29, 0.78, 0.57)
+
+# Laki ng NPC button (5:1 ratio)
+const NPC_BUTTON_SIZE := Vector2(80, 16)
+
+# Kulay ng text (dark kasi light parchment ang background)
+const COLOR_INK := Color("#3B2412")        # normal / pamagat
+const COLOR_DONE_TEXT := Color("#2E6B2E")  # tapos na (dark green)
+const COLOR_CURRENT_TEXT := Color("#A01818") # kasalukuyang step (dark red)
+const COLOR_DONE := "#2E6B2E"
+const COLOR_CURRENT := "#A01818"
+const COLOR_TODO := "#3B2412"
+
+# Tint ng button
+const BUTTON_NORMAL_TINT := Color(1, 1, 1, 1)
+const BUTTON_SELECTED_TINT := Color(1.0, 0.82, 0.4, 1)  # golden kapag selected
 
 # "minigame" = pangalan ng mini game sa step na "Play ..."
 # "next_scene" = scene ng susunod na province; kapag napasok na, tapos ang "Proceed"
@@ -28,11 +64,15 @@ const QUESTS: Array = [
 ]
 
 var _font: Font = null
-var _panel: PanelContainer
-var _list_buttons: Array = []
+var _panel: TextureRect
+var _list_buttons: Array = []   # TextureButton
+var _list_labels: Array = []    # Label sa loob ng bawat button
 var _detail_title: Label
 var _detail_text: RichTextLabel
 var _selected: int = 0
+var _sfx_open: AudioStreamPlayer = null
+# Totoong sakop ng scroll sa loob ng image (0.0 - 1.0), kinukuwenta sa _ready
+var _art_rect := Rect2(0, 0, 1, 1)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -47,6 +87,8 @@ func _ready() -> void:
 	_build_panel()
 	_panel.visible = false
 
+	_build_sfx()
+
 	Global.journal_updated.connect(func(_p): _refresh())
 	Global.token_claimed.connect(func(_p): _refresh())
 	Global.inventory_changed.connect(_refresh)
@@ -59,84 +101,183 @@ func _track_current_scene() -> void:
 	if scene != null and scene.scene_file_path != "":
 		Global.mark_scene_visited(scene.scene_file_path)
 
+# ---------------- SFX ----------------
+
+func _build_sfx() -> void:
+	_sfx_open = AudioStreamPlayer.new()
+	_sfx_open.name = "SfxOpen"
+	_sfx_open.process_mode = Node.PROCESS_MODE_ALWAYS
+	_sfx_open.volume_db = SFX_VOLUME_DB
+	# Gamitin ang "SFX" bus kung meron, kung wala "Master"
+	_sfx_open.bus = "SFX" if AudioServer.get_bus_index("SFX") != -1 else "Master"
+	if ResourceLoader.exists(SFX_OPEN_PATH):
+		_sfx_open.stream = load(SFX_OPEN_PATH)
+	else:
+		push_warning("Quest SFX not found: " + SFX_OPEN_PATH)
+	add_child(_sfx_open)
+
+func _play_open_sfx() -> void:
+	if _sfx_open != null and _sfx_open.stream != null:
+		_sfx_open.play()
+
 # ---------------- UI BUILD ----------------
 
-func _style_label(lbl: Control, font_size: int, color: Color = Color.WHITE) -> void:
+func _style_label(lbl: Control, font_size: int, color: Color = COLOR_INK) -> void:
 	if _font:
 		lbl.add_theme_font_override("font", _font)
 	lbl.add_theme_font_size_override("font_size", font_size)
 	lbl.add_theme_color_override("font_color", color)
 
-func _make_box(color: Color) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = color
-	sb.set_corner_radius_all(8)
-	sb.content_margin_left = 4
-	sb.content_margin_right = 4
-	sb.content_margin_top = 1
-	sb.content_margin_bottom = 1
-	return sb
+# Ilagay ang isang Control sa porsyento ng parent niya (0.0 - 1.0)
+func _place(c: Control, r: Rect2) -> void:
+	c.anchor_left = r.position.x
+	c.anchor_top = r.position.y
+	c.anchor_right = r.position.x + r.size.x
+	c.anchor_bottom = r.position.y + r.size.y
+	c.offset_left = 0
+	c.offset_top = 0
+	c.offset_right = 0
+	c.offset_bottom = 0
+
+# Hanapin kung saan talaga ang scroll sa loob ng image (iwas sa transparent margin)
+func _compute_art_rect(tex: Texture2D) -> Rect2:
+	if tex == null:
+		return Rect2(0, 0, 1, 1)
+	var img: Image = tex.get_image()
+	if img == null or img.is_compressed():
+		return Rect2(0, 0, 1, 1)
+	img = img.duplicate()
+	img.resize(200, 112, Image.INTERPOLATE_NEAREST)
+	var min_x := 9999
+	var min_y := 9999
+	var max_x := -1
+	var max_y := -1
+	for y in range(img.get_height()):
+		for x in range(img.get_width()):
+			if img.get_pixel(x, y).a > 0.5:
+				min_x = min(min_x, x)
+				min_y = min(min_y, y)
+				max_x = max(max_x, x)
+				max_y = max(max_y, y)
+	if max_x < 0:
+		return Rect2(0, 0, 1, 1)
+	var w := float(img.get_width())
+	var h := float(img.get_height())
+	return Rect2(min_x / w, min_y / h, (max_x - min_x + 1) / w, (max_y - min_y + 1) / h)
+
+# I-convert ang porsyento ng scroll papunta sa porsyento ng buong panel
+func _art_to_panel(r: Rect2) -> Rect2:
+	return Rect2(
+		_art_rect.position.x + r.position.x * _art_rect.size.x,
+		_art_rect.position.y + r.position.y * _art_rect.size.y,
+		r.size.x * _art_rect.size.x,
+		r.size.y * _art_rect.size.y)
+
+func _add_debug_box(parent: Control, r: Rect2, color: Color) -> void:
+	var cr := ColorRect.new()
+	cr.color = color
+	cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(cr)
+	_place(cr, r)
 
 func _build_panel() -> void:
-	_panel = PanelContainer.new()
+	# Background = parchment scroll image (self_modulate para ang image lang ang transparent)
+	_panel = TextureRect.new()
 	_panel.name = "QuestPanel"
+	var tex: Texture2D = null
+	if ResourceLoader.exists(PANEL_TEXTURE_PATH):
+		tex = load(PANEL_TEXTURE_PATH)
+		_panel.texture = tex
+	_art_rect = _compute_art_rect(tex)
+	_panel.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_panel.stretch_mode = TextureRect.STRETCH_SCALE
+	_panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_panel.self_modulate = Color(1, 1, 1, PANEL_ALPHA)
 	_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_panel.custom_minimum_size = PANEL_SIZE
 	_panel.z_index = 100
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0, 0, PANEL_BG_ALPHA)
-	sb.border_color = Color(1, 1, 1, 0.6)
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(6)
-	sb.content_margin_left = 8
-	sb.content_margin_right = 8
-	sb.content_margin_top = 6
-	sb.content_margin_bottom = 6
-	_panel.add_theme_stylebox_override("panel", sb)
 	add_child(_panel)
 	_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	_panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 
-	var root := VBoxContainer.new()
-	root.add_theme_constant_override("separation", 4)
-	_panel.add_child(root)
+	var title_rect := _art_to_panel(TITLE_RECT)
+	var close_rect := _art_to_panel(CLOSE_RECT)
 
-	# Header: pamagat + close
-	var header := HBoxContainer.new()
-	root.add_child(header)
+	if DEBUG_LAYOUT:
+		_add_debug_box(_panel, title_rect, Color(1, 0, 0, 0.35))
+		_add_debug_box(_panel, close_rect, Color(0, 0.3, 1, 0.35))
+
+	# ---- Title "Quest" sa gitna ng ribbon ----
 	var title := Label.new()
 	title.text = "Quest"
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_style_label(title, TITLE_FONT_SIZE)
-	header.add_child(title)
+	_panel.add_child(title)
+	_place(title, title_rect)
+
+	# ---- Close button "X" sa loob ng kahon ----
 	var close := Button.new()
 	close.text = "X"
 	close.focus_mode = Control.FOCUS_NONE
-	_style_label(close, BUTTON_FONT_SIZE)
+	close.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	close.clip_text = false
+	var empty := StyleBoxEmpty.new()
+	for s in ["normal", "hover", "pressed", "focus", "disabled"]:
+		close.add_theme_stylebox_override(s, empty)
+	_style_label(close, CLOSE_FONT_SIZE, COLOR_CURRENT_TEXT)
+	close.add_theme_color_override("font_hover_color", Color("#D02020"))
+	close.add_theme_color_override("font_pressed_color", COLOR_INK)
 	close.pressed.connect(_close)
-	header.add_child(close)
+	_panel.add_child(close)
+	_place(close, close_rect)
+
+	# ---- Content area (listahan + steps) ----
+	var content := Control.new()
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel.add_child(content)
+	_place(content, CONTENT_RECT)
 
 	# Body: kaliwa = listahan ng quest, kanan = steps
 	var body := HBoxContainer.new()
-	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation", 8)
-	root.add_child(body)
+	body.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	content.add_child(body)
 
 	var left := VBoxContainer.new()
-	left.custom_minimum_size = Vector2(70, 0)
+	left.custom_minimum_size = Vector2(NPC_BUTTON_SIZE.x, 0)
 	left.add_theme_constant_override("separation", 3)
 	body.add_child(left)
+
+	var btn_tex: Texture2D = null
+	if ResourceLoader.exists(BUTTON_TEXTURE_PATH):
+		btn_tex = load(BUTTON_TEXTURE_PATH)
+
 	for i in range(QUESTS.size()):
-		var b := Button.new()
-		b.text = QUESTS[i]["title"]
+		var b := TextureButton.new()
+		b.texture_normal = btn_tex
+		b.ignore_texture_size = true
+		b.stretch_mode = TextureButton.STRETCH_SCALE
+		b.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		b.custom_minimum_size = NPC_BUTTON_SIZE
 		b.focus_mode = Control.FOCUS_NONE
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		_style_label(b, BUTTON_FONT_SIZE)
 		b.pressed.connect(_select.bind(i))
 		left.add_child(b)
+
+		# Text sa ibabaw ng button (kasi blangko ang image)
+		var lbl := Label.new()
+		lbl.text = QUESTS[i]["title"]
+		lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_style_label(lbl, BUTTON_FONT_SIZE)
+		b.add_child(lbl)
+
 		_list_buttons.append(b)
+		_list_labels.append(lbl)
 
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -144,17 +285,18 @@ func _build_panel() -> void:
 	body.add_child(right)
 
 	_detail_title = Label.new()
-	_style_label(_detail_title, TEXT_FONT_SIZE + 1, Color(1.0, 0.9, 0.3))
+	_style_label(_detail_title, TEXT_FONT_SIZE + 1, COLOR_INK)
 	right.add_child(_detail_title)
 
 	_detail_text = RichTextLabel.new()
 	_detail_text.bbcode_enabled = true
 	_detail_text.fit_content = false
 	_detail_text.scroll_active = false
-	_detail_text.custom_minimum_size = Vector2(150, 80)
+	_detail_text.custom_minimum_size = Vector2(120, 60)
 	_detail_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_detail_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_detail_text.add_theme_font_size_override("normal_font_size", TEXT_FONT_SIZE)
+	_detail_text.add_theme_color_override("default_color", COLOR_INK)
 	if _font:
 		_detail_text.add_theme_font_override("normal_font", _font)
 	right.add_child(_detail_text)
@@ -170,6 +312,7 @@ func _toggle() -> void:
 func _open() -> void:
 	_selected = _first_unfinished_quest()
 	_panel.visible = true
+	_play_open_sfx()
 	_refresh()
 
 func _close() -> void:
@@ -257,13 +400,18 @@ func _refresh() -> void:
 	for i in range(_list_buttons.size()):
 		var done: Array = _steps_done(i)
 		var finished: bool = not (false in done)
-		var b: Button = _list_buttons[i]
+		var b: TextureButton = _list_buttons[i]
+		var lbl: Label = _list_labels[i]
+
+		# Hidden hanggang ma-unlock, tapos lalabas yung same button
 		b.visible = _is_unlocked(i)
-		b.text = ("[x] " if finished else "") + QUESTS[i]["title"]
-		var col := Color(0.42, 0.82, 0.42) if finished else (Color(1.0, 0.9, 0.3) if i == _selected else Color.WHITE)
-		b.add_theme_color_override("font_color", col)
-		b.add_theme_color_override("font_hover_color", col)
-		b.add_theme_color_override("font_pressed_color", col)
+
+		# Golden tint kapag selected
+		b.modulate = BUTTON_SELECTED_TINT if i == _selected else BUTTON_NORMAL_TINT
+
+		lbl.text = ("[x] " if finished else "") + QUESTS[i]["title"]
+		var col: Color = COLOR_DONE_TEXT if finished else COLOR_INK
+		lbl.add_theme_color_override("font_color", col)
 
 	var q: Dictionary = QUESTS[_selected]
 	var steps: Array = _steps_done(_selected)

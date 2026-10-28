@@ -349,8 +349,8 @@ func handle_movement(delta):
 	if is_sprinting and iso_direction != Vector2.ZERO and stamina > 0:
 		sprinting_now = true
 		current_speed = walk_speed * sprint_multiplier
-		stamina -= 0 * delta ##pota  #20
-		energy -= 0 * delta #3
+		stamina -= 20 * delta # #20
+		energy -= 3 * delta #3
 	else:
 		sprinting_now = false
 		current_speed = walk_speed

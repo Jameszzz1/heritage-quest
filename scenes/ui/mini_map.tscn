@@ -115,4 +115,6 @@ theme_override_fonts/font = ExtResource("9_et8qq")
 theme_override_font_sizes/font_size = 6
 text = "Location"
 horizontal_alignment = 1
-autowrap_mode = 2
+vertical_alignment = 2
+autowrap_mode = 3
+clip_text = true

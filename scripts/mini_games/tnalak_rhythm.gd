@@ -34,22 +34,24 @@ var drum_sfx = {
 	"K": preload("res://assets/audio/sfx/mini_games/K_drum.wav")
 }
 
-@onready var label_score = $UI/LabelScore
-@onready var label_combo = $UI/LabelCombo
-@onready var label_timer = $UI/LabelTimer
-@onready var label_countdown = $UI/LabelCountdown
-@onready var notes_node = $Notes
-@onready var audio_player = $AudioPlayer
+# Gumagana kahit saang node nakakabit ang script (root man o HitZone)
+@onready var scene_root = get_tree().current_scene
+@onready var label_score = scene_root.get_node("UI/LabelScore")
+@onready var label_combo = scene_root.get_node("UI/LabelCombo")
+@onready var label_timer = scene_root.get_node("UI/LabelTimer")
+@onready var label_countdown = scene_root.get_node("UI/LabelCountdown")
+@onready var notes_node = scene_root.get_node("Notes")
+@onready var audio_player = scene_root.get_node("AudioPlayer")
 @onready var buttons = [
-	$HitZone/ButtonD,
-	$HitZone/ButtonF,
-	$HitZone/ButtonJ,
-	$HitZone/ButtonK
+	scene_root.get_node("HitZone/ButtonD"),
+	scene_root.get_node("HitZone/ButtonF"),
+	scene_root.get_node("HitZone/ButtonJ"),
+	scene_root.get_node("HitZone/ButtonK")
 ]
 
 
 func _ready():
-	MusicManager.stop_music()   # ← IDAGDAG ITO (para tumigil ang South Cotabato music)
+	MusicManager.stop_music()
 	load_drum_chart()
 
 	note_textures = [
@@ -143,7 +145,7 @@ func show_instructions_popup() -> void:
 
 	popup.dismissed.connect(start_countdown)
 
-	add_child(popup)
+	scene_root.add_child(popup)
 
 func start_countdown():
 	var countdown_values = ["3", "2", "1", "START!"]
@@ -162,16 +164,16 @@ func start_countdown():
 func _process(delta):
 	if not game_started or game_ended:
 		return
-	
+
 	if audio_player.playing:
 		song_time = audio_player.get_playback_position() + AudioServer.get_time_since_last_mix() - AudioServer.get_output_latency()
 	else:
 		song_time += delta
-		
+
 	spawn_notes()
 	move_notes()
 	update_ui()
-	
+
 	if song_time > 1.0 and not audio_player.playing:
 		end_game()
 
@@ -179,7 +181,7 @@ func spawn_notes():
 	while chart_index < chart.size():
 		var note_time = chart[chart_index][0] + song_start_offset
 		var lane = chart[chart_index][1]
-		
+
 		if song_time >= (note_time - travel_time):
 			create_note(lane, note_time)
 			chart_index += 1
@@ -200,9 +202,9 @@ func move_notes():
 		var target_time = note.get_meta("note_time")
 		var time_until_hit = target_time - song_time
 		var calculated_y = hit_y - (time_until_hit * note_speed)
-		
+
 		note.position.y = calculated_y
-		
+
 		if note.position.y > hit_y + good_range:
 			note.queue_free()
 			miss()
@@ -225,8 +227,8 @@ func play_drum_sound(lane: String) -> void:
 	if drum_sfx.has(lane):
 		var sfx_player = AudioStreamPlayer.new()
 		sfx_player.stream = drum_sfx[lane]
-		sfx_player.volume_db = -25.0 
-		
+		sfx_player.volume_db = -25.0
+
 		add_child(sfx_player)
 		sfx_player.play()
 		sfx_player.finished.connect(sfx_player.queue_free)
@@ -281,16 +283,16 @@ func end_game():
 func show_result(success: bool):
 	var font = load("res://assets/fonts/GrapeSoda.ttf")
 
-	# Markahan agad na natapos ang mini game (hindi na mawawala kahit i-close ang game)
+	# Markahan agad na natapos ang mini game
 	if success:
 		Global.mark_minigame_passed(Global.current_minigame_npc)
-		Global.unlock_badge("dreamweaver_apprentice")      # <-- BAGO
+		Global.unlock_badge("dreamweaver_apprentice")
 
 	var overlay = ColorRect.new()
 	overlay.color = Color(0, 0, 0, 0.75)
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(overlay)
+	scene_root.add_child(overlay)
 
 	var container = CenterContainer.new()
 	container.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -368,11 +370,14 @@ func show_result(success: bool):
 	container.add_child(box)
 
 	if success:
-		btn.pressed.connect(func():
-			overlay.queue_free()
-			Global.spawn_position = Global.return_spawn_pos
-			get_tree().change_scene_to_file(Global.return_scene)
-		)
+		btn.pressed.connect(_on_result_back.bind(overlay))
 	else:
-		btn.pressed.connect(func(): get_tree().reload_current_scene())
-		
+		btn.pressed.connect(_on_result_retry)
+
+func _on_result_back(overlay: Node) -> void:
+	overlay.queue_free()
+	Global.spawn_position = Global.return_spawn_pos
+	get_tree().change_scene_to_file(Global.return_scene)
+
+func _on_result_retry() -> void:
+	get_tree().reload_current_scene()

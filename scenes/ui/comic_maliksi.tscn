@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://0xnytfb1khdq"]
+
+[ext_resource type="Script" uid="uid://dvtaeblnqfvbb" path="res://scripts/comic_maliksi.gd" id="1_0yddw"]
+
+[node name="ComicMaliksi" type="Control" unique_id=1766217015]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_0yddw")

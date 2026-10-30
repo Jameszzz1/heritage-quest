@@ -1,101 +1,94 @@
 extends CharacterBody2D
 
-# ---------- CONTROLS & PHYSICS CONFIG ----------
-@export var speed: float = 150.0            # Normal/slow walking speed
-@export var jump_velocity: float = -400.0   # Swabe at natural na taas ng talon
-@export var gravity: float = 1100.0         # Natural at hindi parang batong pagbagsak
+signal grip_changed(ratio: float)
+signal step_done(quality: String)
+signal fell
 
-# ---------- AUDIO CONFIG ----------
-# Naka-preload na rito ang dalawang paths sa isang Array/Listahan
-var jump_grunt_sounds: Array = [
-	preload("res://assets/audio/sfx/ascent_jump_effort_grunt_male.wav"),
-	preload("res://assets/audio/sfx/ascent_jump_effort_grunt2_male.wav")
-]
+enum State { IDLE, HOLD, CLIMBING, FALLING }
 
-var audio_player: AudioStreamPlayer2D
-@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@export var grip_time := 15.0
+@export var miss_grip_penalty := 3.0
+@export var climb_anim_time := 0.35
 
-signal jumped_from_platform(platform_node)
-var current_floor_platform: Node = null
+var state: State = State.IDLE
+var grip := 15.0
 
-# --- CUTSCENE CONTROL LOCK ---
-var control_enabled: bool = true
-
-func set_control_enabled(enabled: bool) -> void:
-	control_enabled = enabled
-	if enabled:
-		# i-reset ang animation papuntang idle kapag nabalik ang control
-		sprite.play("ascent_idle")
+@onready var sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
 
 func _ready() -> void:
-	# Gumawa tayo ng Audio Player node dynamically
-	audio_player = AudioStreamPlayer2D.new()
-	audio_player.volume_db = -6.0 # Tweak base sa pandinig mo
-	add_child(audio_player)
+	grip = grip_time
+	_play("idle")
 
-func _physics_process(delta: float) -> void:
-	# --- KAPAG NAKA-LOCK ANG CONTROLS (habang cutscene) ---
-	if not control_enabled:
-		if not is_on_floor():
-			velocity.y += gravity * delta
-		velocity.x = move_toward(velocity.x, 0, speed)
-		move_and_slide()
+func _play(anim: String) -> void:
+	if sprite == null or sprite.sprite_frames == null:
 		return
-
-	# 1. APPLY GRAVITY
-	if not is_on_floor():
-		velocity.y += gravity * delta
-
-	# 2. HANDLE JUMP INPUT & RANDOM SOUND TRIGGER
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		if current_floor_platform != null:
-			jumped_from_platform.emit(current_floor_platform)
-		
-		velocity.y = jump_velocity
-		
-		# Pumipili nang random sound mula sa array para i-play
-		if audio_player != null and jump_grunt_sounds.size() > 0:
-			var random_index = randi() % jump_grunt_sounds.size()
-			audio_player.stream = jump_grunt_sounds[random_index]
-			audio_player.play()
-
-	# 3. HANDLE MOVEMENT INPUT
-	var direction := Input.get_axis("move_left", "move_right")
-	if direction != 0:
-		velocity.x = direction * speed
+	if sprite.sprite_frames.has_animation(anim):
+		sprite.play(anim)
 	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
+		push_warning("PLAYER: Walang animation na '%s'" % anim)
 
-	move_and_slide()
+# side: "left" = A, "right" = D, "both" = A+D
+func show_pose(side: String) -> void:
+	match side:
+		"left":
+			_play("left_up")
+		"right":
+			_play("right_up")
+		_:
+			_play("hold")
 
-	# 4. TRACK CURRENT PLATFORM COLLISION
-	current_floor_platform = null
-	for i in range(get_slide_collision_count()):
-		var collision := get_slide_collision(i)
-		if collision.get_normal().y < -0.5:
-			current_floor_platform = collision.get_collider()
+func begin_climb() -> void:
+	state = State.HOLD
+	grip = grip_time
+	_play("hold")                 # panimulang pose lang
+	grip_changed.emit(1.0)
 
-	# 5. TRIGGER ANIMATION LOGIC
-	update_animation(direction)
+func resume_climb() -> void:
+	# pagkatapos mahulog at bumalik sa checkpoint
+	state = State.HOLD
+	grip = grip_time
+	_play("hold")
+	grip_changed.emit(1.0)
 
-func update_animation(direction: float) -> void:
-	# --- ANIMATION MECHANICS KAPAG NASA ERE (JUMPING / FALLING) ---
-	if not is_on_floor():
-		if direction < 0:
-			sprite.play("ascent_jump_left")
-		elif direction > 0:
-			sprite.play("ascent_jump_right")
-		else:
-			sprite.play("ascent_jump")
-	# --- ANIMATION MECHANICS KAPAG NASA GROUND (GROUNDED) ---
-	else:
-		if direction < 0:
-			sprite.play("ascent_left")
-		elif direction > 0:
-			sprite.play("ascent_right")
-		else:
-			sprite.play("ascent_idle")
+func reset_to_idle() -> void:
+	state = State.IDLE
+	grip = grip_time
+	_play("idle")
+	grip_changed.emit(1.0)
 
+func _process(delta: float) -> void:
+	if state != State.HOLD:
+		return
+	grip -= delta
+	grip_changed.emit(clampf(grip / grip_time, 0.0, 1.0))
+	if grip <= 0.0:
+		fall()
 
-func _on_jumped_from_platform(platform_node: Variant) -> void:
-	pass # Replace with function body.
+func climb(quality: String, side: String) -> void:
+	if state != State.HOLD:
+		return
+	state = State.CLIMBING
+	show_pose(side)
+	await get_tree().create_timer(climb_anim_time).timeout
+	if state != State.CLIMBING:
+		return
+	grip = grip_time
+	state = State.HOLD
+	# HINDI na bumabalik sa "hold": nananatili ang huling pose
+	grip_changed.emit(1.0)
+	step_done.emit(quality)
+
+func slip() -> void:
+	if state != State.HOLD:
+		return
+	grip -= miss_grip_penalty
+	grip_changed.emit(clampf(grip / grip_time, 0.0, 1.0))
+	if grip <= 0.0:
+		fall()
+
+func fall() -> void:
+	if state == State.FALLING:
+		return
+	state = State.FALLING
+	_play("fall")
+	fell.emit()

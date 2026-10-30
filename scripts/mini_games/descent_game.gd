@@ -3,33 +3,77 @@ extends Node2D
 # ---------- CONFIG ----------
 @export var screen_width: float = 320.0
 @export var screen_height: float = 180.0
-@export var bottom_offset_from_end: float = 60.0  # margin bago maabot ang literal na dulo ng bg
+@export var bottom_offset_from_end: float = 60.0
 
 @export var obstacle_gap_min: float = 50.0
 @export var obstacle_gap_max: float = 90.0
-@export var edge_margin: float = 20.0   # gaano kalapit sa gilid ang left/right obstacles
+@export var edge_margin: float = 20.0
 @export var obstacle_scale_width: float = 64.0
 
 @export var camera_follow_threshold: float = 30.0
 
-# I-set ito sa Inspector: saan babalik si James pagkatapos matapos ang FINAL na laro
+const DESCENT_BG_PATH: String = "res://assets/mini_games/descent/descent_background.png"
+@export var bg_texture: Texture2D
+
 @export var return_scene_path: String = "res://scenes/provinces/south_cotabato/homebase.tscn"
 @export var return_spawn_pos: Vector2 = Vector2.ZERO
-@export var win_delay_seconds: float = 3.0
+@export var win_delay_seconds: float = 2.0
 
-# ---------- ENDING CUTSCENES ----------
-const DESCENT_FIRST_CUTSCENE_PATH: String = "res://assets/cutscenes/mini_game_cutscenes/descent_first_cutscenes.ogv"
-const DESCENT_LAST_CUTSCENE_PATH: String = "res://assets/cutscenes/mini_game_cutscenes/descent_last_cutscenes.ogv"
+# ---------- DESCENT MUSIC (nagsisimula lang pag pinindot ang SPACE sa instructions) ----------
+# Ilagay dito ang path ng background music ng descent. Iwanang "" kung walang idadagdag.
+const DESCENT_MUSIC_PATH: String = ""
+@export var descent_music_volume_db: float = 0.0
+var descent_music_player: AudioStreamPlayer
+var held_scene_music: Array[AudioStreamPlayer] = []
+var music_bus_name: String = "Master"
+var music_bus_muted: bool = false
 
-var cutscene_player: VideoStreamPlayer
+# ---------- ENDING: COMICS + CREDITS ----------
+const ENDING_COMIC_PATHS: Array[String] = [
+	"res://assets/comics/1_comic_descent.png",
+	"res://assets/comics/2_comic_descent.png",
+	"res://assets/comics/3_comic_descent.png",
+]
+const CREDITS_BG_PATH: String = "res://assets/comics/end_credit_background.png"
+const ENDING_MUSIC_PATH: String = "res://assets/audio/music/MainmenuBG.mp3"
+@export var ending_music_volume_db: float = 0.0
+
+# Palitan ng totoong pangalan at sources
+const CREDITS_LINES: Array[String] = [
+	"THANK YOU FOR PLAYING",
+	"",
+	"DEVELOPED BY",
+	"Member Name 1",
+	"Member Name 2",
+	"Member Name 3",
+	"Member Name 4",
+	"",
+	"ADVISER",
+	"Adviser Name",
+	"",
+	"FREE ASSETS AND SOURCES",
+	"Source / Artist Name 1",
+	"Source / Artist Name 2",
+	"Source / Artist Name 3",
+	"",
+	"Made with Godot Engine",
+	"",
+	"",
+	"THE END",
+]
+@export var credits_scroll_seconds: float = 24.0
+@export var credits_font_size: int = 10
+
+signal ending_advance
+var ending_waiting: bool = false
 var ending_sequence_started: bool = false
+var ending_music_player: AudioStreamPlayer
 
 # ---------- SFX ----------
 @export var falling_sfx_volume_db: float = 0.0
 var falling_sfx_stream: AudioStream = preload("res://assets/audio/mini_game_audio/Cotabato_descent_falling.wav")
 var falling_sfx_player: AudioStreamPlayer
 
-# Tunog kapag tumama si James
 @export var hit_sfx_volume_db: float = 0.0
 var damage_sfx_stream: AudioStream = preload("res://assets/audio/mini_game_audio/Cotabato_descent_damage_james.wav")
 var branch_hit_sfx_stream: AudioStream = preload("res://assets/audio/mini_game_audio/Cotabato_descent_brach_hit.wav")
@@ -38,8 +82,6 @@ var damage_sfx_player: AudioStreamPlayer
 var obstacle_sfx_player: AudioStreamPlayer
 
 # ---------- ASSETS ----------
-var bg_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentbackground.png")
-
 var left_branch_texture: Texture2D = preload("res://assets/mini_games/descent/descent_left_branch_asset.png")
 var left_rockcliff_texture: Texture2D = preload("res://assets/mini_games/descent/descent_left_edgerockcliff_asset.png")
 var right_branch_texture: Texture2D = preload("res://assets/mini_games/descent/descent_right_branch_asset.png")
@@ -72,16 +114,27 @@ var ui_font: Font = preload("res://assets/fonts/GrapeSoda.ttf")
 func _ready() -> void:
 	randomize()
 
+	music_bus_name = _find_bus(["music", "bgm"])
+	# Itigil + i-mute ang music hanggang ma-dismiss ang instructions
+	hold_scene_music()
+
 	camera = Camera2D.new()
 	camera.enabled = true
 	add_child(camera)
 
 	if background != null:
-		background.texture = bg_texture
+		var tex: Texture2D = bg_texture
+		if tex == null:
+			tex = load(DESCENT_BG_PATH) as Texture2D
+		if tex != null:
+			background.texture = tex
+		else:
+			push_error("DESCENT: Hindi mahanap ang background: " + DESCENT_BG_PATH)
 
 	create_ui()
 	setup_falling_sfx()
 	setup_hit_sfx()
+	setup_descent_music()
 	setup_background()
 
 	camera_target_y = player.global_position.y - screen_height / 2.0
@@ -97,13 +150,48 @@ func _ready() -> void:
 	for i in range(30):
 		spawn_next_obstacle()
 
-	# Huwag munang bigyan ng control ang player hanggang ma-dismiss ang instructions popup
 	if player.has_method("set_control_enabled"):
 		player.set_control_enabled(false)
-	# Ifreeze din ang physics niya (gravity/movement) para hindi siya mahulog nang mag-isa
 	player.set_physics_process(false)
 
 	show_instructions_popup()
+
+func _exit_tree() -> void:
+	# siguraduhing hindi maiiwang naka-mute ang Music bus
+	_set_music_muted(false)
+
+# =========================================================================
+#  INPUT (pang-next ng comics / pang-skip ng credits)
+# =========================================================================
+func _unhandled_input(event: InputEvent) -> void:
+	if ending_waiting and event is InputEventKey and event.pressed and not event.echo \
+			and event.keycode == KEY_SPACE:
+		get_viewport().set_input_as_handled()
+		ending_advance.emit()
+
+# =========================================================================
+#  AUDIO BUS HELPERS
+# =========================================================================
+func _find_bus(keywords: Array, fallback: String = "Master") -> String:
+	var names: Array[String] = []
+	for i in range(AudioServer.bus_count):
+		var n: String = AudioServer.get_bus_name(i)
+		names.append(n)
+		var lower := n.to_lower()
+		for k in keywords:
+			if lower.contains(String(k)):
+				return n
+	push_warning("DESCENT: Walang bus na tugma sa %s. Mga bus: %s" % [str(keywords), str(names)])
+	return fallback
+
+func _set_music_muted(value: bool) -> void:
+	if music_bus_name == "Master":
+		return                      # huwag i-mute ang Master (pati sfx)
+	var idx := AudioServer.get_bus_index(music_bus_name)
+	if idx == -1:
+		return
+	AudioServer.set_bus_mute(idx, value)
+	music_bus_muted = value
 
 # =========================================================================
 #  SOUND
@@ -118,7 +206,6 @@ func setup_falling_sfx() -> void:
 	add_child(falling_sfx_player)
 
 func _on_falling_sfx_finished() -> void:
-	# I-loop habang nahuhulog pa
 	if game_started and not is_game_over and not has_won:
 		falling_sfx_player.play()
 
@@ -135,21 +222,104 @@ func _make_hit_player() -> AudioStreamPlayer:
 	return p
 
 func setup_hit_sfx() -> void:
-	# Magkahiwalay ang player para sabay silang tutunog (damage + obstacle hit)
 	damage_sfx_player = _make_hit_player()
 	obstacle_sfx_player = _make_hit_player()
 
 func play_hit_sfx(obstacle_type: String) -> void:
-	# Tunog ng damage ni James (para sa lahat ng obstacles)
 	damage_sfx_player.stream = damage_sfx_stream
 	damage_sfx_player.play()
 
-	# Tunog depende sa tinamaan
 	if obstacle_type == "thunder":
 		obstacle_sfx_player.stream = thunder_hit_sfx_stream
 	else:
 		obstacle_sfx_player.stream = branch_hit_sfx_stream
 	obstacle_sfx_player.play()
+
+# --- Background music ng descent: tahimik hanggang pindutin ang SPACE sa instructions ---
+func _is_own_player(p: Node) -> bool:
+	return p == falling_sfx_player or p == damage_sfx_player or p == obstacle_sfx_player \
+		or p == descent_music_player or p == ending_music_player
+
+func _stop_scene_music() -> void:
+	if has_node("/root/MusicManager"):
+		MusicManager.stop_music()
+	# hanapin ang LAHAT ng AudioStreamPlayer sa scene (kahit nakatago sa loob ng ibang node)
+	for n in find_children("*", "AudioStreamPlayer", true, false):
+		var p := n as AudioStreamPlayer
+		if p == null or _is_own_player(p):
+			continue
+		p.autoplay = false
+		p.stop()
+		if not held_scene_music.has(p):
+			held_scene_music.append(p)
+
+func hold_scene_music() -> void:
+	_set_music_muted(true)
+	_stop_scene_music()
+	_recheck_scene_music()
+
+func _recheck_scene_music() -> void:
+	# ulitin pagkatapos ng ilang frame para sa mga nagsisimula nang late
+	for i in range(2):
+		await get_tree().process_frame
+		if game_started:
+			return
+		_stop_scene_music()
+
+func setup_descent_music() -> void:
+	if DESCENT_MUSIC_PATH.is_empty():
+		return
+	var stream := load(DESCENT_MUSIC_PATH) as AudioStream
+	if stream == null:
+		push_error("DESCENT: Hindi mahanap ang music: " + DESCENT_MUSIC_PATH)
+		return
+	if stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = true
+	descent_music_player = AudioStreamPlayer.new()
+	descent_music_player.stream = stream
+	descent_music_player.volume_db = descent_music_volume_db
+	descent_music_player.bus = music_bus_name
+	add_child(descent_music_player)
+
+func start_descent_music() -> void:
+	_set_music_muted(false)
+	for p in held_scene_music:
+		if is_instance_valid(p):
+			p.play()
+	if descent_music_player != null:
+		descent_music_player.play()
+
+# --- Music ng ending (comics + credits) ---
+func stop_descent_music() -> void:
+	stop_falling_sfx()
+	for p in held_scene_music:
+		if is_instance_valid(p):
+			p.stop()
+	if descent_music_player != null:
+		descent_music_player.stop()
+	if has_node("/root/MusicManager"):
+		MusicManager.stop_music()
+
+func start_ending_music() -> void:
+	_set_music_muted(false)
+	var stream := load(ENDING_MUSIC_PATH) as AudioStream
+	if stream == null:
+		push_error("DESCENT: Hindi mahanap ang music: " + ENDING_MUSIC_PATH)
+		return
+	if stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = true
+	ending_music_player = AudioStreamPlayer.new()
+	ending_music_player.stream = stream
+	ending_music_player.volume_db = ending_music_volume_db
+	ending_music_player.bus = music_bus_name      # sumusunod na sa Music slider
+	add_child(ending_music_player)
+	ending_music_player.play()
+
+func stop_ending_music() -> void:
+	if ending_music_player != null:
+		ending_music_player.stop()
+		ending_music_player.queue_free()
+		ending_music_player = null
 
 # =========================================================================
 #  INSTRUCTIONS / SETUP
@@ -181,14 +351,12 @@ func setup_background() -> void:
 	var bg_height_scaled: float = bg_size.y * bg_scale
 	start_player_y = player.position.y
 
-	# Itaas ng background ang nakatapat sa starting position ni James (reverse ng Ascent)
 	background.position = Vector2(0, start_player_y + bg_height_scaled / 2.0)
 
 	total_descent_height = bg_height_scaled
 	bottom_y = start_player_y + total_descent_height - bottom_offset_from_end
 
 func _process(delta: float) -> void:
-	# ---------- WAITING FOR INSTRUCTIONS POPUP TO BE DISMISSED ----------
 	if not game_started:
 		return
 
@@ -220,6 +388,7 @@ func start_game() -> void:
 	if player.has_method("set_control_enabled"):
 		player.set_control_enabled(true)
 	player.set_physics_process(true)
+	start_descent_music()      # dito lang magsisimula ang music
 	falling_sfx_player.play()
 
 func update_camera(delta: float) -> void:
@@ -234,7 +403,7 @@ func clamp_player_x() -> void:
 	player.position.x = clamp(player.position.x, -half_width + 10, half_width - 10)
 
 # =========================================================================
-#  OBSTACLE SPAWNING (left corner / right corner / middle)
+#  OBSTACLE SPAWNING
 # =========================================================================
 func spawn_next_obstacle() -> void:
 	var gap: float = randf_range(obstacle_gap_min, obstacle_gap_max)
@@ -246,17 +415,14 @@ func spawn_next_obstacle() -> void:
 	var obstacle_type: String
 
 	if lane_roll < 0.35:
-		# LEFT CORNER
 		texture = left_branch_texture if randf() > 0.5 else left_rockcliff_texture
 		pos_x = -screen_width / 2.0 + edge_margin
 		obstacle_type = "branch"
 	elif lane_roll < 0.7:
-		# RIGHT CORNER
 		texture = right_branch_texture if randf() > 0.5 else right_rockcliff_texture
 		pos_x = screen_width / 2.0 - edge_margin
 		obstacle_type = "branch"
 	else:
-		# MIDDLE
 		texture = middle_thundercloud_texture
 		pos_x = randf_range(-20.0, 20.0)
 		obstacle_type = "thunder"
@@ -282,7 +448,7 @@ func create_obstacle(pos: Vector2, texture: Texture2D, obstacle_type: String = "
 
 	var collision := CollisionShape2D.new()
 	var shape := RectangleShape2D.new()
-	shape.size = Vector2(tex_size.x * scale_factor * 0.7, tex_size.y * scale_factor * 0.7)  # medyo mas maliit sa sprite para forgiving ang hitbox
+	shape.size = Vector2(tex_size.x * scale_factor * 0.7, tex_size.y * scale_factor * 0.7)
 	collision.shape = shape
 	area.add_child(collision)
 
@@ -365,67 +531,146 @@ func trigger_win() -> void:
 	win_popup_label.text = "You made it down safely!"
 	win_popup_label.visible = true
 
-	# Ipakita muna ang win message, pagkatapos ay i-play ang dalawang cutscene.
 	await get_tree().create_timer(win_delay_seconds).timeout
-	await play_ending_cutscenes()
+	win_popup_label.visible = false
 
-	# I-mark ang completion at i-unlock ang badge pagkatapos ng cutscenes.
+	await play_ending_sequence()
+
 	Global.mark_minigame_passed(Global.current_minigame_npc)
 	Global.complete_heritage_pillar()
 	Global.unlock_badge("mountain_climber_safe_descent")
 
 	await return_to_homebase()
 
-func play_ending_cutscenes() -> void:
+# =========================================================================
+#  ENDING: 3 COMICS -> CREDITS (may MainmenuBG music)
+# =========================================================================
+func play_ending_sequence() -> void:
 	if ending_sequence_started:
 		return
 	ending_sequence_started = true
 
-	# Gumawa ng full-screen video player sa ibabaw ng game UI.
-	cutscene_player = VideoStreamPlayer.new()
-	cutscene_player.name = "DescentEndingCutscenePlayer"
-	cutscene_player.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	cutscene_player.expand = true
-	cutscene_player.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	cutscene_player.z_index = 100
-	ui_layer.add_child(cutscene_player)
+	stop_descent_music()      # alisin ang music ng descent
+	start_ending_music()      # MainmenuBG.mp3 (sa Music bus)
 
-	# First cutscene
-	var first_video := load(DESCENT_FIRST_CUTSCENE_PATH) as VideoStream
-	if first_video == null:
-		push_error("Hindi ma-load ang first descent cutscene: " + DESCENT_FIRST_CUTSCENE_PATH)
-		cutscene_player.queue_free()
-		cutscene_player = null
-		return
+	await play_ending_comics()
+	await play_credits()
 
-	cutscene_player.stream = first_video
-	cutscene_player.visible = true
-	cutscene_player.play()
-	await cutscene_player.finished
+	stop_ending_music()
 
-	# Second cutscene
-	var last_video := load(DESCENT_LAST_CUTSCENE_PATH) as VideoStream
-	if last_video == null:
-		push_error("Hindi ma-load ang last descent cutscene: " + DESCENT_LAST_CUTSCENE_PATH)
-		cutscene_player.stop()
-		cutscene_player.queue_free()
-		cutscene_player = null
-		return
+func _make_ending_layer(layer_index: int) -> CanvasLayer:
+	var layer := CanvasLayer.new()
+	layer.layer = layer_index
+	add_child(layer)
+	return layer
 
-	cutscene_player.stop()
-	cutscene_player.stream = last_video
-	cutscene_player.play()
-	await cutscene_player.finished
+func _make_ending_label(text: String, size_px: int, align: HorizontalAlignment) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.horizontal_alignment = align
+	l.add_theme_font_override("font", ui_font)
+	l.add_theme_font_size_override("font_size", size_px)
+	l.add_theme_color_override("font_color", Color.WHITE)
+	l.add_theme_color_override("font_outline_color", Color.BLACK)
+	l.add_theme_constant_override("outline_size", 3)
+	return l
 
-	cutscene_player.stop()
-	cutscene_player.queue_free()
-	cutscene_player = null
+func play_ending_comics() -> void:
+	var layer := _make_ending_layer(50)
+
+	var dim := ColorRect.new()
+	dim.color = Color.BLACK
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(dim)
+
+	var rect := TextureRect.new()
+	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	rect.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	layer.add_child(rect)
+
+	var hint := _make_ending_label("", 8, HORIZONTAL_ALIGNMENT_CENTER)
+	hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	hint.offset_top = -16
+	layer.add_child(hint)
+
+	for i in range(ENDING_COMIC_PATHS.size()):
+		var path: String = ENDING_COMIC_PATHS[i]
+		var tex := load(path) as Texture2D
+		if tex == null:
+			push_error("DESCENT: Hindi mahanap ang comic: " + path)
+			continue
+
+		rect.texture = tex
+		hint.text = "SPACE - magpatuloy" if i >= ENDING_COMIC_PATHS.size() - 1 else "SPACE - susunod"
+		rect.modulate.a = 0.0
+		create_tween().tween_property(rect, "modulate:a", 1.0, 0.4)
+
+		ending_waiting = true
+		await ending_advance
+		ending_waiting = false
+
+	layer.queue_free()
+
+func play_credits() -> void:
+	var layer := _make_ending_layer(60)
+	var vp: Vector2 = get_viewport_rect().size
+
+	var bg := TextureRect.new()
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	bg.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var bg_tex := load(CREDITS_BG_PATH) as Texture2D
+	if bg_tex == null:
+		push_error("DESCENT: Hindi mahanap ang credits background: " + CREDITS_BG_PATH)
+		var fallback := ColorRect.new()
+		fallback.color = Color.BLACK
+		fallback.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		layer.add_child(fallback)
+	else:
+		bg.texture = bg_tex
+		layer.add_child(bg)
+
+	var shade := ColorRect.new()
+	shade.color = Color(0, 0, 0, 0.45)
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(shade)
+
+	var credits := _make_ending_label("\n".join(CREDITS_LINES), credits_font_size, HORIZONTAL_ALIGNMENT_CENTER)
+	credits.size = Vector2(vp.x, 0)
+	credits.position = Vector2(0, vp.y)
+	layer.add_child(credits)
+
+	var skip_hint := _make_ending_label("SPACE - skip", 8, HORIZONTAL_ALIGNMENT_RIGHT)
+	skip_hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	skip_hint.offset_top = -16
+	skip_hint.offset_right = -6
+	layer.add_child(skip_hint)
+
+	await get_tree().process_frame
+	var text_h: float = credits.get_combined_minimum_size().y
+	credits.size = Vector2(vp.x, text_h)
+	credits.position = Vector2(0, vp.y)
+
+	var tw := create_tween()
+	tw.tween_property(credits, "position:y", -text_h, credits_scroll_seconds)
+	tw.finished.connect(func(): ending_advance.emit())
+
+	ending_waiting = true
+	await ending_advance
+	ending_waiting = false
+	tw.kill()
+
+	layer.queue_free()
 
 func return_to_homebase() -> void:
 	if return_scene_path.is_empty():
 		push_error("return_scene_path is empty!")
 		return
 
+	stop_ending_music()
 	Global.spawn_position = return_spawn_pos
 
 	if has_node("/root/LoadingScreen"):
@@ -438,7 +683,7 @@ func restart_game() -> void:
 
 
 # =========================================================================
-#  PROGRESS BAR (simpleng reuse ng Ascent style)
+#  PROGRESS BAR
 # =========================================================================
 class DescentProgressBar extends Control:
 	var bar_width: float = 6.0

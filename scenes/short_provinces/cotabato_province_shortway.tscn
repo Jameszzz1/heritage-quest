@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://coqw106vvoex8"]
 
-[ext_resource type="Script" uid="uid://dsg36jma07rdx" path="res://scenes/short_provinces/cotabato_province_shortway.gd" id="1_524a4"]
+[ext_resource type="Script" path="res://scenes/short_provinces/cotabato_province_shortway.gd" id="1_524a4"]
 [ext_resource type="Texture2D" uid="uid://77no4k1yn1vk" path="res://assets/sprites/tiles/water.png" id="2_0mk35"]
 [ext_resource type="Texture2D" uid="uid://7g3vnvxhcbyh" path="res://assets/sprites/tiles/dark_water.png" id="3_524a4"]
 [ext_resource type="Texture2D" uid="uid://cr6aals8mliq1" path="res://assets/sprites/tiles/dirt.png" id="4_qlpn2"]
@@ -15,7 +15,8 @@
 [ext_resource type="Script" uid="uid://c0ffo331v0ub4" path="res://scripts/settings_audio_ingame_script/night_overlay.gd" id="13_av2gg"]
 [ext_resource type="PackedScene" uid="uid://c6ebuwyr0shm0" path="res://scenes/characters/balbal.tscn" id="14_0mk35"]
 [ext_resource type="Script" uid="uid://dngnen74paewr" path="res://scripts/scene_transition.gd" id="14_oas4c"]
-[ext_resource type="PackedScene" path="res://scenes/characters/maliksi.tscn" id="15_0mk35"]
+[ext_resource type="PackedScene" uid="uid://cyl6yp08e0qvb" path="res://scenes/characters/maliksi.tscn" id="15_0mk35"]
+[ext_resource type="Script" uid="uid://dvpi0e84xkhaa" path="res://scripts/route_comic_trigger.gd" id="16_qlpn2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qxu0i"]
 texture = ExtResource("2_0mk35")
@@ -155,6 +156,9 @@ size = Vector2(65.09857, 24.369637)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ttc3q"]
 size = Vector2(41.489918, 49.791294)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_20ww2"]
+size = Vector2(183.71068, 5)
+
 [node name="cotabato_province_shortway" type="Node2D" unique_id=1066175384]
 script = ExtResource("1_524a4")
 
@@ -194,7 +198,7 @@ tile_map_data = PackedByteArray("AADg/5f/AQADAAAAAADn/57/AQADAAAAAADj/7L/AQADAAA
 tile_set = SubResource("TileSet_i5btb")
 
 [node name="James" parent="Y-sort" unique_id=636874803 instance=ExtResource("11_ptu8w")]
-position = Vector2(-223, -219)
+position = Vector2(458.99994, 93.99997)
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/James" unique_id=139820229]
 
@@ -264,8 +268,19 @@ scale = Vector2(0.9999997, 0.9999998)
 skew = -0.017453292
 shape = SubResource("RectangleShape2D_ttc3q")
 
+[node name="ComicTrigger" type="Area2D" parent="." unique_id=435841254]
+position = Vector2(455, -1)
+script = ExtResource("16_qlpn2")
+route = "route3_highland"
+auto_play_on_ready = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ComicTrigger" unique_id=1734958370]
+position = Vector2(56.189026, 12.294189)
+rotation = 0.8936085
+shape = SubResource("RectangleShape2D_20ww2")
+
 [node name="Maliksi" parent="." unique_id=2100318797 instance=ExtResource("15_0mk35")]
-position = Vector2(468.99994, -39.000015)
+position = Vector2(-66.99994, 112.999985)
 
 [connection signal="body_entered" from="ToSultanKudaratShortway" to="ToSultanKudaratShortway" method="_on_body_entered"]
 [connection signal="body_entered" from="ToBacktoCotabatoProvince" to="ToBacktoCotabatoProvince" method="_on_body_entered"]

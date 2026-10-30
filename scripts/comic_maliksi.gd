@@ -41,10 +41,13 @@ const SKIP_SIZE_RATIO := 0.032
 
 # Itakda ang mga ito bago i-add_child kung kailangan.
 # next_scene = "" ay nangangahulugang magsasara lang at mag-e-emit ng "finished".
+# center_page = true: malaki at nasa gitna ang comic, walang narration sa kanan
+# (para sa comic na nakalagay na ang text sa mismong image).
 var pages: Array = PREQUEL_PAGES.duplicate()
 var narration: Array = PREQUEL_NARRATION.duplicate(true)
 var next_scene: String = DEFAULT_NEXT_SCENE
 var speaker: String = DEFAULT_SPEAKER
+var center_page: bool = false
 
 var _textures: Array[Texture2D] = []
 var _page_narration: Array = []
@@ -93,10 +96,10 @@ func _build_ui() -> void:
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
 
-	# Comic sa kaliwa (58% ng screen)
+	# Comic: sa kaliwa (58%) kapag may narration, buong screen kapag center_page
 	_page_rect = TextureRect.new()
 	_page_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_page_rect.anchor_right = 0.58
+	_page_rect.anchor_right = 1.0 if center_page else 0.58
 	_page_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_page_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_page_rect.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -106,7 +109,7 @@ func _build_ui() -> void:
 	# Pangalan ng nagsasalita (sa itaas ng narration)
 	_speaker_label = Label.new()
 	_speaker_label.text = speaker
-	_speaker_label.visible = speaker != ""
+	_speaker_label.visible = speaker != "" and not center_page
 	_speaker_label.anchor_left = 0.62
 	_speaker_label.anchor_right = 0.96
 	_speaker_label.anchor_top = 0.08
@@ -124,6 +127,7 @@ func _build_ui() -> void:
 
 	# Narration sa kanan
 	_narration_label = Label.new()
+	_narration_label.visible = not center_page
 	_narration_label.anchor_left = 0.62
 	_narration_label.anchor_right = 0.96
 	_narration_label.anchor_top = 0.17

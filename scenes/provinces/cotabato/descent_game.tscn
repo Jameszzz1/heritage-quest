@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://xavywihtvd70"]
 
 [ext_resource type="Script" uid="uid://cfld61j4x2qqs" path="res://scripts/mini_games/descent_game.gd" id="1_gwd4n"]
-[ext_resource type="Texture2D" uid="uid://cswjxvpta1e3a" path="res://assets/mini_games/ascent/ascentbackground.png" id="2_3c0n2"]
+[ext_resource type="Texture2D" uid="uid://btxm1647323su" path="res://assets/mini_games/descent/descent_background.png" id="2_ttsth"]
 [ext_resource type="PackedScene" uid="uid://dcxo0g5sfhmm2" path="res://scenes/provinces/cotabato/descent_james.tscn" id="3_ttsth"]
 [ext_resource type="Script" uid="uid://hb7byenci0ne" path="res://scripts/mini_games/minigame_settings.gd" id="4_ttsth"]
 
@@ -9,7 +9,7 @@
 script = ExtResource("1_gwd4n")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1842403537]
-texture = ExtResource("2_3c0n2")
+texture = ExtResource("2_ttsth")
 
 [node name="DescentJames" parent="." unique_id=2090927404 instance=ExtResource("3_ttsth")]
 

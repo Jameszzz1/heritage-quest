@@ -13,6 +13,12 @@ const TARGET_SCORE = 50000   # 50,000
 
 const END_GAME_FONT = preload("res://assets/fonts/GrapeSoda.ttf")
 
+# ===== Settings ng popup (dito mo ayusin kung masyadong maliit/malaki) =====
+const POPUP_POINTS_SIZE = 12     # laki ng "+300"
+const POPUP_COMBO_BASE_SIZE = 10 # simula ng laki ng "COMBO xN!"
+const POPUP_OUTLINE = 4          # kapal ng outline (para visible)
+const POPUP_HOLD_TIME = 0.55     # gaano katagal nakatigil ang text bago mawala (seconds)
+
 var score = 0
 var time_left = 420.0   # 420 seconds = 7 minutes
 var game_over = false
@@ -39,7 +45,7 @@ var is_holding = false
 var combo_count = 0
 
 func _ready():
-	MusicManager.stop_music()   # ← IDAGDAG ITO
+	MusicManager.stop_music()
 	build_cropped_textures()
 	grid_container.columns = GRID_SIZE
 	grid_container.add_theme_constant_override("h_separation", TILE_GAP)
@@ -264,8 +270,12 @@ func process_matches(match_list: Array):
 	if base == 4: bonus = 100
 	elif base == 5: bonus = 300
 	elif base > 5: bonus = 500
-	score += (base * 100) + bonus
+	var gained = (base * 100) + bonus
+	score += gained
 	score_label.text = "SCORE: " + str(score) + " / 50,000"
+	
+	# popup ng points at combo
+	show_match_popups(match_list, gained, base)
 	
 	if match_sound:
 		match_sound.stop()
@@ -299,6 +309,98 @@ func process_matches(match_list: Array):
 			trigger_end_state(true)
 		else:
 			check_board_moves_availability()
+
+
+# ===================== SCORE POPUP SYSTEM =====================
+
+# Kulay ng combo text: puti -> dilaw -> orange -> pula -> pink
+func combo_color(level: int) -> Color:
+	match level:
+		1: return Color("ffffff")
+		2: return Color("ffe066")
+		3: return Color("ff9f43")
+		4: return Color("ff5e5e")
+		_: return Color("ff4df0")
+
+# Kinukuha ang gitna ng lahat ng pumuputok na tiles, tapos nagpapalabas ng text doon
+func show_match_popups(match_list: Array, gained: int, base: int) -> void:
+	var sum := Vector2.ZERO
+	for pos in match_list:
+		var tile = grid_matrix[pos.x][pos.y]
+		sum += tile.global_position + Vector2(TILE_SIZE, TILE_SIZE) / 2.0
+	var center: Vector2 = sum / float(match_list.size())
+	
+	# Points: "+300" (puti, o dilaw kapag malaking match)
+	var points_color := Color("ffffff")
+	if base >= 5:
+		points_color = Color("ffe066")
+	spawn_popup(center + Vector2(0, 5), "+" + str(gained), points_color, POPUP_POINTS_SIZE)
+	
+	# Bonus text para sa 4+ na match
+	if base == 4:
+		spawn_popup(center + Vector2(0, -22), "GREAT!", Color("7dffb0"), POPUP_COMBO_BASE_SIZE)
+	elif base >= 5:
+		spawn_popup(center + Vector2(0, -22), "AWESOME!", Color("5ee6ff"), POPUP_COMBO_BASE_SIZE + 2)
+	
+	# Combo text: lalabas simula sa 2nd chain, lalaki habang tumataas ang combo
+	if combo_count >= 2:
+		var combo_size: int = mini(POPUP_COMBO_BASE_SIZE + combo_count * 2, 24)
+		spawn_popup(center + Vector2(0, -10), "COMBO x" + str(combo_count) + "!", combo_color(combo_count), combo_size)
+
+# POP lang (walang galaw pababa): lalaki na may bounce, hold, tapos fade out
+func spawn_popup(center: Vector2, text: String, color: Color, font_size: int) -> void:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.z_index = 100
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	# Visible kahit anong background: makapal na outline + shadow
+	lbl.add_theme_font_override("font", END_GAME_FONT)
+	lbl.add_theme_font_size_override("font_size", font_size)
+	lbl.add_theme_color_override("font_color", color)
+	lbl.add_theme_color_override("font_outline_color", Color(0.05, 0.02, 0.1, 1))
+	lbl.add_theme_constant_override("outline_size", POPUP_OUTLINE)
+	lbl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
+	lbl.add_theme_constant_override("shadow_offset_x", 1)
+	lbl.add_theme_constant_override("shadow_offset_y", 1)
+	
+	add_child(lbl)
+	var s: Vector2 = lbl.get_minimum_size()
+	lbl.size = s
+	lbl.pivot_offset = s / 2.0
+	
+	# Hindi lalabas sa labas ng screen
+	var vp: Vector2 = get_viewport_rect().size
+	var pos: Vector2 = center - s / 2.0
+	pos.x = clamp(pos.x, 2.0, max(2.0, vp.x - s.x - 2.0))
+	pos.y = clamp(pos.y, 2.0, max(2.0, vp.y - s.y - 2.0))
+	lbl.global_position = pos
+	
+	# Nagsisimula maliit at transparent, may konting tilt
+	lbl.scale = Vector2(0.2, 0.2)
+	lbl.modulate.a = 0.0
+	lbl.rotation_degrees = randf_range(-6.0, 6.0)
+	
+	# Sunod-sunod na animation (walang parallel na magulo)
+	var tw := lbl.create_tween()
+	# 1) POP: lalaki na may bounce
+	tw.tween_property(lbl, "scale", Vector2(1.4, 1.4), 0.14) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(lbl, "modulate:a", 1.0, 0.08)
+	tw.parallel().tween_property(lbl, "rotation_degrees", 0.0, 0.14)
+	# 2) Settle: babalik sa normal na laki
+	tw.tween_property(lbl, "scale", Vector2.ONE, 0.1) \
+		.set_trans(Tween.TRANS_SINE)
+	# 3) Hold: nakatigil para mabasa
+	tw.tween_interval(POPUP_HOLD_TIME)
+	# 4) Fade out habang lumalaki ng konti
+	tw.tween_property(lbl, "scale", Vector2(1.2, 1.2), 0.25)
+	tw.parallel().tween_property(lbl, "modulate:a", 0.0, 0.25)
+	tw.tween_callback(lbl.queue_free)
+
+# ===================== END NG SCORE POPUP SYSTEM =====================
+
 
 func drop_tiles_down():
 	var has_movement = false
@@ -442,7 +544,7 @@ func trigger_end_state(is_victory: bool):
 
 	if is_victory:
 		Global.mark_minigame_passed(Global.current_minigame_npc)
-		Global.unlock_badge("master_of_the_golden_grid")      # <-- BAGO
+		Global.unlock_badge("master_of_the_golden_grid")
 		timer_label.text = "TASK SUCCESS!"
 		score_label.modulate = Color(0.3, 1, 0.3)
 	else:

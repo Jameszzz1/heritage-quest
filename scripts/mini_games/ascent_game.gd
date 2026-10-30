@@ -1,713 +1,500 @@
-extends Node2D
+extends Node
 
-# ---------- CONFIG ----------
-@export var gap_min: float = 40.0
-@export var gap_max: float = 75.0
-@export var min_x_distance: float = 60.0
-@export var screen_width: float = 320.0
-@export var screen_height: float = 180.0
-@export var fall_death_margin: float = 60.0
-@export var target_platform_width: float = 96.0
-@export var final_platform_width: float = 280.0
-@export var final_platform_offset_from_top: float = 60.0
-@export var final_platform_visual_y_offset: float = 0.0
-@export var jump_velocity_ref: float = -500.0
-@export var gravity_ref: float = 1200.0
-@export var move_speed_ref: float = 300.0
-@export var reach_safety_factor: float = 0.65
+const BG_PATH := "res://assets/mini_games/ascent/background.png"
+const COMIC_PATHS := [
+	"res://assets/mini_games/ascent/1_comics_ascent.png",
+	"res://assets/mini_games/ascent/2_comics_ascent.png",
+]
+const HAMMER_SFX_PATH := "res://assets/audio/mini_game_audio/sfx_new_ascent_hammering.wav"
+const FALL_SFX_PATH := "res://assets/audio/mini_game_audio/sfx_new_ascent_falling.mp3"
 
-@export var cloud_chance_level2: float = 0.15
-@export var cloud_chance_level3: float = 0.35
-
-@export var final_platform_surface_y_ratio: float = 0.70
-@export var final_platform_collision_height: float = 12.0
-
-@export var level_surface_y_ratio: float = 0.65
-@export var level_collision_height: float = 16.0
-
-@export var cloud_surface_y_ratio: float = 0.45
-@export var cloud_collision_height: float = 12.0
-
-# Pixels na mas mababa sa alpha na ito ay hindi bibilangin sa HABA ng collision.
-# Kung mahaba pa rin ang collision kaysa sa nakikitang platform, TAASAN (hal. 0.6).
-# Kung kulang ang haba, BAWASAN.
-@export_range(0.0, 1.0) var collision_alpha_threshold: float = 0.35
-
-@export var cloud_move_speed: float = 30.0
-@export var cloud_move_range: float = 40.0
-
-# Ulap: gaano katagal tatagal pagkalapag ni James bago mag-fade
-@export var cloud_stay_time: float = 0.3
-@export var cloud_fade_time: float = 0.4
-
-@export var camera_follow_threshold: float = 30.0
-@export var camera_start_margin: float = 50.0
-
-# --- SANDAWA NPC ---
-@export var sandawa_offset: Vector2 = Vector2(-70, -20)  # relative sa final platform center
-@export var sandawa_scale: float = 0.3
-@export_range(0, 7) var sandawa_frame_index: int = 0  # piliin dito kung aling pose (0-7)
-@export var sandawa_trigger_radius: float = 26.0  # gaano kalapit dapat si James para mag-trigger
-
-# --- NEXT SCENE (Descent minigame) ---
-@export var descent_scene_path: String = "res://scenes/provinces/cotabato/descent_game.tscn"
-
-var level1_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentlevel1.png")
-var level2_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentlevel2.png")
-var level3_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentlevel3.png")
-var clouds_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentclouds.png")
-var final_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentfinal.png")
-var bg_texture: Texture2D = preload("res://assets/mini_games/ascent/ascentbackground.png")
-var sandawa_texture: Texture2D = preload("res://assets/images/provinces/cotabato/descent_sandawa_sprite.png")
-var ui_font: Font = preload("res://assets/fonts/GrapeSoda.ttf")
-
-# Eksaktong mga rehiyon ng bawat frame (na-detect na mula sa larawan mo)
-const SANDAWA_FRAMES: Array = [
-	Rect2(55, 3, 88, 197),
-	Rect2(222, 2, 87, 199),
-	Rect2(385, 4, 88, 197),
-	Rect2(522, 5, 97, 196),
-	Rect2(682, 5, 88, 196),
-	Rect2(816, 4, 87, 197),
-	Rect2(969, 4, 86, 197),
-	Rect2(1113, 6, 89, 195),
+# Instructions popup (palitan ang icon/caption dito kung gusto)
+const INSTRUCTION_STEPS := [
+	{"icon": "move", "caption": "Press A, D, or A + D to match the key shown."},
+	{"icon": "hazard", "caption": "Hit the white zone. A miss drains your grip."},
+	{"icon": "goal_down", "caption": "Climb all the way to the summit."},
 ]
 
-@onready var player: CharacterBody2D = $AscentPlayer
-@onready var background: Sprite2D = $Background
-@onready var sandawa_cutscene: VideoStreamPlayer = $CutsceneLayer/SandawaCutscene
-var camera: Camera2D
+@export var screen_size := Vector2(320, 180)
+@export var perfect_step_px := 28.0
+@export var good_step_px := 14.0
+@export var scroll_time := 0.35
+@export var ground_pos := Vector2(160, 142)
+@export var climb_pos := Vector2(160, 104)
+@export var idle_height_px := 56.0
+@export var climb_height_px := 56.0
+@export var end_offset := 70.0
+@export var fall_time := 0.9
+@export var hammer_volume_db := 0.0
+@export var fall_sfx_volume_db := 0.0
+@export var label_font_size := 8
+@export_file("*.tscn") var next_scene := "res://scenes/provinces/cotabato/descent_game.tscn"
 
-var camera_target_y: float = 0.0
-var highest_platform_y: float = 0.0
-var last_platform_x: float = 0.0
-var platforms_spawned: int = 0
-var platforms_before_final: int = 20
-var total_climb_height: float = 0.0
-var final_platform_y: float = 0.0
-var is_game_over: bool = false
-var has_won: bool = false
-var final_platform_spawned: bool = false
-var game_started: bool = false
+enum Phase { INSTRUCTIONS, WAITING, CLIMBING, FINISHED, COMIC, GAMEOVER }
 
-var platforms: Array[Node] = []
-var cloud_platforms: Array[Node] = []
+var ui_font: Font = preload("res://assets/fonts/GrapeSoda.ttf")
 
-# Cache ng nakikitang haba (kaliwa-kanan) ng bawat texture
-var _visible_x_cache: Dictionary = {}
-
-var ui_layer: CanvasLayer
+var player: Node2D
+var hud: CanvasLayer
+var timing_bar: TimingBar
+var grip_bar: ProgressBar
+var prompt: Label
+var stage_label: Label
 var game_over_label: Label
-var win_popup_label: Label
-var win_popup_timer: Timer
 
-var procedural_progress_bar: AscentProgressBar
-var start_player_y: float = 0.0
+var comic_layer: CanvasLayer
+var comic_rect: TextureRect
+var comic_hint: Label
+var comic_textures: Array[Texture2D] = []
+var comic_index := 0
 
-# --- Sandawa cutscene trigger ---
-var sandawa_trigger: Area2D
-var cutscene_has_played: bool = false
+var hammer_left: AudioStreamPlayer
+var hammer_right: AudioStreamPlayer
+var hammer_both: AudioStreamPlayer
+var fall_sfx_player: AudioStreamPlayer
+
+var phase: Phase = Phase.INSTRUCTIONS
+var world: Node2D
+var total_h := 0.0
+var max_scroll := 0.0
+var goal_scroll := 0.0
+var scroll := 0.0
+var scroll_target := 0.0
+var stage := 1
+var scroll_tween: Tween
+var fall_tween: Tween
+var ready_ok := false
+
+var _old_scale_mode := Window.CONTENT_SCALE_MODE_DISABLED
+var _old_scale_aspect := Window.CONTENT_SCALE_ASPECT_KEEP
+
 
 func _ready() -> void:
-	MusicManager.stop_music()   # ← IDAGDAG ITO
-	randomize()
+	MusicManager.stop_music()
+	var win := get_window()
+	_old_scale_mode = win.content_scale_mode
+	_old_scale_aspect = win.content_scale_aspect
+	win.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	win.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
 
-	camera = Camera2D.new()
-	camera.enabled = true
-	add_child(camera)
+	_ensure_action()
 
-	player.jumped_from_platform.connect(_on_player_jumped_from)
+	player = get_node_or_null("AscentPlayer") as Node2D
+	if player == null:
+		for c in get_children():
+			if c is CharacterBody2D:
+				player = c
+				break
+	if player == null:
+		push_error("ASCENT: Walang player node. Dapat 'AscentPlayer' (CharacterBody2D) ang pangalan sa scene.")
+		return
+	for sig in ["step_done", "grip_changed", "fell"]:
+		if not player.has_signal(sig):
+			push_error("ASCENT: Walang signal '%s' ang script ng player." % sig)
+			return
 
-	if background != null:
-		background.texture = bg_texture
+	_build_world()
+	_build_ui()
+	_build_comic()
+	_setup_sfx()
 
-	sandawa_cutscene.visible = false
-	sandawa_cutscene.finished.connect(_on_cutscene_finished)
+	timing_bar.hit.connect(_on_hit)
+	timing_bar.missed.connect(_on_missed)
+	player.step_done.connect(_on_step_done)
+	player.grip_changed.connect(_on_grip_changed)
+	player.fell.connect(_on_fell)
 
-	create_ui()
-	setup_background()
-	create_background_filler(player.position.y)
+	ready_ok = true
+	_reset_to_ground()
+	_show_instructions()
 
-	camera_target_y = player.global_position.y - screen_height / 2.0
-	camera.global_position = Vector2(0, camera_target_y)
 
-	camera.limit_left = int(-screen_width / 2.0)
-	camera.limit_right = int(screen_width / 2.0)
-	camera.limit_top = int(player.position.y - total_climb_height + 2)
+func _exit_tree() -> void:
+	var win := get_window()
+	if win:
+		win.content_scale_mode = _old_scale_mode
+		win.content_scale_aspect = _old_scale_aspect
 
-	var avg_gap: float = (gap_min + gap_max) / 2.0
-	platforms_before_final = max(10, int(total_climb_height / avg_gap))
 
-	create_flat_start_platform(Vector2(player.position.x, player.position.y + 20))
-	last_platform_x = player.position.x
-	highest_platform_y = player.position.y + 20
+# SPACEBAR ang "climb" (pang-start sa ground at pang-next ng comics)
+func _ensure_action() -> void:
+	if not InputMap.has_action("climb"):
+		InputMap.add_action("climb")
+	InputMap.action_erase_events("climb")
+	var ev := InputEventKey.new()
+	ev.physical_keycode = KEY_SPACE
+	InputMap.action_add_event("climb", ev)
 
-	for i in range(platforms_before_final + 10):
-		if final_platform_spawned:
-			break
-		spawn_next_platform()
 
-	start_player_y = player.position.y
+# ---------- SFX ----------
+func _make_pan_bus(bus_name: String, pan: float) -> void:
+	if AudioServer.get_bus_index(bus_name) != -1:
+		return
+	AudioServer.add_bus()
+	var idx := AudioServer.bus_count - 1
+	AudioServer.set_bus_name(idx, bus_name)
+	var fx := AudioEffectPanner.new()
+	fx.pan = pan
+	AudioServer.add_bus_effect(idx, fx)
+	var send := "SFX" if AudioServer.get_bus_index("SFX") != -1 else "Master"
+	AudioServer.set_bus_send(idx, send)
 
-	# Ifreeze ang player hanggang ma-dismiss ang instructions popup
-	if player.has_method("set_control_enabled"):
-		player.set_control_enabled(false)
+func _make_sfx_player(stream: AudioStream, bus_name: String, vol_db: float) -> AudioStreamPlayer:
+	var p := AudioStreamPlayer.new()
+	p.stream = stream
+	p.bus = bus_name
+	p.volume_db = vol_db
+	add_child(p)
+	return p
+
+func _setup_sfx() -> void:
+	_make_pan_bus("AscentHammerL", -1.0)   # kaliwa lang
+	_make_pan_bus("AscentHammerR", 1.0)    # kanan lang
+	_make_pan_bus("AscentHammerC", 0.0)    # gitna (dalawa)
+
+	var hammer := load(HAMMER_SFX_PATH) as AudioStream
+	if hammer == null:
+		push_error("ASCENT: Hindi mahanap ang sfx: " + HAMMER_SFX_PATH)
 	else:
-		player.set_physics_process(false)
+		hammer_left = _make_sfx_player(hammer, "AscentHammerL", hammer_volume_db)
+		hammer_right = _make_sfx_player(hammer, "AscentHammerR", hammer_volume_db)
+		hammer_both = _make_sfx_player(hammer, "AscentHammerC", hammer_volume_db)
 
-	show_instructions_popup()
+	var fall_stream := load(FALL_SFX_PATH) as AudioStream
+	if fall_stream == null:
+		push_error("ASCENT: Hindi mahanap ang sfx: " + FALL_SFX_PATH)
+	else:
+		var fall_bus := "SFX" if AudioServer.get_bus_index("SFX") != -1 else "Master"
+		fall_sfx_player = _make_sfx_player(fall_stream, fall_bus, fall_sfx_volume_db)
 
-func show_instructions_popup() -> void:
+# side: "left" = A, "right" = D, "both" = A+D
+func _play_hammer(side: String) -> void:
+	var p: AudioStreamPlayer
+	match side:
+		"left":
+			p = hammer_left
+		"right":
+			p = hammer_right
+		_:
+			p = hammer_both
+	if p != null:
+		p.play()
+
+
+# ---------- INSTRUCTIONS ----------
+func _show_instructions() -> void:
+	phase = Phase.INSTRUCTIONS
+	prompt.visible = false
+
 	var popup := InstructionsPopup.new()
 	popup.popup_title = "INSTRUCTIONS"
-	popup.popup_subtitle = "ASCENT: Climbing the mountain"
-	popup.start_hint = "PRESS SPACE TO START"
-	popup.steps = [
-		{"icon": "move", "caption": "PRESS A , D LEFT/RIGHT"},
-		{"icon": "jump", "caption": "PRESS SPACE TO JUMP"},
-		{"icon": "goal_up", "caption": "CLIMB TO THE PEAK"}
-	]
+	popup.popup_subtitle = "ASCENT: Climbing the Mountain"
+	popup.start_hint = "Press SPACE to start"
+	popup.steps = INSTRUCTION_STEPS.duplicate(true)
 	popup.dismissed.connect(_on_instructions_dismissed)
-	ui_layer.add_child(popup)
+	hud.add_child(popup)
 
 func _on_instructions_dismissed() -> void:
-	game_started = true
-	if player.has_method("set_control_enabled"):
-		player.set_control_enabled(true)
-	else:
-		player.set_physics_process(true)
+	await get_tree().process_frame
+	phase = Phase.WAITING
+	prompt.visible = true
 
-func setup_background() -> void:
-	if background == null or background.texture == null:
-		total_climb_height = 3000.0
-		final_platform_y = player.position.y - total_climb_height + final_platform_offset_from_top
+
+# ---------- LAKI NG PLAYER (auto-fit sa taas) ----------
+func _fit_player(anim: String, height_px: float) -> void:
+	var spr := player.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	if spr == null or spr.sprite_frames == null:
+		return
+	if not spr.sprite_frames.has_animation(anim):
+		return
+	var tex := spr.sprite_frames.get_frame_texture(anim, 0)
+	if tex == null:
+		return
+	var h := tex.get_height() * absf(spr.scale.y)
+	if h <= 0.0:
+		return
+	var k := height_px / h
+	player.scale = Vector2(k, k)
+
+
+# ---------- MUNDO ----------
+func _build_world() -> void:
+	world = Node2D.new()
+	world.name = "World"
+	add_child(world)
+	move_child(world, 0)
+
+	var tex := load(BG_PATH) as Texture2D
+	if tex == null:
+		push_error("ASCENT: Hindi mahanap ang background: " + BG_PATH)
 		return
 
-	var bg_size: Vector2 = background.texture.get_size()
-	var bg_scale: float = screen_width / bg_size.x
-	background.scale = Vector2(bg_scale, bg_scale)
-
-	var bg_height_scaled: float = bg_size.y * bg_scale
-	var start_y: float = player.position.y
-
-	background.position = Vector2(0, start_y - bg_height_scaled / 2.0)
-
-	total_climb_height = bg_height_scaled
-	final_platform_y = start_y - total_climb_height + final_platform_offset_from_top
-
-func create_background_filler(bottom_y: float) -> void:
-	var filler := ColorRect.new()
-	filler.color = Color(0.125, 0.176, 0.059)
-	filler.size = Vector2(screen_width * 3, 2000)
-	filler.position = Vector2(-screen_width * 1.5, bottom_y)
-	filler.z_index = -100
-	add_child(filler)
-
-func create_flat_start_platform(pos: Vector2) -> void:
-	var body := StaticBody2D.new()
-	body.position = pos
-	body.add_to_group("platforms")
-
-	var visual := ColorRect.new()
-	var plat_width: float = screen_width * 0.9
-	var plat_height: float = 16.0
-	visual.size = Vector2(plat_width, plat_height)
-	visual.position = Vector2(-plat_width / 2.0, 0)
-	visual.color = Color(0.45, 0.32, 0.18)
-	body.add_child(visual)
-
-	var collision := CollisionShape2D.new()
-	var shape := RectangleShape2D.new()
-	shape.size = Vector2(plat_width, plat_height)
-	collision.shape = shape
-	collision.position = Vector2(0, plat_height / 2.0)
-	collision.one_way_collision = true
-	collision.one_way_collision_margin = 5.0
-	body.add_child(collision)
-
-	add_child(body)
-	platforms.append(body)
-
-func _on_player_jumped_from(platform_node: Node) -> void:
-	# Backup lang: kung hindi pa nagsisimula ang countdown, simulan na rito
-	if is_instance_valid(platform_node) and platform_node.is_in_group("cloud_platform"):
-		start_cloud_countdown(platform_node)
-
-# Tinitingnan kung nakatayo si James sa ulap; kapag oo, simulan ang countdown
-func check_cloud_landing() -> void:
-	if not player.is_on_floor():
-		return
-	for i in range(player.get_slide_collision_count()):
-		var col := player.get_slide_collision(i)
-		var c: Object = col.get_collider()
-		if c != null and c is Node and c.is_in_group("cloud_platform"):
-			start_cloud_countdown(c)
-
-func start_cloud_countdown(cloud: Node) -> void:
-	if not is_instance_valid(cloud) or cloud.has_meta("fade_started"):
-		return
-	cloud.set_meta("fade_started", true)
-
-	await get_tree().create_timer(cloud_stay_time).timeout
-
-	if is_instance_valid(cloud):
-		fade_and_remove_platform(cloud)
-
-func _process(delta: float) -> void:
-	if not game_started:
-		return
-
-	update_cloud_movement(delta)
-	check_cloud_landing()
-
-	if is_game_over:
-		if Input.is_key_pressed(KEY_R):
-			restart_game()
-		return
-
-	update_camera(delta)
-	wrap_player_x()
-
-	if procedural_progress_bar != null and not has_won:
-		var current_climb: float = start_player_y - player.position.y
-		var target_distance: float = start_player_y - final_platform_y
-
-		if target_distance > 0:
-			var progress_percentage: float = (current_climb / target_distance) * 100.0
-			procedural_progress_bar.update_progress(progress_percentage)
-
-	if not final_platform_spawned and player.position.y < highest_platform_y + screen_height:
-		spawn_next_platform()
-
-	if final_platform_spawned and not has_won and player.is_on_floor() and player.position.y <= final_platform_y + 5.0:
-		trigger_win()
-
-	if player.position.y > camera.global_position.y + screen_height / 2.0 + fall_death_margin:
-		trigger_game_over()
-
-func update_cloud_movement(delta: float) -> void:
-	for body in cloud_platforms.duplicate():
-		if not is_instance_valid(body):
-			cloud_platforms.erase(body)
-			continue
-
-		var base_x: float = body.get_meta("base_x")
-		var move_dir: float = body.get_meta("move_dir")
-		var speed_mult: float = body.get_meta("speed_mult")
-
-		var offset: float = body.get_meta("offset")
-		offset += cloud_move_speed * speed_mult * move_dir * delta
-
-		if offset > cloud_move_range or offset < -cloud_move_range:
-			move_dir *= -1.0
-			body.set_meta("move_dir", move_dir)
-
-		body.set_meta("offset", offset)
-		body.position.x = base_x + offset
-
-func wrap_player_x() -> void:
-	var half_width := screen_width / 2.0
-	if player.position.x < -half_width - 10:
-		player.position.x = half_width + 10
-	elif player.position.x > half_width + 10:
-		player.position.x = -half_width - 10
-
-func update_camera(delta: float) -> void:
-	var player_screen_y: float = player.global_position.y - camera.global_position.y
-	if player_screen_y < -camera_follow_threshold:
-		camera_target_y = player.global_position.y + camera_follow_threshold
-	camera.global_position.y = camera_target_y
-	camera.global_position.x = 0
-
-func max_reachable_x(gap: float) -> float:
-	var g: float = gravity_ref
-	var v0: float = absf(jump_velocity_ref)
-	var discriminant: float = v0 * v0 - 2.0 * g * gap
-	if discriminant < 0.0:
-		return 0.0
-	var t: float = (v0 + sqrt(discriminant)) / g
-	return move_speed_ref * t * reach_safety_factor
-
-# Kinukuha ang kaliwa at kanang dulo (sa pixels ng texture) ng NAKIKITANG bahagi
-# ng sprite, para ang haba ng collision ay tugma sa itsura ng platform.
-func get_visible_x_range(texture: Texture2D) -> Vector2:
-	if _visible_x_cache.has(texture):
-		return _visible_x_cache[texture]
-
-	var result := Vector2(0.0, texture.get_size().x - 1.0)
-	var img: Image = texture.get_image()
-	if img != null and not img.is_empty():
-		if img.is_compressed():
-			img.decompress()
-		var min_x: int = img.get_width()
-		var max_x: int = -1
-		for py in range(img.get_height()):
-			for px in range(img.get_width()):
-				if img.get_pixel(px, py).a > collision_alpha_threshold:
-					min_x = mini(min_x, px)
-					max_x = maxi(max_x, px)
-		if max_x >= min_x:
-			result = Vector2(min_x, max_x)
-
-	_visible_x_cache[texture] = result
-	return result
-
-func create_platform(pos: Vector2, texture: Texture2D, is_cloud: bool = false, custom_width: float = -1.0, collision_height_override: float = -1.0, collision_y_offset: float = 0.0) -> StaticBody2D:
-	var body := StaticBody2D.new()
-	body.position = pos
-	body.add_to_group("platforms")
-	if is_cloud:
-		body.add_to_group("cloud_platform")
-		body.set_meta("base_x", pos.x)
-		body.set_meta("offset", 0.0)
-		body.set_meta("move_dir", 1.0 if randf() > 0.5 else -1.0)
-		body.set_meta("speed_mult", randf_range(0.7, 1.3))
-
-	var visual := Sprite2D.new()
-	visual.texture = texture
-	visual.name = "Visual"
-
-	var tex_size := texture.get_size()
-	var use_width: float = target_platform_width if custom_width < 0.0 else custom_width
-	var scale_factor: float = use_width / tex_size.x
-	visual.scale = Vector2(scale_factor, scale_factor)
-	body.add_child(visual)
-
-	var collision := CollisionShape2D.new()
-	collision.name = "Collision"
-	var shape := RectangleShape2D.new()
-
-	var col_height: float = collision_height_override if collision_height_override > 0.0 else tex_size.y * scale_factor
-
-	# HABA ng collision = haba ng nakikitang bahagi ng sprite (walang transparent na gilid)
-	var x_range: Vector2 = get_visible_x_range(texture)
-	var col_width: float = (x_range.y - x_range.x + 1.0) * scale_factor
-	shape.size = Vector2(col_width, col_height)
-	collision.shape = shape
-
-	# Ilagay sa gitna ng nakikitang bahagi (hindi sa gitna ng buong image)
-	collision.position.x = ((x_range.x + x_range.y + 1.0) / 2.0 - tex_size.x / 2.0) * scale_factor
-	# Taas/baba ng tinatayuan: HINDI binago, sakto sa dati
-	collision.position.y = collision_y_offset
-
-	collision.one_way_collision = true
-	collision.one_way_collision_margin = 5.0
-	body.add_child(collision)
-
-	add_child(body)
-	platforms.append(body)
-
-	if is_cloud:
-		cloud_platforms.append(body)
-
-	return body
-
-func get_platform_data(index: int) -> Dictionary:
-	var progress: float = float(index) / float(platforms_before_final)
-	var base_texture: Texture2D
-	var cloud_chance: float = 0.0
-
-	if progress < 0.35:
-		base_texture = level1_texture
-		cloud_chance = 0.0
-	elif progress < 0.7:
-		base_texture = level2_texture
-		cloud_chance = cloud_chance_level2
-	else:
-		base_texture = level3_texture
-		cloud_chance = cloud_chance_level3
-
-	var is_cloud: bool = randf() < cloud_chance
-	var final_texture_choice: Texture2D = clouds_texture if is_cloud else base_texture
-
-	return {"texture": final_texture_choice, "is_cloud": is_cloud}
-
-func spawn_next_platform() -> void:
-	if final_platform_spawned:
-		return
-
-	var remaining_to_final: float = highest_platform_y - final_platform_y
-	if remaining_to_final <= gap_max:
-		spawn_final_platform()
-		return
-
-	var gap: float = randf_range(gap_min, gap_max)
-	var new_y: float = highest_platform_y - gap
-
-	var min_x: float = -screen_width / 2.0 + 40.0
-	var max_x: float = screen_width / 2.0 - 40.0
-
-	var reach: float = max_reachable_x(gap)
-	var range_min: float = max(min_x, last_platform_x - reach)
-	var range_max: float = min(max_x, last_platform_x + reach)
-	if range_min > range_max:
-		range_min = min_x
-		range_max = max_x
-
-	var new_x: float = randf_range(range_min, range_max)
-
-	if gap < (gap_min + gap_max) / 2.0:
-		var attempts := 0
-		while absf(new_x - last_platform_x) < min_x_distance and attempts < 10:
-			new_x = randf_range(range_min, range_max)
-			attempts += 1
-
-	var data := get_platform_data(platforms_spawned)
-	var is_cloud: bool = data["is_cloud"]
-
-	var tex_size: Vector2 = data["texture"].get_size()
-	var scale_factor: float = target_platform_width / tex_size.x
-	var scaled_height: float = tex_size.y * scale_factor
-
-	if is_cloud:
-		var cloud_surface_offset: float = (cloud_surface_y_ratio * scaled_height) - (scaled_height / 2.0)
-		create_platform(Vector2(new_x, new_y), data["texture"], true, target_platform_width, cloud_collision_height, cloud_surface_offset)
-	else:
-		var surface_offset: float = (level_surface_y_ratio * scaled_height) - (scaled_height / 2.0)
-		create_platform(Vector2(new_x, new_y), data["texture"], false, target_platform_width, level_collision_height, surface_offset)
-
-	last_platform_x = new_x
-	highest_platform_y = new_y
-	platforms_spawned += 1
-	cleanup_old_platforms()
-
-func fade_and_remove_platform(body: Node) -> void:
-	if not is_instance_valid(body):
-		return
-	body.remove_from_group("cloud_platform")
-	cloud_platforms.erase(body)
-
-	var collision := body.get_node_or_null("Collision")
-	if collision:
-		collision.set_deferred("disabled", true)
-
-	var visual := body.get_node_or_null("Visual")
-	if visual:
-		var tween := create_tween()
-		tween.tween_property(visual, "modulate:a", 0.0, cloud_fade_time)
-		await tween.finished
-
-	platforms.erase(body)
-	body.queue_free()
-
-func spawn_final_platform() -> void:
-	var tex_size: Vector2 = final_texture.get_size()
-	var scale_factor: float = final_platform_width / tex_size.x
-	var scaled_height: float = tex_size.y * scale_factor
-
-	var surface_offset_from_center: float = (final_platform_surface_y_ratio * scaled_height) - (scaled_height / 2.0)
-
-	var body := create_platform(
-		Vector2(0, final_platform_y),
-		final_texture,
-		false,
-		final_platform_width,
-		final_platform_collision_height,
-		surface_offset_from_center
-	)
-
-	var visual := body.get_node_or_null("Visual")
-	if visual:
-		visual.position.y = final_platform_visual_y_offset
-
-	final_platform_spawned = true
-
-	create_sandawa_npc(surface_offset_from_center)
-
-# --- Sandawa NPC: static lang, hindi na naglalaro ng animation ---
-func create_sandawa_npc(final_surface_offset: float) -> void:
-	var sandawa := Sprite2D.new()
-	sandawa.name = "Sandawa"
-
-	var atlas := AtlasTexture.new()
-	atlas.atlas = sandawa_texture
-	atlas.region = SANDAWA_FRAMES[sandawa_frame_index]
-	sandawa.texture = atlas
-
-	sandawa.scale = Vector2(sandawa_scale, sandawa_scale)
-	sandawa.position = Vector2(sandawa_offset.x, final_platform_y + final_surface_offset + sandawa_offset.y)
-
-	add_child(sandawa)
-
-	_setup_sandawa_trigger(sandawa.position)
-
-func cleanup_old_platforms() -> void:
-	for p in platforms.duplicate():
-		if p.position.y > camera.global_position.y + screen_height:
-			p.queue_free()
-			platforms.erase(p)
-			cloud_platforms.erase(p)
-
-func create_ui() -> void:
-	ui_layer = CanvasLayer.new()
-	add_child(ui_layer)
-
-	var viewport_size: Vector2 = get_viewport_rect().size
-
-	procedural_progress_bar = AscentProgressBar.new()
-	procedural_progress_bar.position = Vector2(viewport_size.x - 32, (viewport_size.y - 160) / 2.0)
-	ui_layer.add_child(procedural_progress_bar)
+	var s := screen_size.x / tex.get_width()
+	var spr := Sprite2D.new()
+	spr.texture = tex
+	spr.centered = false
+	spr.scale = Vector2(s, s)
+	spr.position = Vector2.ZERO
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	world.add_child(spr)
+
+	total_h = tex.get_height() * s
+	max_scroll = maxf(total_h - screen_size.y, 0.0)
+	goal_scroll = maxf(max_scroll - end_offset, 0.0)
+	if goal_scroll <= 0.0:
+		push_error("ASCENT: goal_scroll = 0. Check ang BG_PATH o ang end_offset.")
+	_set_scroll(0.0)
+
+func _set_scroll(value: float) -> void:
+	scroll = value
+	world.position.y = screen_size.y - total_h + scroll
+
+
+# ---------- UI ----------
+func _build_ui() -> void:
+	hud = CanvasLayer.new()
+	hud.name = "HUD"
+	add_child(hud)
+
+	timing_bar = TimingBar.new()
+	timing_bar.name = "TimingBar"
+	timing_bar.position = Vector2((screen_size.x - 120.0) / 2.0, 12.0)
+	hud.add_child(timing_bar)
+
+	grip_bar = ProgressBar.new()
+	grip_bar.name = "GripBar"
+	grip_bar.min_value = 0.0
+	grip_bar.max_value = 100.0
+	grip_bar.value = 100.0
+	grip_bar.show_percentage = false
+	grip_bar.custom_minimum_size = Vector2(120, 6)
+	grip_bar.size = Vector2(120, 6)
+	grip_bar.position = Vector2((screen_size.x - 120.0) / 2.0, 26.0)
+	hud.add_child(grip_bar)
+
+	prompt = _make_label(Vector2(0, 156), Vector2(screen_size.x, 16), HORIZONTAL_ALIGNMENT_CENTER)
+	prompt.name = "PressKey"
+	hud.add_child(prompt)
+
+	stage_label = _make_label(Vector2(6, 4), Vector2(100, 14), HORIZONTAL_ALIGNMENT_LEFT)
+	stage_label.name = "StageLabel"
+	hud.add_child(stage_label)
 
 	game_over_label = Label.new()
+	game_over_label.name = "GameOver"
 	game_over_label.text = "GAME OVER\nPress R to Restart"
 	game_over_label.add_theme_font_override("font", ui_font)
 	game_over_label.add_theme_font_size_override("font_size", 12)
+	game_over_label.add_theme_color_override("font_color", Color.WHITE)
+	game_over_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	game_over_label.add_theme_constant_override("outline_size", 3)
 	game_over_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	game_over_label.size = Vector2(160, 40)
-	game_over_label.position = Vector2(viewport_size.x / 2.0 - 80, viewport_size.y / 2.0 - 20)
+	game_over_label.position = Vector2(screen_size.x / 2.0 - 80, screen_size.y / 2.0 - 20)
 	game_over_label.visible = false
-	ui_layer.add_child(game_over_label)
+	hud.add_child(game_over_label)
 
-	# --- Pansamantalang popup message (2 seconds) ---
-	win_popup_label = Label.new()
-	win_popup_label.text = "Talk to Sandawa to claim the final token."
-	win_popup_label.add_theme_font_override("font", ui_font)
-	win_popup_label.add_theme_font_size_override("font_size", 12)
-	win_popup_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	win_popup_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	win_popup_label.size = Vector2(260, 40)
-	win_popup_label.position = Vector2(viewport_size.x / 2.0 - 130, 20)
-	win_popup_label.visible = false
-	win_popup_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-	ui_layer.add_child(win_popup_label)
+func _make_label(pos: Vector2, sz: Vector2, align: HorizontalAlignment) -> Label:
+	var l := Label.new()
+	l.position = pos
+	l.size = sz
+	l.horizontal_alignment = align
+	l.add_theme_font_override("font", ui_font)
+	l.add_theme_font_size_override("font_size", label_font_size)
+	l.add_theme_color_override("font_color", Color.WHITE)
+	l.add_theme_color_override("font_outline_color", Color.BLACK)
+	l.add_theme_constant_override("outline_size", 2)
+	return l
 
-	win_popup_timer = Timer.new()
-	win_popup_timer.wait_time = 2.0
-	win_popup_timer.one_shot = true
-	win_popup_timer.timeout.connect(_on_win_popup_timeout)
-	add_child(win_popup_timer)
 
-func _on_win_popup_timeout() -> void:
-	win_popup_label.visible = false
+# ---------- COMICS ----------
+func _build_comic() -> void:
+	for p in COMIC_PATHS:
+		var t := load(p) as Texture2D
+		if t == null:
+			push_error("ASCENT: Hindi mahanap ang comic: " + p)
+		else:
+			comic_textures.append(t)
 
-func trigger_game_over() -> void:
-	is_game_over = true
-	if player.has_method("set_control_enabled"):
-		player.set_control_enabled(false)
+	comic_layer = CanvasLayer.new()
+	comic_layer.name = "ComicLayer"
+	comic_layer.layer = 10
+	comic_layer.visible = false
+	add_child(comic_layer)
+
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.85)
+	dim.position = Vector2.ZERO
+	dim.size = screen_size
+	comic_layer.add_child(dim)
+
+	comic_rect = TextureRect.new()
+	comic_rect.position = Vector2(10, 6)
+	comic_rect.size = screen_size - Vector2(20, 22)
+	comic_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	comic_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	comic_rect.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	comic_layer.add_child(comic_rect)
+
+	comic_hint = _make_label(Vector2(0, 166), Vector2(screen_size.x, 12), HORIZONTAL_ALIGNMENT_CENTER)
+	comic_layer.add_child(comic_hint)
+
+func _show_comic() -> void:
+	if comic_textures.is_empty():
+		_go_next_scene()
+		return
+	phase = Phase.COMIC
+	comic_index = 0
+	comic_layer.visible = true
+	_show_comic_page()
+
+func _show_comic_page() -> void:
+	comic_rect.texture = comic_textures[comic_index]
+	var last := comic_index >= comic_textures.size() - 1
+	comic_hint.text = "SPACE - magpatuloy" if last else "SPACE - susunod"
+	comic_rect.modulate.a = 0.0
+	create_tween().tween_property(comic_rect, "modulate:a", 1.0, 0.3)
+
+func _next_comic() -> void:
+	comic_index += 1
+	if comic_index >= comic_textures.size():
+		comic_layer.visible = false
+		_go_next_scene()
 	else:
-		player.set_physics_process(false)
-	game_over_label.visible = true
+		_show_comic_page()
 
-func trigger_win() -> void:
-	has_won = true
-	win_popup_label.visible = true
-	win_popup_timer.start()
+func _go_next_scene() -> void:
+	get_tree().change_scene_to_file(next_scene)
 
-func restart_game() -> void:
-	get_tree().reload_current_scene()
 
-# =========================================================================
-#  SANDAWA CUTSCENE TRIGGER
-# =========================================================================
-func _setup_sandawa_trigger(sandawa_pos: Vector2) -> void:
-	sandawa_trigger = Area2D.new()
-	sandawa_trigger.name = "SandawaTrigger"
-
-	var collision_shape := CollisionShape2D.new()
-	var shape := CircleShape2D.new()
-	shape.radius = sandawa_trigger_radius
-	collision_shape.shape = shape
-	sandawa_trigger.add_child(collision_shape)
-
-	sandawa_trigger.position = sandawa_pos
-	add_child(sandawa_trigger)
-
-	sandawa_trigger.body_entered.connect(_on_sandawa_trigger_entered)
-
-func _on_sandawa_trigger_entered(body: Node2D) -> void:
-	if body == player and not cutscene_has_played:
-		_play_sandawa_cutscene()
-
-func _play_sandawa_cutscene() -> void:
-	cutscene_has_played = true
-
-	if player.has_method("set_control_enabled"):
-		player.set_control_enabled(false)
-	else:
-		player.set_physics_process(false)
-
-	win_popup_label.visible = false
-	if procedural_progress_bar != null:
-		procedural_progress_bar.visible = false
-	sandawa_cutscene.visible = true
-	sandawa_cutscene.play()
-
-func _on_cutscene_finished() -> void:
-	sandawa_cutscene.visible = false
-	sandawa_cutscene.stop()
-	if procedural_progress_bar != null:
-		procedural_progress_bar.visible = false
-
-	# Diretso na papunta sa Descent minigame pagkatapos ng cutscene
-	go_to_descent_scene()
-
-func go_to_descent_scene() -> void:
-	LoadingScreen.change_scene(descent_scene_path)
+# ---------- SIMULA ----------
+func _reset_to_ground() -> void:
+	phase = Phase.WAITING
+	stage = 1
+	scroll_target = 0.0
+	_set_scroll(0.0)
+	player.set_process(true)
+	player.position = ground_pos
+	player.reset_to_idle()
+	_fit_player("idle", idle_height_px)
+	timing_bar.set_active(false)
+	timing_bar.visible = false
+	grip_bar.visible = false
+	game_over_label.visible = false
+	prompt.text = "Press SPACE to climb"
+	prompt.visible = true
+	_update_stage_label()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if sandawa_cutscene.visible and event.is_action_pressed("ui_accept"):
-		sandawa_cutscene.stop()
-		_on_cutscene_finished()
+	if not ready_ok:
+		return
+	if phase == Phase.WAITING and event.is_action_pressed("climb"):
+		get_viewport().set_input_as_handled()
+		_start_climb()
+	elif phase == Phase.COMIC and event.is_action_pressed("climb"):
+		get_viewport().set_input_as_handled()
+		_next_comic()
+	elif phase == Phase.GAMEOVER and event is InputEventKey \
+			and event.pressed and not event.echo and event.keycode == KEY_R:
+		get_viewport().set_input_as_handled()
+		_restart()
+
+func _restart() -> void:
+	get_tree().reload_current_scene()
+
+func _start_climb() -> void:
+	phase = Phase.CLIMBING
+	prompt.visible = false
+	var tw := create_tween()
+	tw.tween_property(player, "position", climb_pos, 0.8)
+	await tw.finished
+	_fit_player("hold", climb_height_px)
+	player.begin_climb()
+	timing_bar.visible = true
+	grip_bar.visible = true
+	timing_bar.set_active(true)
 
 
-# =========================================================================
-#  CUSTOM IN-LINE PROGRESS TRACKER (WITH CHARACTER HEAD INDICATOR)
-# =========================================================================
-class AscentProgressBar extends Control:
-	var bar_width: float = 6.0
-	var bar_height: float = 130.0
-	var current_value: float = 0.0
+# ---------- PAG-AKYAT ----------
+func _on_hit(quality: String, side: String) -> void:
+	if phase != Phase.CLIMBING:
+		return
+	_play_hammer(side)
+	timing_bar.set_active(false)
+	var step := perfect_step_px if quality == "perfect" else good_step_px
+	scroll_target = minf(scroll_target + step, goal_scroll)
+	player.climb(quality, side)
+	_scroll_to(scroll_target, scroll_time)
 
-	var face_texture: Texture2D = preload("res://assets/images/mini_map/marker_james.png")
+func _on_missed(_side: String) -> void:
+	if phase == Phase.CLIMBING:
+		player.slip()
 
-	func _ready() -> void:
-		custom_minimum_size = Vector2(24, bar_height + 30)
+func _on_step_done(_quality: String) -> void:
+	if phase != Phase.CLIMBING:
+		return
+	_update_stage()
+	if goal_scroll > 0.0 and scroll_target >= goal_scroll - 1.0:
+		_finish()
+	else:
+		timing_bar.set_active(true)
 
-	func _draw() -> void:
-		var center_x: float = size.x / 2.0
-		var start_y: float = 20.0
-		var end_y: float = start_y + bar_height
+func _scroll_to(target: float, time: float) -> void:
+	if scroll_tween:
+		scroll_tween.kill()
+	scroll_tween = create_tween()
+	scroll_tween.tween_method(_set_scroll, scroll, target, time)
 
-		draw_line(Vector2(center_x, start_y), Vector2(center_x, end_y), Color("#2e2219"), bar_width + 4.0, true)
-		draw_line(Vector2(center_x, start_y), Vector2(center_x, end_y), Color("#1a1310"), bar_width, true)
+func _on_grip_changed(ratio: float) -> void:
+	grip_bar.value = ratio * 100.0
 
-		var current_head_y: float = end_y
 
-		if current_value > 0.0:
-			var fill_ratio: float = current_value / 100.0
-			var fill_length: float = bar_height * fill_ratio
-			var fill_start_y: float = end_y
-			var fill_end_y: float = end_y - fill_length
+# ---------- YUGTO ----------
+func _update_stage() -> void:
+	var b1 := goal_scroll * 0.33
+	var b2 := goal_scroll * 0.66
+	var new_stage := 1
+	if scroll_target >= b2:
+		new_stage = 3
+	elif scroll_target >= b1:
+		new_stage = 2
+	if new_stage != stage:
+		stage = new_stage
+		_update_stage_label()
 
-			current_head_y = fill_end_y
+func _update_stage_label() -> void:
+	stage_label.text = ["Paanan", "Bato", "Tuktok"][stage - 1]
 
-			draw_line(Vector2(center_x, fill_start_y), Vector2(center_x, fill_end_y), Color("#dca134"), bar_width - 2.0, true)
-			draw_line(Vector2(center_x - 1, fill_start_y), Vector2(center_x - 1, fill_end_y), Color("#f7d070"), 1.0, true)
 
-		var blimp_center := Vector2(center_x, 10.0)
-		draw_rect(Rect2(blimp_center.x - 7, blimp_center.y - 7, 14, 14), Color("#2e2219"), false, 2.0)
-		draw_rect(Rect2(blimp_center.x - 6, blimp_center.y - 6, 12, 12), Color("#4a3728"), true)
+# ---------- BAGSAK: TOTOONG HULOG, TAPOS GAME OVER ----------
+func _on_fell() -> void:
+	if phase != Phase.CLIMBING:
+		return
+	phase = Phase.GAMEOVER
+	timing_bar.set_active(false)
+	if scroll_tween:
+		scroll_tween.kill()
 
-		var icon_color: Color = Color("#dca134") if current_value >= 100.0 else Color("#82664d")
-		draw_rect(Rect2(blimp_center.x - 4, blimp_center.y - 3, 8, 6), icon_color, true)
-		draw_rect(Rect2(blimp_center.x - 5, blimp_center.y - 2, 1, 4), icon_color, true)
-		draw_rect(Rect2(blimp_center.x + 4, blimp_center.y - 4, 1, 8), Color("#2e2219"), true)
-		draw_rect(Rect2(blimp_center.x + 5, blimp_center.y - 3, 1, 6), icon_color, true)
+	if fall_sfx_player != null:
+		fall_sfx_player.play()
 
-		var base_center := Vector2(center_x, end_y + 10.0)
-		draw_rect(Rect2(base_center.x - 7, base_center.y - 6, 14, 12), Color("#2e2219"), false, 2.0)
-		draw_rect(Rect2(base_center.x - 6, base_center.y - 5, 12, 10), Color("#4a3728"), true)
+	var end_y := screen_size.y + 90.0
+	fall_tween = create_tween()
+	fall_tween.tween_property(player, "position:y", end_y, fall_time) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await fall_tween.finished
 
-		var base_color := Color("#9a7d66")
-		draw_rect(Rect2(base_center.x - 3, base_center.y + 1, 6, 3), base_color, true)
-		draw_rect(Rect2(base_center.x - 2, base_center.y - 3, 4, 4), base_color, true)
-		draw_rect(Rect2(base_center.x - 4, base_center.y - 4, 8, 1), Color("#dca134"), true)
+	if phase == Phase.GAMEOVER and is_inside_tree():
+		game_over_label.visible = true
 
-		if face_texture != null:
-			var face_size: float = 16.0
-			var face_rect := Rect2(center_x - (face_size / 2.0), current_head_y - (face_size / 2.0), face_size, face_size)
-			draw_texture_rect(face_texture, face_rect, false)
 
-	func update_progress(percentage: float) -> void:
-		current_value = clampf(percentage, 0.0, 100.0)
-		queue_redraw()
+# ---------- DULO: diretso comics ----------
+func _finish() -> void:
+	phase = Phase.FINISHED
+	timing_bar.set_active(false)
+	timing_bar.visible = false
+	grip_bar.visible = false
+	prompt.visible = false
+	player.set_process(false)
+	await get_tree().create_timer(0.5).timeout
+	_show_comic()

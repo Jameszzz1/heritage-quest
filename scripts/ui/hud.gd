@@ -36,7 +36,7 @@ const JOURNAL_PANEL_SIZE: Vector2 = Vector2(240, 136)
 const BACKPACK_OFFSET: Vector2 = Vector2(0, 10)
 # Area ng laman, sa porsyento ng MISMONG panel: Rect2(x, y, width, height)
 const INVENTORY_CONTENT_RECT: Rect2 = Rect2(0.09, 0.17, 0.82, 0.68)
-# Journal: nasa left page lang ang text (para hindi tumawid sa spine)
+# Journal: (luma, hindi na ginagamit ng text; ang gamit na ay JOURNAL_LEFT_RECT / JOURNAL_RIGHT_RECT sa baba)
 const JOURNAL_CONTENT_RECT: Rect2 = Rect2(0.10, 0.16, 0.38, 0.68)
 
 # Tabs (Inventory / Journal) na nasa ibabaw ng panel
@@ -101,10 +101,6 @@ var toast_token: int = 0
 var _last_battery_count: int = 0
 var _last_fish_count: int = 0
 var _last_shovel_count: int = 0
-
-var journal_container: Control = null
-var journal_scroll: ScrollContainer
-var journal_vbox: VBoxContainer
 
 var _slot_tex: Texture2D = null
 var _panel_inventory_tex: Texture2D = null
@@ -817,111 +813,273 @@ func use_fish_item() -> void:
 	])
 
 
-# ---------------- JOURNAL TAB ----------------
+# ---------------- JOURNAL TAB (BOOK STYLE: 2 PAGES, WALANG SCROLL) ----------------
+
+const JOURNAL_FONT_PATH: String = "res://assets/fonts/PixelifySans-VariableFont_wght.ttf"
+
+# Area ng text sa bawat page, sa porsyento ng MISMONG panel: Rect2(x, y, width, height)
+const JOURNAL_LEFT_RECT: Rect2 = Rect2(0.09, 0.17, 0.37, 0.62)
+const JOURNAL_RIGHT_RECT: Rect2 = Rect2(0.55, 0.17, 0.37, 0.62)
+
+# Prev / Next buttons
+const JOURNAL_NAV_SIZE: Vector2 = Vector2(36, 14)
+const JOURNAL_NAV_Y: float = 0.81        # taas-baba (0 = taas ng panel, 1 = baba)
+const JOURNAL_PREV_X: float = 0.09       # kaliwang gilid ng Prev
+const JOURNAL_NEXT_X: float = 0.92       # KANANG gilid ng Next
+const JOURNAL_NAV_FONT_SIZE: int = 6
+
+# Laki ng letra
+const JOURNAL_TITLE_SIZE: int = 8
+const JOURNAL_TOPIC_SIZE: int = 6
+const JOURNAL_BODY_SIZE: int = 6
+
+# Palakihin kung may na-cut na linya sa ibaba ng page
+const JOURNAL_FIT_MARGIN: float = 3.0
+
+const JOURNAL_PROVINCES: Array = [
+	{"id": "south_cotabato", "name": "South Cotabato", "topic": "T'nalak Weaving - Bai Linay"},
+	{"id": "sarangani", "name": "Sarangani", "topic": "Maitum Burial Jars - Ayu"},
+	{"id": "sultan_kudarat", "name": "Sultan Kudarat", "topic": "Isulan Capitol - Ustadz Ameer"},
+	{"id": "cotabato_province", "name": "Cotabato Province", "topic": "Mt. Apo - Apo Sandawa"}
+]
+
+var journal_root: Control = null
+var journal_left: RichTextLabel = null
+var journal_right: RichTextLabel = null
+var journal_prev_btn: Button = null
+var journal_next_btn: Button = null
+
+var _journal_measure: RichTextLabel = null
+var _journal_pages: Array = []
+var _journal_spread: int = 0
+var _journal_font: Font = null
+
 
 func setup_journal_tab() -> void:
-	var journal_tab_node = get_node_or_null("BackpackPopup/TabContainer/Journal")
-	if journal_tab_node == null:
-		return
+	# Itago ang lumang laman ng Journal tab (para hindi mag-overlap)
+	var old_tab = get_node_or_null("BackpackPopup/TabContainer/Journal")
+	if old_tab != null:
+		for child in old_tab.get_children():
+			if child is CanvasItem:
+				child.visible = false
 
-	journal_scroll = journal_tab_node.get_node_or_null("ScrollContainer")
-	if journal_scroll == null:
-		journal_scroll = ScrollContainer.new()
-		journal_scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-		journal_scroll.offset_left = 0
-		journal_scroll.offset_top = 0
-		journal_scroll.offset_right = 0
-		journal_scroll.offset_bottom = 0
-		journal_tab_node.add_child(journal_scroll)
+	if ResourceLoader.exists(JOURNAL_FONT_PATH):
+		_journal_font = load(JOURNAL_FONT_PATH) as Font
+	else:
+		push_warning("Journal font not found: " + JOURNAL_FONT_PATH)
 
-	journal_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	journal_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	journal_root = Control.new()
+	journal_root.name = "JournalBook"
+	journal_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	journal_root.visible = false
+	backpack_popup.add_child(journal_root)
+	journal_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	journal_vbox = journal_scroll.get_node_or_null("VBoxContainer")
-	if journal_vbox == null:
-		journal_vbox = VBoxContainer.new()
-		journal_vbox.add_theme_constant_override("separation", 6)
-		journal_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		journal_scroll.add_child(journal_vbox)
+	journal_left = _make_journal_page()
+	journal_right = _make_journal_page()
+	journal_root.add_child(journal_left)
+	journal_root.add_child(journal_right)
 
-	journal_container = journal_vbox
+	# Hindi nakikitang label na pansukat kung kasya pa ang text sa page
+	_journal_measure = _make_journal_page()
+	_journal_measure.fit_content = true
+	_journal_measure.modulate.a = 0.0
+	_journal_measure.position = Vector2(-3000, -3000)
+	journal_root.add_child(_journal_measure)
+
+	journal_prev_btn = _make_journal_nav("< Prev", -1)
+	journal_next_btn = _make_journal_nav("Next >", 1)
+
+	if not tabs.tab_changed.is_connected(_on_journal_tab_changed):
+		tabs.tab_changed.connect(_on_journal_tab_changed)
+
 	refresh_journal_display()
 
 
-func refresh_journal_display() -> void:
-	if not is_instance_valid(journal_container):
+func _make_journal_page() -> RichTextLabel:
+	var rtl := RichTextLabel.new()
+	rtl.bbcode_enabled = true
+	rtl.scroll_active = false          # WALANG SCROLL
+	rtl.fit_content = false
+	rtl.clip_contents = true
+	rtl.selection_enabled = false
+	rtl.focus_mode = Control.FOCUS_NONE
+	rtl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rtl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	rtl.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	rtl.add_theme_color_override("default_color", COLOR_INK)
+	rtl.add_theme_font_size_override("normal_font_size", JOURNAL_BODY_SIZE)
+	rtl.add_theme_constant_override("line_separation", 2)
+	if _journal_font:
+		rtl.add_theme_font_override("normal_font", _journal_font)
+	return rtl
+
+
+func _make_journal_nav(label_text: String, direction: int) -> Button:
+	var b := Button.new()
+	b.text = label_text
+	b.focus_mode = Control.FOCUS_NONE
+	b.custom_minimum_size = JOURNAL_NAV_SIZE
+	b.size = JOURNAL_NAV_SIZE
+	b.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
+	var tex := _crop_to_art(_load_tex(CLOSE_TEXTURE_PATH))
+	if tex != null:
+		b.add_theme_stylebox_override("normal", _make_full_box(tex))
+		b.add_theme_stylebox_override("hover", _make_full_box(tex, Color(1.1, 1.05, 0.9, 1)))
+		b.add_theme_stylebox_override("pressed", _make_full_box(tex, Color(0.85, 0.8, 0.7, 1)))
+		b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+
+	b.add_theme_font_size_override("font_size", JOURNAL_NAV_FONT_SIZE)
+	b.add_theme_color_override("font_color", COLOR_INK)
+	b.add_theme_color_override("font_hover_color", COLOR_JOURNAL_ENTRY)
+	b.add_theme_color_override("font_pressed_color", COLOR_INK)
+	if _journal_font:
+		b.add_theme_font_override("font", _journal_font)
+
+	b.pressed.connect(_journal_turn_page.bind(direction))
+	journal_root.add_child(b)
+	return b
+
+
+func _bb_escape(s: String) -> String:
+	return s.replace("[", "[lb]")
+
+
+# Kasya pa ba ang bbcode text sa isang page?
+func _journal_text_fits(bb: String, page_w: float, page_h: float) -> bool:
+	_journal_measure.size = Vector2(page_w, 10)
+	_journal_measure.text = bb
+	return _journal_measure.get_content_height() <= page_h - JOURNAL_FIT_MARGIN
+
+
+# Hahatiin ang text sa mga page. Kapag puno na ang page, ituloy sa susunod.
+# Walang page para sa province na wala pang na-unlock na entry.
+func _build_journal_pages() -> void:
+	_journal_pages.clear()
+	if _journal_measure == null:
 		return
 
-	for child in journal_container.get_children():
-		child.queue_free()
+	var page_w: float = JOURNAL_LEFT_RECT.size.x * JOURNAL_PANEL_SIZE.x
+	var page_h: float = JOURNAL_LEFT_RECT.size.y * JOURNAL_PANEL_SIZE.y
 
-	var custom_font = load(UI_FONT_PATH)
+	var col_prov := "#" + COLOR_JOURNAL_PROVINCE.to_html(false)
+	var col_entry := "#" + COLOR_JOURNAL_ENTRY.to_html(false)
+	var col_topic := "#" + COLOR_JOURNAL_EMPTY.to_html(false)
 
-	var provinces = [
-		{"id": "south_cotabato", "name": "South Cotabato (T'nalak Weaving - Bai Linay)"},
-		{"id": "sarangani", "name": "Sarangani (Maitum Burial Jars - Ayu)"},
-		{"id": "sultan_kudarat", "name": "Sultan Kudarat (Isulan Capitol - Ustadz Ameer)"},
-		{"id": "cotabato_province", "name": "Cotabato Province (Mt. Apo - Apo Sandawa)"}
-	]
-
-	for prov in provinces:
-		var prov_title = Label.new()
-		prov_title.text = prov["name"]
-		prov_title.add_theme_font_size_override("font_size", 7)
-		prov_title.add_theme_color_override("font_color", COLOR_JOURNAL_PROVINCE)
-		prov_title.autowrap_mode = TextServer.AUTOWRAP_WORD
-		prov_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-
-		if custom_font:
-			prov_title.add_theme_font_override("font", custom_font)
-
-		journal_container.add_child(prov_title)
-
+	# units: {"t": "break" | "nl" | "line" | "word", "bb": String}
+	var units: Array = []
+	for prov in JOURNAL_PROVINCES:
 		var entries = Global.get_journal_entries(prov["id"])
-
 		if entries.is_empty():
-			var empty_lbl = Label.new()
-			empty_lbl.text = "No entries unlocked yet."
-			empty_lbl.add_theme_font_size_override("font_size", 6)
-			empty_lbl.add_theme_color_override("font_color", COLOR_JOURNAL_EMPTY)
-			empty_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
-			empty_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			continue
 
-			if custom_font:
-				empty_lbl.add_theme_font_override("font", custom_font)
+		units.append({"t": "break", "bb": ""})
+		units.append({"t": "line", "bb": "[color=%s][font_size=%d]%s[/font_size][/color]" % [
+			col_prov, JOURNAL_TITLE_SIZE, _bb_escape(str(prov["name"]))]})
+		units.append({"t": "line", "bb": "[color=%s][font_size=%d]%s[/font_size][/color]" % [
+			col_topic, JOURNAL_TOPIC_SIZE, _bb_escape(str(prov["topic"]))]})
 
-			journal_container.add_child(empty_lbl)
+		for entry in entries:
+			units.append({"t": "nl", "bb": ""})
+			units.append({"t": "line", "bb": "[color=%s]%s[/color]" % [
+				col_entry, _bb_escape("- " + str(entry["title"]))]})
+
+			var paragraphs: PackedStringArray = str(entry["content"]).split("\n")
+			for p in paragraphs:
+				for w in p.split(" ", false):
+					units.append({"t": "word", "bb": _bb_escape(w)})
+				units.append({"t": "nl", "bb": ""})
+
+	var cur := ""
+	for u in units:
+		var t: String = u["t"]
+
+		if t == "break":
+			if cur != "":
+				_journal_pages.append(cur.strip_edges())
+				cur = ""
+			continue
+
+		var piece: String = ""
+		if t == "nl":
+			if cur == "":
+				continue   # walang blank line sa taas ng page
+			piece = "\n"
+		elif t == "line":
+			piece = str(u["bb"]) + "\n"
 		else:
-			for entry in entries:
-				var title_lbl = Label.new()
-				title_lbl.text = "- " + str(entry["title"])
-				title_lbl.add_theme_font_size_override("font_size", 6)
-				title_lbl.add_theme_color_override("font_color", COLOR_JOURNAL_ENTRY)
-				title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
-				title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			piece = str(u["bb"]) + " "
 
-				if custom_font:
-					title_lbl.add_theme_font_override("font", custom_font)
+		var cand: String = cur + piece
+		if cur == "" or _journal_text_fits(cand, page_w, page_h):
+			cur = cand
+		else:
+			# Puno na: i-save ang page, ituloy sa susunod
+			_journal_pages.append(cur.strip_edges())
+			cur = "" if t == "nl" else piece
 
-				journal_container.add_child(title_lbl)
+	if cur.strip_edges() != "":
+		_journal_pages.append(cur.strip_edges())
 
-				var desc_lbl = Label.new()
-				desc_lbl.text = str(entry["content"])
-				desc_lbl.add_theme_font_size_override("font_size", 6)
-				desc_lbl.add_theme_color_override("font_color", COLOR_INK)
-				desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
-				desc_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-				if custom_font:
-					desc_lbl.add_theme_font_override("font", custom_font)
+func refresh_journal_display() -> void:
+	if not is_instance_valid(journal_root):
+		return
 
-				journal_container.add_child(desc_lbl)
+	_build_journal_pages()
 
-		var spacer = Label.new()
-		spacer.text = "------------------------------"
-		spacer.add_theme_font_size_override("font_size", 5)
-		spacer.add_theme_color_override("font_color", COLOR_JOURNAL_LINE)
-		journal_container.add_child(spacer)
+	var max_spread: int = maxi(0, int(ceil(_journal_pages.size() / 2.0)) - 1)
+	_journal_spread = clampi(_journal_spread, 0, max_spread)
+
+	_show_journal_spread()
+	_layout_journal()
+
+
+func _show_journal_spread() -> void:
+	var li: int = _journal_spread * 2
+	var ri: int = li + 1
+
+	journal_left.text = _journal_pages[li] if li < _journal_pages.size() else ""
+	journal_right.text = _journal_pages[ri] if ri < _journal_pages.size() else ""
+
+	journal_prev_btn.visible = _journal_spread > 0
+	journal_next_btn.visible = (_journal_spread + 1) * 2 < _journal_pages.size()
+
+
+func _journal_turn_page(direction: int) -> void:
+	_journal_spread += direction
+	refresh_journal_display()
+
+
+func _layout_journal() -> void:
+	if not is_instance_valid(journal_root):
+		return
+
+	var is_journal: bool = tabs.current_tab == 1
+	journal_root.visible = is_journal
+	if not is_journal:
+		return
+
+	var l := _art_to_screen(JOURNAL_LEFT_RECT)
+	journal_left.position = l.position
+	journal_left.size = l.size
+
+	var r := _art_to_screen(JOURNAL_RIGHT_RECT)
+	journal_right.position = r.position
+	journal_right.size = r.size
+
+	var y: float = _art_pos.y + JOURNAL_NAV_Y * _art_size.y
+	journal_prev_btn.position = Vector2(_art_pos.x + JOURNAL_PREV_X * _art_size.x, y)
+	journal_prev_btn.size = JOURNAL_NAV_SIZE
+	journal_next_btn.position = Vector2(
+		_art_pos.x + JOURNAL_NEXT_X * _art_size.x - JOURNAL_NAV_SIZE.x, y)
+	journal_next_btn.size = JOURNAL_NAV_SIZE
+
+
+# Deferred para tapos na ang _layout_backpack bago mag-layout ang journal
+func _on_journal_tab_changed(_index: int) -> void:
+	_layout_journal.call_deferred()
 
 
 func _on_journal_updated(_province: String) -> void:
@@ -1113,5 +1271,3 @@ func _on_quest_log_button_pressed() -> void:
 			quest_log.call("_toggle")
 		else:
 			push_warning("QuestLog has no toggle() or _toggle() method.")
-			
-## dipatapos

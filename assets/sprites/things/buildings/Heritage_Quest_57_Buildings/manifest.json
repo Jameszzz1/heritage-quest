@@ -1,0 +1,800 @@
+[
+  {
+    "category": "city",
+    "name": "Municipal office",
+    "png": "sprites/city/01_municipal_office.png",
+    "scene": "godot_scenes/city/01_municipal_office.tscn",
+    "size": [
+      320,
+      384
+    ],
+    "anchor": [
+      160,
+      380
+    ]
+  },
+  {
+    "category": "city",
+    "name": "Clinic",
+    "png": "sprites/city/02_clinic.png",
+    "scene": "godot_scenes/city/02_clinic.tscn",
+    "size": [
+      320,
+      384
+    ],
+    "anchor": [
+      160,
+      380
+    ]
+  },
+  {
+    "category": "city",
+    "name": "Commercial office",
+    "png": "sprites/city/03_commercial_office.png",
+    "scene": "godot_scenes/city/03_commercial_office.tscn",
+    "size": [
+      320,
+      384
+    ],
+    "anchor": [
+      160,
+      380
+    ]
+  },
+  {
+    "category": "city",
+    "name": "Public market",
+    "png": "sprites/city/04_public_market.png",
+    "scene": "godot_scenes/city/04_public_market.tscn",
+    "size": [
+      320,
+      384
+    ],
+    "anchor": [
+      160,
+      380
+    ]
+  },
+  {
+    "category": "city",
+    "name": "Bus terminal",
+    "png": "sprites/city/05_bus_terminal.png",
+    "scene": "godot_scenes/city/05_bus_terminal.tscn",
+    "size": [
+      320,
+      384
+    ],
+    "anchor": [
+      160,
+      380
+    ]
+  },
+  {
+    "category": "city",
+    "name": "Budget hotel",
+    "png": "sprites/city/06_budget_hotel.png",
+    "scene": "godot_scenes/city/06_budget_hotel.tscn",
+    "size": [
+      320,
+      384
+    ],
+    "anchor": [
+      160,
+      380
+    ]
+  },
+  {
+    "category": "city",
+    "name": "School",
+    "png": "sprites/city/07_school.png",
+    "scene": "godot_scenes/city/07_school.tscn",
+    "size": [
+      320,
+      384
+    ],
+    "anchor": [
+      160,
+      380
+    ]
+  },
+  {
+    "category": "city",
+    "name": "Fire station",
+    "png": "sprites/city/08_fire_station.png",
+    "scene": "godot_scenes/city/08_fire_station.tscn",
+    "size": [
+      320,
+      384
+    ],
+    "anchor": [
+      160,
+      380
+    ]
+  },
+  {
+    "category": "modest_homes",
+    "name": "Bamboo stilt house",
+    "png": "sprites/modest_homes/01_bamboo_stilt_house.png",
+    "scene": "godot_scenes/modest_homes/01_bamboo_stilt_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "modest_homes",
+    "name": "Timber house",
+    "png": "sprites/modest_homes/02_timber_house.png",
+    "scene": "godot_scenes/modest_homes/02_timber_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "modest_homes",
+    "name": "Concrete block house",
+    "png": "sprites/modest_homes/03_concrete_block_house.png",
+    "scene": "godot_scenes/modest_homes/03_concrete_block_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "modest_homes",
+    "name": "Patched timber house",
+    "png": "sprites/modest_homes/04_patched_timber_house.png",
+    "scene": "godot_scenes/modest_homes/04_patched_timber_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "modest_homes",
+    "name": "Woven bamboo house",
+    "png": "sprites/modest_homes/05_woven_bamboo_house.png",
+    "scene": "godot_scenes/modest_homes/05_woven_bamboo_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "modest_homes",
+    "name": "Narrow row house",
+    "png": "sprites/modest_homes/06_narrow_row_house.png",
+    "scene": "godot_scenes/modest_homes/06_narrow_row_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "modest_homes",
+    "name": "Wooden porch house",
+    "png": "sprites/modest_homes/07_wooden_porch_house.png",
+    "scene": "godot_scenes/modest_homes/07_wooden_porch_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "modest_homes",
+    "name": "Mixed masonry home",
+    "png": "sprites/modest_homes/08_mixed_masonry_home.png",
+    "scene": "godot_scenes/modest_homes/08_mixed_masonry_home.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "middle_income",
+    "name": "Cream bungalow",
+    "png": "sprites/middle_income/01_cream_bungalow.png",
+    "scene": "godot_scenes/middle_income/01_cream_bungalow.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "middle_income",
+    "name": "Two storey family house",
+    "png": "sprites/middle_income/02_two_storey_family_house.png",
+    "scene": "godot_scenes/middle_income/02_two_storey_family_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "middle_income",
+    "name": "Modern wooden bungalow",
+    "png": "sprites/middle_income/03_modern_wooden_bungalow.png",
+    "scene": "godot_scenes/middle_income/03_modern_wooden_bungalow.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "middle_income",
+    "name": "Blue duplex",
+    "png": "sprites/middle_income/04_blue_duplex.png",
+    "scene": "godot_scenes/middle_income/04_blue_duplex.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "middle_income",
+    "name": "Terracotta roof house",
+    "png": "sprites/middle_income/05_terracotta_roof_house.png",
+    "scene": "godot_scenes/middle_income/05_terracotta_roof_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "middle_income",
+    "name": "Raised balcony house",
+    "png": "sprites/middle_income/06_raised_balcony_house.png",
+    "scene": "godot_scenes/middle_income/06_raised_balcony_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "middle_income",
+    "name": "Contemporary home",
+    "png": "sprites/middle_income/07_contemporary_home.png",
+    "scene": "godot_scenes/middle_income/07_contemporary_home.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "middle_income",
+    "name": "Wide family home",
+    "png": "sprites/middle_income/08_wide_family_home.png",
+    "scene": "godot_scenes/middle_income/08_wide_family_home.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "upscale",
+    "name": "Tropical villa",
+    "png": "sprites/upscale/01_tropical_villa.png",
+    "scene": "godot_scenes/upscale/01_tropical_villa.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "upscale",
+    "name": "White luxury house",
+    "png": "sprites/upscale/02_white_luxury_house.png",
+    "scene": "godot_scenes/upscale/02_white_luxury_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "upscale",
+    "name": "Wood and stone villa",
+    "png": "sprites/upscale/03_wood_and_stone_villa.png",
+    "scene": "godot_scenes/upscale/03_wood_and_stone_villa.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "upscale",
+    "name": "Ancestral inspired house",
+    "png": "sprites/upscale/04_ancestral_inspired_house.png",
+    "scene": "godot_scenes/upscale/04_ancestral_inspired_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "upscale",
+    "name": "Courtyard residence",
+    "png": "sprites/upscale/05_courtyard_residence.png",
+    "scene": "godot_scenes/upscale/05_courtyard_residence.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "upscale",
+    "name": "Corner balcony house",
+    "png": "sprites/upscale/06_corner_balcony_house.png",
+    "scene": "godot_scenes/upscale/06_corner_balcony_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "upscale",
+    "name": "Large timber residence",
+    "png": "sprites/upscale/07_large_timber_residence.png",
+    "scene": "godot_scenes/upscale/07_large_timber_residence.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "upscale",
+    "name": "Glass and concrete house",
+    "png": "sprites/upscale/08_glass_and_concrete_house.png",
+    "scene": "godot_scenes/upscale/08_glass_and_concrete_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "subdivision",
+    "name": "Starter home",
+    "png": "sprites/subdivision/01_starter_home.png",
+    "scene": "godot_scenes/subdivision/01_starter_home.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "subdivision",
+    "name": "Townhouse pair",
+    "png": "sprites/subdivision/02_townhouse_pair.png",
+    "scene": "godot_scenes/subdivision/02_townhouse_pair.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "subdivision",
+    "name": "Duplex with carport",
+    "png": "sprites/subdivision/03_duplex_with_carport.png",
+    "scene": "godot_scenes/subdivision/03_duplex_with_carport.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "subdivision",
+    "name": "Corner family house",
+    "png": "sprites/subdivision/04_corner_family_house.png",
+    "scene": "godot_scenes/subdivision/04_corner_family_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "subdivision",
+    "name": "Gatehouse",
+    "png": "sprites/subdivision/05_gatehouse.png",
+    "scene": "godot_scenes/subdivision/05_gatehouse.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "subdivision",
+    "name": "Clubhouse",
+    "png": "sprites/subdivision/06_clubhouse.png",
+    "scene": "godot_scenes/subdivision/06_clubhouse.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "subdivision",
+    "name": "Narrow townhouse",
+    "png": "sprites/subdivision/07_narrow_townhouse.png",
+    "scene": "godot_scenes/subdivision/07_narrow_townhouse.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "subdivision",
+    "name": "Model home",
+    "png": "sprites/subdivision/08_model_home.png",
+    "scene": "godot_scenes/subdivision/08_model_home.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "farm",
+    "name": "Rice storage barn",
+    "png": "sprites/farm/01_rice_storage_barn.png",
+    "scene": "godot_scenes/farm/01_rice_storage_barn.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "farm",
+    "name": "Poultry housing",
+    "png": "sprites/farm/02_poultry_housing.png",
+    "scene": "godot_scenes/farm/02_poultry_housing.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "farm",
+    "name": "Pig housing",
+    "png": "sprites/farm/03_pig_housing.png",
+    "scene": "godot_scenes/farm/03_pig_housing.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "farm",
+    "name": "Equipment shed",
+    "png": "sprites/farm/04_equipment_shed.png",
+    "scene": "godot_scenes/farm/04_equipment_shed.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "farm",
+    "name": "Produce sorting shed",
+    "png": "sprites/farm/05_produce_sorting_shed.png",
+    "scene": "godot_scenes/farm/05_produce_sorting_shed.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "farm",
+    "name": "Farmhouse",
+    "png": "sprites/farm/06_farmhouse.png",
+    "scene": "godot_scenes/farm/06_farmhouse.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "farm",
+    "name": "Pineapple packing house",
+    "png": "sprites/farm/07_pineapple_packing_house.png",
+    "scene": "godot_scenes/farm/07_pineapple_packing_house.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "farm",
+    "name": "Livestock shelter",
+    "png": "sprites/farm/08_livestock_shelter.png",
+    "scene": "godot_scenes/farm/08_livestock_shelter.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "food",
+    "name": "Sari sari store",
+    "png": "sprites/food/01_sari_sari_store.png",
+    "scene": "godot_scenes/food/01_sari_sari_store.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "food",
+    "name": "Carinderia",
+    "png": "sprites/food/02_carinderia.png",
+    "scene": "godot_scenes/food/02_carinderia.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "food",
+    "name": "Grilled chicken restaurant",
+    "png": "sprites/food/03_grilled_chicken_restaurant.png",
+    "scene": "godot_scenes/food/03_grilled_chicken_restaurant.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "food",
+    "name": "Fried chicken outlet",
+    "png": "sprites/food/04_fried_chicken_outlet.png",
+    "scene": "godot_scenes/food/04_fried_chicken_outlet.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "food",
+    "name": "Burger outlet",
+    "png": "sprites/food/05_burger_outlet.png",
+    "scene": "godot_scenes/food/05_burger_outlet.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "food",
+    "name": "Bakery cafe",
+    "png": "sprites/food/06_bakery_cafe.png",
+    "scene": "godot_scenes/food/06_bakery_cafe.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "food",
+    "name": "Barbecue restaurant",
+    "png": "sprites/food/07_barbecue_restaurant.png",
+    "scene": "godot_scenes/food/07_barbecue_restaurant.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "food",
+    "name": "Family restaurant",
+    "png": "sprites/food/08_family_restaurant.png",
+    "scene": "godot_scenes/food/08_family_restaurant.tscn",
+    "size": [
+      256,
+      256
+    ],
+    "anchor": [
+      128,
+      252
+    ]
+  },
+  {
+    "category": "main_character",
+    "name": "Modern wooden home base",
+    "png": "sprites/main_character/01_modern_wooden_home_base.png",
+    "scene": "godot_scenes/main_character/01_modern_wooden_home_base.tscn",
+    "size": [
+      384,
+      256
+    ],
+    "anchor": [
+      192,
+      252
+    ]
+  }
+]

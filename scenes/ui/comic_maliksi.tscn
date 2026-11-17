@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://0xnytfb1khdq"]
+[gd_scene format=3 uid="uid://dcm8m0sckchk0"]
 
-[ext_resource type="Script" uid="uid://dvtaeblnqfvbb" path="res://scripts/comic_maliksi.gd" id="1_0yddw"]
+[ext_resource type="Script" path="res://scripts/comic_maliksi.gd" id="1_0yddw"]
 
 [node name="ComicMaliksi" type="Control" unique_id=1766217015]
 layout_mode = 3

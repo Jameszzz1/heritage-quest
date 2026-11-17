@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="../../sprites/main_character/01_modern_wooden_home_base.png" id="1"]
+
+[node name="Building" type="Sprite2D"]
+texture_filter = 1
+texture = ExtResource("1")
+offset = Vector2(0, -124.0)

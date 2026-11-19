@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://bvppy00s6eg2x"]
+
+[ext_resource type="Script" uid="uid://c2un5f2rf32tp" path="res://scenes/ui/help_menu.gd" id="1_500p7"]
+
+[node name="HelpMenu" type="Control" unique_id=1739105205]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 180.0
+script = ExtResource("1_500p7")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1655578629]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+
+[node name="HelpPanel" type="Panel" parent="Background" unique_id=1627207558]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -136.0
+offset_top = -74.0
+offset_right = 136.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Background/HelpPanel" unique_id=1773416721]
+layout_mode = 0
+offset_right = 114.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 10
+
+[node name="CloseButton" type="Button" parent="Background/HelpPanel" unique_id=1683099692]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -8.0
+offset_bottom = 8.0
+grow_horizontal = 0
+
+[node name="Subtitle" type="Label" parent="Background/HelpPanel" unique_id=1171959812]
+layout_mode = 0
+offset_top = 22.0
+offset_right = 105.0
+offset_bottom = 35.0
+theme_override_font_sizes/font_size = 8
+
+[node name="HSeparator" type="HSeparator" parent="Background/HelpPanel" unique_id=1770146918]
+layout_mode = 0
+offset_right = 271.0
+offset_bottom = 4.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Background/HelpPanel" unique_id=1504469812]
+layout_mode = 0
+offset_top = 55.0
+offset_right = 272.0
+offset_bottom = 146.0
+
+[node name="ControlsContainer" type="VBoxContainer" parent="Background/HelpPanel/ScrollContainer" unique_id=701330271]
+layout_mode = 2

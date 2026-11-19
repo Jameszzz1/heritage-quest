@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cov0jyhb0rx5i" path="res://scenes/ui/mini_map.tscn" id="6_047uy"]
 [ext_resource type="PackedScene" uid="uid://pqvdhde0ypbb" path="res://scenes/ui/energy_bar.tscn" id="7_gss2c"]
 [ext_resource type="Script" uid="uid://cun8f082ebnq3" path="res://scripts/ui/quest_log.gd" id="10_kicr4"]
+[ext_resource type="PackedScene" uid="uid://bvppy00s6eg2x" path="res://scenes/ui/help_menu.tscn" id="11_mj13f"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fi6k"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -17,6 +18,8 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4jqwt"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h022r"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kicr4"]
 
 [node name="HUD" type="CanvasLayer" unique_id=562083514]
 process_mode = 3
@@ -160,6 +163,18 @@ theme_override_font_sizes/font_size = 10
 theme_override_styles/normal = SubResource("StyleBoxEmpty_h022r")
 text = "⚙"
 
+[node name="HelpButton" type="Button" parent="." unique_id=2095379088]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -59.0
+offset_right = -48.0
+offset_bottom = 14.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxEmpty_kicr4")
+text = "💡"
+
 [node name="PauseLabel" type="Label" parent="." unique_id=1053751796]
 anchors_preset = 8
 anchor_left = 0.5
@@ -193,5 +208,8 @@ theme_override_font_sizes/font_size = 10
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="HelpMenu" parent="." unique_id=1994193080 instance=ExtResource("11_mj13f")]
+
 [connection signal="pressed" from="QuestLogButton" to="." method="_on_quest_log_button_pressed"]
 [connection signal="pressed" from="SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="HelpButton" to="." method="_on_help_button_pressed"]

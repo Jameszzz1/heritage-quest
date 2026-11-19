@@ -11,6 +11,12 @@ extends CanvasLayer
 @onready var quest_log_button: Button = $QuestLogButton
 @onready var quest_log: Control = $QuestLog
 
+@onready var help_menu = $HelpMenu
+
+func _on_help_button_pressed():
+	help_menu.toggle_help()
+
+
 var is_paused: bool = false
 
 const BATTERY_ITEM_RESTORE: float = 30.0

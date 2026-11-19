@@ -15,6 +15,11 @@ const INSTRUCTION_STEPS := [
 	{"icon": "goal_down", "caption": "Climb all the way to the summit."},
 ]
 
+# Kulay ng grip bar
+const GRIP_BLUE := Color("#4ab0dc")
+const GRIP_YELLOW := Color("#f2c94c")
+const GRIP_RED := Color("#e04a3f")
+
 @export var screen_size := Vector2(320, 180)
 @export var perfect_step_px := 28.0
 @export var good_step_px := 14.0
@@ -28,6 +33,8 @@ const INSTRUCTION_STEPS := [
 @export var hammer_volume_db := 0.0
 @export var fall_sfx_volume_db := 0.0
 @export var label_font_size := 8
+@export_range(0.1, 0.9) var mid_grip_ratio := 0.5    # pag ganito na lang ang natitira, nagiging yellow
+@export_range(0.05, 0.6) var low_grip_ratio := 0.3   # pag ganito na lang ang natitira, nagiging red
 @export_file("*.tscn") var next_scene := "res://scenes/provinces/cotabato/descent_game.tscn"
 
 enum Phase { INSTRUCTIONS, WAITING, CLIMBING, FINISHED, COMIC, GAMEOVER }
@@ -38,6 +45,8 @@ var player: Node2D
 var hud: CanvasLayer
 var timing_bar: TimingBar
 var grip_bar: ProgressBar
+var grip_fill_style: StyleBoxFlat
+var progress_bar: AscentProgressBar
 var prompt: Label
 var stage_label: Label
 var game_over_label: Label
@@ -248,6 +257,12 @@ func _build_world() -> void:
 func _set_scroll(value: float) -> void:
 	scroll = value
 	world.position.y = screen_size.y - total_h + scroll
+	_update_progress()
+
+func _update_progress() -> void:
+	if progress_bar == null or goal_scroll <= 0.0:
+		return
+	progress_bar.update_progress(scroll / goal_scroll * 100.0)
 
 
 # ---------- UI ----------
@@ -261,6 +276,7 @@ func _build_ui() -> void:
 	timing_bar.position = Vector2((screen_size.x - 120.0) / 2.0, 12.0)
 	hud.add_child(timing_bar)
 
+	# Grip bar: blue -> yellow (50%) -> red (30%)
 	grip_bar = ProgressBar.new()
 	grip_bar.name = "GripBar"
 	grip_bar.min_value = 0.0
@@ -270,7 +286,26 @@ func _build_ui() -> void:
 	grip_bar.custom_minimum_size = Vector2(120, 6)
 	grip_bar.size = Vector2(120, 6)
 	grip_bar.position = Vector2((screen_size.x - 120.0) / 2.0, 26.0)
+
+	var grip_bg := StyleBoxFlat.new()
+	grip_bg.bg_color = Color("#1a1310")
+	grip_bg.border_color = Color("#2e2219")
+	grip_bg.set_border_width_all(1)
+	grip_bg.set_corner_radius_all(2)
+	grip_fill_style = StyleBoxFlat.new()
+	grip_fill_style.bg_color = GRIP_BLUE
+	grip_fill_style.set_corner_radius_all(2)
+	grip_bar.add_theme_stylebox_override("background", grip_bg)
+	grip_bar.add_theme_stylebox_override("fill", grip_fill_style)
 	hud.add_child(grip_bar)
+
+	# Progress bar ng akyat (kopya ng descent, pataas ang punuan)
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	progress_bar = AscentProgressBar.new()
+	progress_bar.name = "ProgressBar"
+	progress_bar.position = Vector2(vp.x - 32.0, (vp.y - 160.0) / 2.0)
+	hud.add_child(progress_bar)
+	_update_progress()
 
 	prompt = _make_label(Vector2(0, 156), Vector2(screen_size.x, 16), HORIZONTAL_ALIGNMENT_CENTER)
 	prompt.name = "PressKey"
@@ -447,6 +482,14 @@ func _scroll_to(target: float, time: float) -> void:
 
 func _on_grip_changed(ratio: float) -> void:
 	grip_bar.value = ratio * 100.0
+	if grip_fill_style == null:
+		return
+	if ratio <= low_grip_ratio:
+		grip_fill_style.bg_color = GRIP_RED
+	elif ratio <= mid_grip_ratio:
+		grip_fill_style.bg_color = GRIP_YELLOW
+	else:
+		grip_fill_style.bg_color = GRIP_BLUE
 
 
 # ---------- YUGTO ----------
@@ -498,3 +541,46 @@ func _finish() -> void:
 	player.set_process(false)
 	await get_tree().create_timer(0.5).timeout
 	_show_comic()
+
+
+# =========================================================================
+#  PROGRESS BAR (kopya ng descent, pataas ang punuan)
+# =========================================================================
+class AscentProgressBar extends Control:
+	var bar_width: float = 6.0
+	var bar_height: float = 130.0
+	var current_value: float = 0.0
+
+	var face_texture: Texture2D = preload("res://assets/images/mini_map/marker_james.png")
+
+	func _ready() -> void:
+		custom_minimum_size = Vector2(24, bar_height + 30)
+
+	func _draw() -> void:
+		var center_x: float = size.x / 2.0
+		var start_y: float = 20.0
+		var end_y: float = start_y + bar_height
+
+		draw_line(Vector2(center_x, start_y), Vector2(center_x, end_y), Color("#2e2219"), bar_width + 4.0, true)
+		draw_line(Vector2(center_x, start_y), Vector2(center_x, end_y), Color("#1a1310"), bar_width, true)
+
+		var current_head_y: float = end_y
+
+		if current_value > 0.0:
+			var fill_ratio: float = current_value / 100.0
+			var fill_length: float = bar_height * fill_ratio
+			var fill_top_y: float = end_y - fill_length
+
+			current_head_y = fill_top_y
+
+			draw_line(Vector2(center_x, end_y), Vector2(center_x, fill_top_y), Color("#4ab0dc"), bar_width - 2.0, true)
+			draw_line(Vector2(center_x - 1, end_y), Vector2(center_x - 1, fill_top_y), Color("#70d0f7"), 1.0, true)
+
+		if face_texture != null:
+			var face_size: float = 16.0
+			var face_rect := Rect2(center_x - (face_size / 2.0), current_head_y - (face_size / 2.0), face_size, face_size)
+			draw_texture_rect(face_texture, face_rect, false)
+
+	func update_progress(percentage: float) -> void:
+		current_value = clampf(percentage, 0.0, 100.0)
+		queue_redraw()

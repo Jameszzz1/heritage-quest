@@ -1,8 +1,14 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://bsqu6hdbxcey"]
 
-[ext_resource type="Texture2D" path="../../sprites/farm/07_pineapple_packing_house.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bsnf534bv2hpe" path="res://assets/sprites/things/buildings/Heritage_Quest_57_Buildings/sprites/farm/07_pineapple_packing_house.png" id="1"]
 
-[node name="Building" type="Sprite2D"]
+[node name="StaticBody2D" type="StaticBody2D" unique_id=714993689]
+
+[node name="Building" type="Sprite2D" parent="." unique_id=1528883856]
 texture_filter = 1
+position = Vector2(0, 45)
 texture = ExtResource("1")
-offset = Vector2(0, -124.0)
+offset = Vector2(0, -124)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1658167387]
+polygon = PackedVector2Array(-13, 35, -118, -5, 15, -52, 113, -3)

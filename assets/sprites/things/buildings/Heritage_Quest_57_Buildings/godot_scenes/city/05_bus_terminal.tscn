@@ -1,8 +1,14 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://d4llo5wdesmea"]
 
-[ext_resource type="Texture2D" path="../../sprites/city/05_bus_terminal.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://batw8txrdj87w" path="res://assets/sprites/things/buildings/Heritage_Quest_57_Buildings/sprites/city/05_bus_terminal.png" id="1"]
 
-[node name="Building" type="Sprite2D"]
+[node name="StaticBody2D" type="StaticBody2D" unique_id=984759716]
+
+[node name="Building" type="Sprite2D" parent="." unique_id=1819923889]
 texture_filter = 1
+position = Vector2(2, 85)
 texture = ExtResource("1")
-offset = Vector2(0, -188.0)
+offset = Vector2(0, -188)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1323795020]
+polygon = PackedVector2Array(-35, 67, -146, 4, 29, -54, 141, 7)

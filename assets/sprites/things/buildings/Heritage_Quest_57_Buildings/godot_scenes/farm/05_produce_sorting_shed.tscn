@@ -1,8 +1,14 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://bbc57fxu8q8m6"]
 
-[ext_resource type="Texture2D" path="../../sprites/farm/05_produce_sorting_shed.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://chi0vlbyv3co5" path="res://assets/sprites/things/buildings/Heritage_Quest_57_Buildings/sprites/farm/05_produce_sorting_shed.png" id="1"]
 
-[node name="Building" type="Sprite2D"]
+[node name="StaticBody2D" type="StaticBody2D" unique_id=234378419]
+
+[node name="Building" type="Sprite2D" parent="." unique_id=983483343]
 texture_filter = 1
+position = Vector2(0, 50)
 texture = ExtResource("1")
-offset = Vector2(0, -124.0)
+offset = Vector2(0, -124)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1246565074]
+polygon = PackedVector2Array(-29, 37, -106, 1, 20, -41, 104, -4)

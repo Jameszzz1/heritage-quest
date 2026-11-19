@@ -393,7 +393,7 @@ polygon = PackedVector2Array(492, 169, 508, 161, 523, 168, 553, 153, 539, 144, 5
 position = Vector2(526, 385)
 script = ExtResource("12_xjq4p")
 target_scene = "res://scenes/provinces/south_cotabato/homebase.tscn"
-spawn_pos = Vector2(-499, -195)
+spawn_pos = Vector2(-272.99997, -194.99998)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ToHomeBase" unique_id=238790663]
 rotation = -0.39793506
